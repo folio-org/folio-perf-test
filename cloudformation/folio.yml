@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+    Create basic FOLIO AWS infrastructure. It consists of three EC2
+    instances where OKAPI, backend modules, and database are to be deployed. 
+
+Parameters:
+    EnvName:
+        Description: Specify a name to prefix resource names.
+        Type: String
+        Default: perf-test
+    Subnet:
+        Description: Optional, specify subnet to use
+        Type: String
+        Default: default
+    SecurityGroups:
+        Description: Optional, specify security groups to use.
+        Type: List<String>
+        Default: default
+    InstanceAmiId:
+        Description: Image ID for EC2 instance
+        Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+        Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
+    InstanceTypeOkapi:
+        Description: EC2 instance type for OKAPI server
+        Type: String
+        Default: m5.large
+    InstanceTypeMods:
+        Description: EC2 instance type for backend modules server
+        Type: String
+        Default: m5.xlarge
+    InstanceTypeDb:
+        Description: EC2 instance type for database server
+        Type: String
+        Default: m5.xlarge
+    KeyName: 
+        Description: Specify an existing KeyPair to ssh into EC2
+        Type: AWS::EC2::KeyPair::KeyName
+        Default: folio-int
+    PublicIp: 
+        Description: Optional. Specify whether to use public IP. Default is Yes. 
+        Type: String
+        Default: 'Yes'
+        AllowedValues:
+            - 'Yes'
+            - 'No'
+        
+Conditions:
+    UseDefaultSubnet: !Equals [!Ref Subnet, 'default']
+    UseDefaultSecurityGroup: !Equals [!Select [0, !Ref SecurityGroups], 'default']
+    UsePublicIp: !Equals [!Ref PublicIp, 'Yes']
+    
+Resources: 
+    OkapiInstance:
+      Type: AWS::EC2::Instance
+      Properties:
+        ImageId: !Ref InstanceAmiId
+        InstanceType: !Ref InstanceTypeOkapi
+        KeyName: !Ref KeyName
+        SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+        SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+        Tags:
+            - Key: "Name"
+              Value: !Sub ${EnvName}-okapi
+    ModsInstance:
+      Type: AWS::EC2::Instance
+      Properties:
+        ImageId: !Ref InstanceAmiId
+        InstanceType: !Ref InstanceTypeMods
+        KeyName: !Ref KeyName
+        SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+        SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+        Tags:
+            - Key: "Name"
+              Value: !Sub ${EnvName}-mods
+    DbInstance:
+      Type: AWS::EC2::Instance
+      Properties:
+        ImageId: !Ref InstanceAmiId
+        InstanceType: !Ref InstanceTypeDb
+        KeyName: !Ref KeyName
+        SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+        SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+        BlockDeviceMappings: 
+          - DeviceName: "/dev/xvda"
+            Ebs: 
+              VolumeSize: "20"
+        Tags:
+            - Key: "Name"
+              Value: !Sub ${EnvName}-db
+              
+Outputs:
+    OkapiIp:
+        Value: !If [UsePublicIp, !GetAtt OkapiInstance.PublicIp, !GetAtt OkapiInstance.PrivateIp]
+        Description: OKAPI server public IP or fall back to private IP
+    OkapiPvtIp:
+        Value: !GetAtt OkapiInstance.PrivateIp
+        Description: OKAPI server private IP
+    ModsIp:
+        Value: !If [UsePublicIp, !GetAtt ModsInstance.PublicIp, !GetAtt ModsInstance.PrivateIp]
+        Description: Mods server public IP or fall back to private IP
+    ModsPvtIp:
+        Value: !GetAtt ModsInstance.PrivateIp
+        Description: Mods server private IP
+    DbIp:
+        Value: !If [UsePublicIp, !GetAtt DbInstance.PublicIp, !GetAtt DbInstance.PrivateIp]
+        Description: Database server public IP or fall back to private IP
+    DbPvtIp:
+        Value: !GetAtt DbInstance.PrivateIp
+        Description: Database server IP
