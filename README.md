@@ -11,7 +11,7 @@ System requirements
 
 * Jenkins on Linux with default plugins installed
 
-* Extra Jenkins plugins: Pipeline Utility Steps, HTTP Request Plugin, Performance
+* Extra Jenkins plugins: Pipeline Utility Steps, HTTP Request Plugin, SSH Agent Plugin, CloudBees AWS Credentials Plugin, Performance
 
 * Install aws-cli and JMeter on Jenkins
 
@@ -22,4 +22,4 @@ Quick start
 
 * Import in Jenkins as standard pipeline project
 
-* Adjust build parameters as needed
+* Pick a Jenkinsfile and adjust build parameters as needed
