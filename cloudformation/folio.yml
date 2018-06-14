@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
     Create basic FOLIO AWS infrastructure. It consists of three EC2
-    instances where OKAPI, backend modules, and database are to be deployed. 
+    instances where OKAPI, backend modules, and database are to be deployed.
 
 Parameters:
     EnvName:
@@ -32,24 +32,24 @@ Parameters:
         Description: EC2 instance type for database server
         Type: String
         Default: m5.xlarge
-    KeyName: 
+    KeyName:
         Description: Specify an existing KeyPair to ssh into EC2
         Type: AWS::EC2::KeyPair::KeyName
         Default: folio-int
-    PublicIp: 
-        Description: Optional. Specify whether to use public IP. Default is Yes. 
+    PublicIp:
+        Description: Optional. Specify whether to use public IP. Default is Yes.
         Type: String
         Default: 'Yes'
         AllowedValues:
             - 'Yes'
             - 'No'
-        
+
 Conditions:
     UseDefaultSubnet: !Equals [!Ref Subnet, 'default']
     UseDefaultSecurityGroup: !Equals [!Select [0, !Ref SecurityGroups], 'default']
     UsePublicIp: !Equals [!Ref PublicIp, 'Yes']
-    
-Resources: 
+
+Resources:
     OkapiInstance:
       Type: AWS::EC2::Instance
       Properties:
@@ -80,14 +80,14 @@ Resources:
         KeyName: !Ref KeyName
         SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
         SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
-        BlockDeviceMappings: 
+        BlockDeviceMappings:
           - DeviceName: "/dev/xvda"
-            Ebs: 
+            Ebs:
               VolumeSize: "20"
         Tags:
             - Key: "Name"
               Value: !Sub ${EnvName}-db
-              
+
 Outputs:
     OkapiIp:
         Value: !If [UsePublicIp, !GetAtt OkapiInstance.PublicIp, !GetAtt OkapiInstance.PrivateIp]
