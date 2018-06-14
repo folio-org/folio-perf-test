@@ -100,7 +100,7 @@ node {
         }
     }
 
-    stage("Bootstrap OKAPI") {
+    stage("Bootstrap Okapi") {
         def okapiVersionResp = httpRequest "${stableFolio}:9130/_/version"
         def okapiVersion = okapiVersionResp.content
         def okapiJob = readFile "config/okapi.sh"
