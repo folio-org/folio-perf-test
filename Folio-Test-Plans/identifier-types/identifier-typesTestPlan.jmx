@@ -280,7 +280,7 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
      &quot;id&quot;: &quot;{{identifierTypeId}}&quot;,&#xd;
-	&quot;name&quot;: &quot;Test identifier type - modified name: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;&#xd;
+     &quot;name&quot;: &quot;Test identifier type - modified name: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
