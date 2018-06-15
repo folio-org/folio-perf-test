@@ -23,3 +23,15 @@ Quick start
 * Import in Jenkins as standard pipeline project
 
 * Pick a Jenkinsfile and adjust build parameters as needed
+
+## Additional information
+
+### Issue tracker
+
+See project [FOLIO](https://issues.folio.org/browse/FOLIO)
+at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker).
+
+### Other documentation
+
+Other [infrastructure projects](https://dev.folio.org/source-code/#other-projects) are described,
+with further FOLIO Developer documentation at [dev.folio.org](https://dev.folio.org/)
