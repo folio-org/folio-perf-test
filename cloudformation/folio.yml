@@ -53,40 +53,40 @@ Resources:
   OkapiInstance:
     Type: AWS::EC2::Instance
     Properties:
-    ImageId: !Ref InstanceAmiId
-    InstanceType: !Ref InstanceTypeOkapi
-    KeyName: !Ref KeyName
-    SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
-    SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
-    Tags:
-      - Key: "Name"
-        Value: !Sub ${EnvName}-okapi
+      ImageId: !Ref InstanceAmiId
+      InstanceType: !Ref InstanceTypeOkapi
+      KeyName: !Ref KeyName
+      SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+      SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+      Tags:
+        - Key: "Name"
+          Value: !Sub ${EnvName}-okapi
   ModsInstance:
     Type: AWS::EC2::Instance
     Properties:
-    ImageId: !Ref InstanceAmiId
-    InstanceType: !Ref InstanceTypeMods
-    KeyName: !Ref KeyName
-    SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
-    SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
-    Tags:
-      - Key: "Name"
-        Value: !Sub ${EnvName}-mods
+      ImageId: !Ref InstanceAmiId
+      InstanceType: !Ref InstanceTypeMods
+      KeyName: !Ref KeyName
+      SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+      SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+      Tags:
+        - Key: "Name"
+          Value: !Sub ${EnvName}-mods
   DbInstance:
     Type: AWS::EC2::Instance
     Properties:
-    ImageId: !Ref InstanceAmiId
-    InstanceType: !Ref InstanceTypeDb
-    KeyName: !Ref KeyName
-    SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
-    SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
-    BlockDeviceMappings:
-      - DeviceName: "/dev/xvda"
-        Ebs:
-          VolumeSize: "20"
-    Tags:
-      - Key: "Name"
-        Value: !Sub ${EnvName}-db
+      ImageId: !Ref InstanceAmiId
+      InstanceType: !Ref InstanceTypeDb
+      KeyName: !Ref KeyName
+      SubnetId: !If [UseDefaultSubnet, !Ref "AWS::NoValue", !Ref Subnet]
+      SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeSize: "20"
+      Tags:
+        - Key: "Name"
+          Value: !Sub ${EnvName}-db
 
 Outputs:
   OkapiIp:
