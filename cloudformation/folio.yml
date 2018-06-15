@@ -82,8 +82,8 @@ Resources:
     SecurityGroupIds: !If [UseDefaultSecurityGroup, !Ref "AWS::NoValue", !Ref SecurityGroups]
     BlockDeviceMappings:
       - DeviceName: "/dev/xvda"
-      Ebs:
-        VolumeSize: "20"
+        Ebs:
+          VolumeSize: "20"
     Tags:
       - Key: "Name"
         Value: !Sub ${EnvName}-db
