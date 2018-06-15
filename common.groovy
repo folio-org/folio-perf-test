@@ -68,7 +68,7 @@ def main() {
       }
 
       stage("Bootstrap DB") {
-        def dbJob = readFile "config/db.sh"
+        def dbJob = readFile("config/db.sh").trim()
         sh "ssh -o StrictHostKeyChecking=no -l ${sshUser} ${dbIp} sudo yum install -y postgresql96 jq wget"
         sh "ssh -o StrictHostKeyChecking=no -l ${sshUser} ${dbIp} ${dbJob}"
         timeout(10) {
@@ -87,7 +87,7 @@ def main() {
       stage("Bootstrap Okapi") {
         def okapiVersionResp = httpRequest "${stableFolio}:9130/_/version"
         def okapiVersion = okapiVersionResp.content
-        def okapiJob = readFile "config/okapi.sh"
+        def okapiJob = readFile("config/okapi.sh").trim()
         okapiJob = okapiJob.replace('${okapiPvtIp}', okapiPvtIp)
         okapiJob = okapiJob.replace('${dbPvtIp}', dbPvtIp)
         okapiJob = okapiJob.replace('${okapiVersion}', okapiVersion)
@@ -107,7 +107,7 @@ def main() {
 
       stage("Bootstrap modules") {
         // db config
-        def pgconf = readFile "config/pg.json"
+        def pgconf = readFile("config/pg.json").trim()
         pgconf = pgconf.replace('${db_host}', dbPvtIp)
         echo "pgconf: ${pgconf}"
         writeFile(text: pgconf, file: "folio-conf/pg.json")
@@ -124,7 +124,7 @@ def main() {
       }
 
       stage("Populate data") {
-        def cmd = readFile "config/data.sh"
+        def cmd = readFile("config/data.sh").trim()
         cmd = cmd.replace('${dataName}', dataName)
         cmd = cmd.replace('${tenant}', tenant)
         sh "ssh -o StrictHostKeyChecking=no -l ${sshUser} ${dbIp} wget ${dataRepo}/${dataName}.tar.gz"
@@ -137,7 +137,7 @@ def main() {
       def jMeterInput = "Folio-Test-Plans"
       def jMeterOutput = "jmeter_perf.jtl"
 
-      def jMeterConfTemplate = readFile "config/jmeter.csv"
+      def jMeterConfTemplate = readFile("config/jmeter.csv").trim()
       echo "JMeter config template: ${jMeterConfTemplate}"
       def jMeterConf = jMeterConfTemplate.replace('tenant', tenant)
       jMeterConf = jMeterConf.replace('user', 'admin')
@@ -243,10 +243,10 @@ def registerMods(mods, mdRepo, okapiIp) {
 // deploy modules
 def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshUser) {
   def port = 9200
-  def modJobTemplate = readFile "config/mods.sh"
-  def modKbEbscoTemplate = readFile "config/mod-kb-ebsco.sh"
-  def installTemplate = readFile "config/install.json"
-  def discoveryTemplate = readFile "config/discovery.json"
+  def modJobTemplate = readFile("config/mods.sh").trim()
+  def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
+  def installTemplate = readFile("config/install.json").trim()
+  def discoveryTemplate = readFile("config/discovery.json").trim()
   def installMods = [];
   for (entry in mods.entrySet()) {
     def modName = entry.getKey()
