@@ -17,11 +17,12 @@ properties([
 ])
 
 node {
-  stage("Checkout") {
-    cleanWs()
-    checkout scm
-  }
-
-  def pipeline = load "common.groovy"
-  pipeline.main()
+  timeout(90) {
+    stage("Checkout") {
+      cleanWs()
+      checkout scm
+    }
+    def pipeline = load "common.groovy"
+    pipeline.main()
+  } 
 }
