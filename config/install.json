@@ -1,1 +1,4 @@
-{"action": "enable","id": "${modId}"}
+{
+  "action": "enable",
+  "id": "${modId}"
+}

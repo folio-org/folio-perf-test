@@ -1,1 +1,5 @@
-{"instId":"${modId}","srvcId":"${modId}","url":"${modUrl}"}
+{
+  "instId": "${modId}",
+  "srvcId": "${modId}",
+  "url": "${modUrl}"
+}
