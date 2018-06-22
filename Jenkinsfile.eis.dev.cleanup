@@ -2,7 +2,7 @@
 
 properties([
   parameters([
-    string(name: 'EnvName', defaultValue: 'folio-perf-test', description: 'Unique performance environment name'),
+    string(name: 'EnvName', defaultValue: 'fse-perf-test', description: 'Unique performance environment name'),
     string(name: 'JenkinsAwsCredential', defaultValue: 'aws_folio_devqa', description: 'Jenkins credential to access AWS account'),
     string(name: 'JenkinsEc2Credential', defaultValue: 'ssh_folio_devqa', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'folio-devqa', description: 'Aws KeyPair name for EC2 instances'),
@@ -16,13 +16,31 @@ properties([
   ])
 ])
 
+def sharedLib
+def context
+
 node {
   timeout(90) {
+
     stage("Checkout") {
       cleanWs()
       checkout scm
+      sharedLib = load "shared.groovy"
+      context = sharedLib.getContext()
     }
-    def pipeline = load "common.groovy"
-    pipeline.main()
-  } 
+
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${context.awsKeyId}",
+      accessKeyVariable: 'AWS_ACCESS_KEY_ID',  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+      sshagent(credentials:["${context.sshKeyId}"]) {
+
+        stage("Wait for Environment") {
+          sharedLib.waitForEnv(context)
+        }
+
+        stage("Tear down environment") {
+          sharedLib.teardownEnv(context)
+        }
+      }
+    }
+  }
 }

@@ -3,16 +3,16 @@
 properties([
   parameters([
     string(name: 'EnvName', defaultValue: 'folio-perf-test', description: 'Unique performance environment name'),
-    string(name: 'JenkinsAwsCredential', defaultValue: '${NEED VALUE}', description: 'Jenkins credential to access AWS account'),
-    string(name: 'JenkinsEc2Credential', defaultValue: '${NEED VALUE}', description: 'Jenkins credential to SSH into AWS EC2'),
-    string(name: 'AwsKeyPair', defaultValue: '${NEED VALUE}', description: 'Aws KeyPair name for EC2 instances'),
+    string(name: 'JenkinsAwsCredential', defaultValue: 'aws_folio_int', description: 'Jenkins credential to access AWS account'),
+    string(name: 'JenkinsEc2Credential', defaultValue: 'ssh_folio_int', description: 'Jenkins credential to SSH into AWS EC2'),
+    string(name: 'AwsKeyPair', defaultValue: 'folio-int', description: 'Aws KeyPair name for EC2 instances'),
     string(name: 'AwsSubnet', defaultValue: 'default', description: 'AWS Subnet to create EC2 instances'),
     string(name: 'AwsSecurityGroups', defaultValue: 'default', description: 'AWS VPC Security Groups to use'),
     string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
     string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
     string(name: 'StableFolio', defaultValue: 'http://folio-snapshot-stable.aws.indexdata.com', description: 'Use stable version of modules'),
     string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
-    string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
+    string(name: 'SampleDataName', defaultValue: 'small', description: 'Sample dataset name'),
   ])
 ])
 

@@ -83,7 +83,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: "/dev/xvda"
           Ebs:
-            VolumeSize: "20"
+            VolumeSize: "80"
       Tags:
         - Key: "Name"
           Value: !Sub ${EnvName}-db
