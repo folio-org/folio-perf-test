@@ -56,14 +56,6 @@ node {
         stage("Populate data") {
           sharedLib.populateData(context)
         }
-
-        stage("Running JMeter tests") {
-          sharedLib.runJmeterTests(context)
-        }
-
-        stage("Tear down environment") {
-          sharedLib.teardownEnv(context)
-        }
       }
     }
   }
