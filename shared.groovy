@@ -155,7 +155,7 @@ def runJmeterTests(ctx) {
     sh "${cmd}"
   }
   archiveArtifacts "jmeter_*"
-  perfReport percentiles: '0,50,90,100', sourceDataFiles: "${jMeterOutput}"
+  perfReport errorFailedThreshold: 1, percentiles: '0,50,90,100', sourceDataFiles: "${jMeterOutput}"
 }
 
 def teardownEnv(ctx) {
