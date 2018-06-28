@@ -1,0 +1,43 @@
+{
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "perf-okapi.${domain}",
+        "Type": "A",
+        "TTL": 5,
+        "ResourceRecords": [
+          {
+            "Value": "${okapiIp}"
+          }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "perf-mods.${domain}",
+        "Type": "A",
+        "TTL": 5,
+        "ResourceRecords": [
+          {
+            "Value": "${modsIp}"
+          }
+        ]
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "perf-db.${domain}",
+        "Type": "A",
+        "TTL": 5,
+        "ResourceRecords": [
+          {
+            "Value": "${dbIp}"
+          }
+        ]
+      }
+    }
+  ]
+}

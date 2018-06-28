@@ -2,7 +2,7 @@
 
 properties([
   parameters([
-    string(name: 'EnvName', defaultValue: 'folio-perf-test', description: 'Unique performance environment name'),
+    string(name: 'EnvName', defaultValue: 'fse-perf-test', description: 'Unique performance environment name'),
     string(name: 'JenkinsAwsCredential', defaultValue: 'aws_folio_int', description: 'Jenkins credential to access AWS account'),
     string(name: 'JenkinsEc2Credential', defaultValue: 'ssh_folio_int', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'folio-int', description: 'Aws KeyPair name for EC2 instances'),

@@ -24,10 +24,10 @@ def getContext() {
     okapiIp : '', modsIp : '', dbIp : '',
     okapiPvtIp : '', modsPvtIp : '', dbPvtIp : '',
 
-    sshCmd : 'ssh -o StrictHostKeyChecking=no',
+    sshCmd : 'ssh -o StrictHostKeyChecking=no -o "UserKnownHostsFile /dev/null" -o "LogLevel ERROR"',
     scpCmd : 'scp -pr -o StrictHostKeyChecking=no'
   ]
-  return ctx;
+  return ctx
 }
 
 def createEnv(ctx) {
@@ -54,7 +54,10 @@ def waitForEnv(ctx) {
   def cmd = "aws cloudformation describe-stacks --stack-name ${ctx.envName}"
   def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
   getStackOutputIps(resp, ctx)
-  println ctx;
+  echo "${ctx}"
+  if (ctx.dns) {
+    setupDns(ctx)
+  }
   def dockerCmd = 'docker ps -l'
   timeout(10) {
     waitUntil {
@@ -62,7 +65,6 @@ def waitForEnv(ctx) {
         sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dockerCmd}"
         sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} ${dockerCmd}"
         sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} ${dockerCmd}"
-        echo "${ctx}"
         true
       } catch (e) {
         sleep 10
@@ -194,6 +196,22 @@ def getStackOutputIps(output, ctx) {
   }
 }
 
+def setupDns(ctx) {
+  def cmd = "aws route53 list-hosted-zones --query 'HostedZones[?Name==`${ctx.dns}`].Id' --output text"
+  def zoneId = (sh(script: "${cmd}", returnStdout: true)).trim()
+
+  def dnsTemplate = readFile("config/dns.json").trim()
+  def dns = dnsTemplate.replace('${domain}', ctx.dns)
+  dns = dns.replace('${okapiIp}', ctx.okapiIp)
+  dns = dns.replace('${modsIp}', ctx.modsIp)
+  dns = dns.replace('${dbIp}', ctx.dbIp)
+
+  def dnsFile = 'output/dns.json'
+  writeFile(text: dns, file: dnsFile)
+  cmd = "aws route53 change-resource-record-sets --hosted-zone-id '${zoneId}' --change-batch file://${dnsFile}"
+  sh "${cmd}"
+}
+
 // find stack output value
 def getStackOutput(output, key) {
   for (o in output.Stacks[0].Outputs) {
@@ -258,13 +276,13 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
-  def installMods = [];
+  def installMods = []
   for (entry in mods.entrySet()) {
     def modName = entry.getKey()
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
     // install needs both front and backend MDs
-    installMods.add(installTemplate.replace('${modId}', modId));
+    installMods.add(installTemplate.replace('${modId}', modId))
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
       continue
@@ -291,4 +309,4 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
 }
 
-return this;
+return this
