@@ -33,14 +33,15 @@ node {
       accessKeyVariable: 'AWS_ACCESS_KEY_ID',  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
       sshagent(credentials:["${context.sshKeyId}"]) {
 
-        stage("Create Environment") {
-          sharedLib.createEnv(context)
-        }
-
-        stage("Wait for Environment") {
-          sharedLib.waitForEnv(context)
-        }
-
+      /*
+      *  stage("Create Environment") {
+      *    sharedLib.createEnv(context)
+      *  }
+      *
+      *  stage("Wait for Environment") {
+      *    sharedLib.waitForEnv(context)
+      *  }
+      */
         stage("Bootstrap DB") {
           sharedLib.bootstrapDb(context)
         }
