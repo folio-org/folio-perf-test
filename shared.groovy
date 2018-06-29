@@ -31,7 +31,7 @@ def getContext() {
 }
 
 def createEnv(ctx) {
-  def cmd = "aws cloudformation create-stack --stack-name ${ctx.envName}"
+  def cmd = "aws --output json cloudformation create-stack --stack-name ${ctx.envName}"
   cmd += " --template-body file://cloudformation/folio.yml"
   cmd += " --parameters ParameterKey=EnvName,ParameterValue=${ctx.envName}"
   cmd += " ParameterKey=KeyName,ParameterValue=${ctx.awsKeyPair}"
@@ -41,7 +41,7 @@ def createEnv(ctx) {
   def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
   ctx.stackId = "${resp.StackId}"
   timeout(10) {
-    cmd = "aws cloudformation describe-stacks --stack-name ${ctx.envName}"
+    cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
     waitUntil {
       sleep 10
       resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
@@ -51,7 +51,7 @@ def createEnv(ctx) {
 }
 
 def waitForEnv(ctx) {
-  def cmd = "aws cloudformation describe-stacks --stack-name ${ctx.envName}"
+  def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
   def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
   getStackOutputIps(resp, ctx)
   echo "${ctx}"
@@ -162,7 +162,7 @@ def runJmeterTests(ctx) {
 
 def teardownEnv(ctx) {
   if (!ctx.stackId) {
-    def cmd = "aws cloudformation describe-stacks --stack-name ${ctx.envName}"
+    def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
     def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
     ctx.stackId = "${resp.Stacks[0].StackId}"
   }
@@ -170,7 +170,7 @@ def teardownEnv(ctx) {
   timeout(10) {
     waitUntil {
       sleep 10
-      def cmd = "aws cloudformation describe-stacks --stack-name ${ctx.stackId}"
+      def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.stackId}"
       def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
       "DELETE_COMPLETE" == "${resp.Stacks[0].StackStatus}"
     }
