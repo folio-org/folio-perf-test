@@ -7,7 +7,7 @@ properties([
     string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
     string(name: 'AwsSubnet', defaultValue: 'subnet-4406021d', description: 'AWS Subnet to create EC2 instances'),
-    string(name: 'AwsSecurityGroups', defaultValue: 'default', description: 'AWS VPC Security Groups to use'),
+    string(name: 'AwsSecurityGroups', defaultValue: 'sg-7ea9ef35', description: 'AWS VPC Security Groups to use'),
     string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
     string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
     string(name: 'StableFolio', defaultValue: 'http://folio-snapshot-stable.aws.indexdata.com', description: 'Use stable version of modules'),
