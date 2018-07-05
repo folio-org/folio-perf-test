@@ -19,7 +19,9 @@ properties([
 def sharedLib
 def context
 
-node {
+
+node('folio-perf-test') {
+  label 
   timeout(90) {
 
     stage("Checkout") {
