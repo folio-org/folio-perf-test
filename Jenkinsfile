@@ -21,7 +21,6 @@ def context
 
 
 node('folio-perf-test') {
-  label 
   timeout(90) {
 
     stage("Checkout") {
