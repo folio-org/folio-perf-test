@@ -202,7 +202,9 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;name&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
+  &quot;name&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;code&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;source&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -224,7 +226,7 @@
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">formatId;formatName;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">instanceFormatId;instanceFormatName;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.name;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0;0;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;x;</stringProp>
@@ -256,7 +258,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats/${formatId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats/${instanceFormatId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -286,7 +288,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats?query=(name=${formatName})</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats?query=(name=${instanceFormatName})</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -315,8 +317,10 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;id&quot; : &quot;${formatId}&quot;,&#xd;
-  &quot;name&quot;:&quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
+  &quot;id&quot; : &quot;${instanceFormatId}&quot;,&#xd;
+  &quot;name&quot;:&quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+  &quot;code&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;,&#xd;
+  &quot;source&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -326,7 +330,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats/${formatId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats/${instanceFormatId}</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -363,7 +367,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats/${formatId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats/${instanceFormatId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -398,7 +402,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats/${formatId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats/${instanceFormatId}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -426,7 +430,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-formats/${formatId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-formats/${instanceFormatId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -561,10 +565,10 @@
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">def formatId = vars.get(&quot;formatId&quot;);
-def formatName = vars.get(&quot;formatName&quot;);
+          <stringProp name="script">def instanceFormatId = vars.get(&quot;instanceFormatId&quot;);
+def instanceFormatName = vars.get(&quot;instanceFormatName&quot;);
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
-log.info (&quot;Variables used Thread: &quot; + threadId + &quot; formatId - &quot; + formatId + &quot;, formatName - &quot; + formatName);</stringProp>
+log.info (&quot;Variables used Thread: &quot; + threadId + &quot; instanceFormatId - &quot; + instanceFormatId + &quot;, instanceFormatName - &quot; + instanceFormatName);</stringProp>
         </JSR223PostProcessor>
         <hashTree/>
       </hashTree>
