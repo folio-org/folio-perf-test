@@ -59,7 +59,10 @@ node('folio-perf-test') {
         }
 
         stage("Running JMeter tests") {
-          sharedLib.runJmeterTests(context)
+          withEnv(['PATH+JMETER_PATH=/usr/local/apache-jmeter/bin']) {
+            echo "PATH is: $env.PATH"
+            sharedLib.runJmeterTests(context)
+          }
         }
 
         stage("Tear down environment") {
