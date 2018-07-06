@@ -1,0 +1,5 @@
+{
+  "instId": "${modId}",
+  "srvcId": "${modId}",
+  "url": "${modUrl}"
+}

@@ -1,0 +1,7 @@
+{
+  "host": "${db_host}",
+  "port": 5432,
+  "username": "folio",
+  "password": "folioadmin",
+  "database": "folio"
+}
