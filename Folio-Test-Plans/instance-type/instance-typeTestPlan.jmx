@@ -13,7 +13,7 @@
     </TestPlan>
     <hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
-        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans\config.csv</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
@@ -184,13 +184,6 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">instanceTypeName;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.instanceTypes[*].name;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;</stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
@@ -209,7 +202,9 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;name&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
+  &quot;name&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+  &quot;code&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+  &quot;source&quot;: &quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
 }&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -232,10 +227,10 @@
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">typeId;typeName;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.name;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;0;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;x;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">instanceTypeId;instanceTypeName;instanceTypeCode;instanceTypeSource;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.name;.code;.source;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;0;0;0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">x;x;x;x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
@@ -264,7 +259,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types/${typeId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types/${instanceTypeId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -294,7 +289,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types?query=(name=${typeName})</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types?query=(name=${instanceTypeName})</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -324,7 +319,9 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;id&quot; : &quot;${typeId}&quot;,&#xd;
-  &quot;name&quot;:&quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
+  &quot;name&quot;:&quot;modified name - ${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+  &quot;code&quot;:&quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;,&#xd;
+  &quot;source&quot;:&quot;${__RandomString(16,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -334,7 +331,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types/${typeId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types/${instanceTypeId}</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -371,7 +368,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types/${typeId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types/${instanceTypeId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -406,7 +403,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types/${typeId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types/${instanceTypeId}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -434,7 +431,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/instance-types/${typeId}</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-types/${instanceTypeId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -569,11 +566,12 @@
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">def instanceTypeName = vars.get(&quot;instanceTypeName&quot;);
-def typeId = vars.get(&quot;typeId&quot;);
-def typeName = vars.get(&quot;typeName&quot;);
+          <stringProp name="script">def instanceTypeId = vars.get(&quot;instanceTypeId&quot;);
+def instanceTypeName = vars.get(&quot;instanceTypeName&quot;);
+def instanceTypeSource = vars.get(&quot;instanceTypeSource&quot;);
+def instanceTypeCode = vars.get(&quot;instanceTypeCode&quot;);
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
-log.info (&quot;Variables used Thread: &quot; + threadId + &quot; instanceTypeName - &quot; + instanceTypeName + &quot;, typeId - &quot; + typeId + &quot;, typeName - &quot; + typeName);</stringProp>
+log.info (&quot;Variables used Thread: &quot; + threadId + &quot; instanceTypeId - &quot; + instanceTypeId + &quot; instanceTypeName - &quot; + instanceTypeName + &quot; instanceTypeSource - &quot; + instanceTypeSource + &quot; instanceTypeCode - &quot; + instanceTypeCode);</stringProp>
         </JSR223PostProcessor>
         <hashTree/>
       </hashTree>

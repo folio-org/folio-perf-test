@@ -13,7 +13,7 @@
     </TestPlan>
     <hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
-        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans\config.csv</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
@@ -195,7 +195,9 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
     &quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-    &quot;name&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;&#xd;
+    &quot;name&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;,&#xd;
+    &quot;code&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ )}&quot;,&#xd;
+    &quot;source&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ )}&quot;&#xd;
 }&#xd;
 </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -280,7 +282,9 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
      &quot;id&quot;: &quot;{{contributorTypeId}}&quot;,&#xd;
-     &quot;name&quot;: &quot;Test contributor type - modified name: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;&#xd;
+	&quot;name&quot;: &quot;contributor type - modified name: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;,&#xd;
+	&quot;code&quot;: &quot;contributor type - modified code: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ )}&quot;,&#xd;
+     &quot;source&quot;: &quot;contributor type - modified source: ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ )}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -300,18 +304,7 @@
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
-        <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49590">204</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - Get contributor-type by contributorTypeId" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -339,10 +332,10 @@
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract contributorTypeName" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">contributorTypeName;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">.name;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">contributorTypeName;contributorTypeCode;contributorTypeSource;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.name;.code;.source;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;1;1;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">x;x;x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
@@ -534,8 +527,10 @@
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="script">def contributorTypeId = vars.get(&quot;contributorTypeId&quot;);
 def contributorTypeName = vars.get(&quot;contributorTypeName&quot;);
+def contributorTypeCode = vars.get(&quot;contributorTypeCode&quot;);
+def contributorTypeSource = vars.get(&quot;contributorTypeSource&quot;);
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
-log.info (&quot;Variables used Thread: &quot; + threadId + &quot; contributor-type-id - &quot; + contributorTypeId + &quot; contributorTypeName - &quot; + contributorTypeName);</stringProp>
+log.info (&quot;Variables used Thread: &quot; + threadId + &quot; contributor-type-id - &quot; + contributorTypeId + &quot; contributorTypeName - &quot; + contributorTypeName + &quot; contributorTypeCode - &quot; + contributorTypeCode + &quot; contributorTypeSource - &quot; + contributorTypeSource);</stringProp>
         </JSR223PostProcessor>
         <hashTree/>
       </hashTree>
