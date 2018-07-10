@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Loan-storage Test Plan" enabled="true">
-      <stringProp name="TestPlan.comments">Performance/Load tests the loan-storage Folio module via Okapi</stringProp>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Service-points Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments"/>
@@ -12,15 +13,15 @@
     </TestPlan>
     <hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
-        <stringProp name="delimiter">,</stringProp>
-        <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
+        <stringProp name="delimiter">,</stringProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
-        <stringProp name="shareMode">shareMode.all</stringProp>
         <boolProp name="stopThread">false</boolProp>
-        <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
       </CSVDataSet>
       <hashTree/>
       <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
@@ -37,15 +38,7 @@
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
-        <stringProp name="scriptLanguage">groovy</stringProp>
-        <stringProp name="parameters"></stringProp>
-        <stringProp name="filename"></stringProp>
-        <stringProp name="cacheKey">true</stringProp>
-        <stringProp name="script">log.info(&quot;These are config values: tenant - ${tenant}, user - ${user}, password - ******, protocol - ${protocol}, host - ${host}, port - ${port}&quot;);</stringProp>
-      </JSR223PostProcessor>
-      <hashTree/>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Loan-storage Login Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Service-points Login Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -53,8 +46,6 @@
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <longProp name="ThreadGroup.start_time">1508954328000</longProp>
-        <longProp name="ThreadGroup.end_time">1508954328000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -77,7 +68,7 @@
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Loan-storage HTTP Request" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Service-points HTTP Request" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -103,7 +94,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -132,16 +123,14 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Loan-storage Thread Group" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Service-points Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation-storage/loan-storage/loan-storage.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/service-points/service-points.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation-storage/loan-storage/loan-storage.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation-storage/loan-storage/loan-storage.csv,1)}</stringProp>
-        <longProp name="ThreadGroup.start_time">1508857125000</longProp>
-        <longProp name="ThreadGroup.end_time">1508857125000</longProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/service-points/service-points.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/service-points/service-points.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -168,22 +157,15 @@
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET all loan-storage loans - 200" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET all service-points" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loans</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -194,7 +176,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -204,29 +186,20 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Loan-storage details" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">loanDate;loanAction;loanStatus;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.loans[*].loanDate;$.loans[*].action;$.loans[*].status.name;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;0;0;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;x;x;</stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST loan-storage - 201" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST service-point - 201" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-&quot;userId&quot;: &quot;${__UUID()}&quot;,&#xd;
-&quot;itemId&quot;: &quot;${__UUID()}&quot;,&#xd;
-&quot;loanDate&quot;: &quot;${loanDate}&quot;,&#xd;
-&quot;action&quot;: &quot;${loanAction}&quot;,&#xd;
-&quot;status&quot;: {&#xd;
-  &quot;name&quot;: &quot;${loanStatus}&quot;&#xd;
-  }&#xd;
-}</stringProp>
+    &quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
+    &quot;name&quot;: &quot;Service-point name ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;,&#xd;
+    &quot;code&quot;: &quot;Service-point code ${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;,&#xd;
+    &quot;discoveryDisplayName&quot;: &quot;Service-point discovery display name ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;&#xd;
+}&#xd;
+</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -235,7 +208,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loans</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -246,14 +219,14 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract loan-storage Id" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">newLoanStorageId;newLoanItemId;newLoanUserId;newLoanDate;newLoanStatus;newLoanAction;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.itemId;.userId;.loanDate;.status.name;.action;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">1;1;1;1;1;1;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;x;x;x;x;x;</stringProp>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract servicePointId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">servicePointId;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49587">201</stringProp>
             </collectionProp>
@@ -264,15 +237,22 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET loan item with given {newLoanStorageId} - 200" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - service-point by servicePointId from POST above" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loans/${newLoanStorageId}</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points/${servicePointId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -283,7 +263,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -294,20 +274,17 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PUT Update loan item with given {newLoanStorageId} - 204" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PUT 204 - Update service-point by doing PUT by servicePointId" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-&quot;userId&quot;: &quot;${newLoanUserId}&quot;,&#xd;
-&quot;itemId&quot;: &quot;${newLoanItemId}&quot;,&#xd;
-&quot;loanDate&quot;: &quot;${newLoanDate}&quot;,&#xd;
-&quot;action&quot;: &quot;${newLoanAction}&quot;,&#xd;
-&quot;status&quot;: {&#xd;
-  &quot;name&quot;: &quot;${newLoanStatus}&quot;&#xd;
-  }&#xd;
+    &quot;id&quot;: &quot;${servicePointId}&quot;,&#xd;
+    &quot;name&quot;: &quot;Service-point modified name ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;,&#xd;
+    &quot;code&quot;: &quot;Service-point modified code ${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;,&#xd;
+    &quot;discoveryDisplayName&quot;: &quot;Service-point modified discovery display name ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -317,7 +294,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loans/${newLoanStorageId}</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points/${servicePointId}</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -328,7 +305,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49590">204</stringProp>
             </collectionProp>
@@ -339,7 +316,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET updated loan item from loan-history with given {newLoanStorageId} - 200" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - Get platform by servicePointId" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -354,7 +331,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loan-history?query=id=${newLoanStorageId}</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points/${servicePointId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -365,10 +342,15 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract Service-point Name, Code and DiscoveryName" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">servicePointName;servicePointCode;servicePointDiscoveryDisplayName;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.name;.code;.discoveryDisplayName;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;1;1;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">x;x;x;</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings"/>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -376,7 +358,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET loan history - 200" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DELETE 204 - Delete from service-points by servicePointId" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
@@ -391,37 +373,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loan-history?query=id=*&amp;limit=2</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49586">200</stringProp>
-            </collectionProp>
-            <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-            <boolProp name="Assertion.assume_success">false</boolProp>
-            <intProp name="Assertion.test_type">16</intProp>
-          </ResponseAssertion>
-          <hashTree/>
-        </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="DELETE loan item with given {newLoanStorageId} - 204" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">loan-storage/loans/${newLoanStorageId}</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points/${servicePointId}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -432,10 +384,8 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-            <collectionProp name="Asserion.test_strings">
-              <stringProp name="49590">204</stringProp>
-            </collectionProp>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+            <collectionProp name="Asserion.test_strings"/>
             <stringProp name="Assertion.custom_message"></stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -443,7 +393,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET loan-storage loan by ID - 404" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname=" GET - 404 Verify service-point is deleted" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -451,7 +401,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/loan-storage/loans/${newLoanStorageId}</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points/${servicePointId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -462,7 +412,7 @@
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 404" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="51512">404</stringProp>
             </collectionProp>
@@ -585,15 +535,13 @@
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">def newLoanStorageId = vars.get(&quot;newLoanStorageId&quot;);
-def newLoanItemId = vars.get(&quot;newLoanItemId&quot;);
-def newLoanUserId = vars.get(&quot;newLoanUserId&quot;);
-def newLoanDate = vars.get(&quot;newLoanDate&quot;);
-def newLoanStatus = vars.get(&quot;newLoanStatus&quot;);
-def newLoanAction = vars.get(&quot;newLoanAction&quot;);
+          <stringProp name="cacheKey">false</stringProp>
+          <stringProp name="script">def servicePointId = vars.get(&quot;servicePointId&quot;);
+def servicePointName = vars.get(&quot;servicePointName&quot;);
+def servicePointCode = vars.get(&quot;servicePointCode&quot;);
+def servicePointDiscoveryDisplayName = vars.get(&quot;servicePointDiscoveryDisplayName&quot;);
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
-log.info (&quot;Variables used Thread: &quot; + threadId + &quot; newLoanStorageId - &quot; + newLoanStorageId + &quot; newLoanItemId - &quot; + newLoanItemId + &quot; newLoanUserId - &quot; + newLoanUserId + &quot; newLoanDate - &quot; + newLoanDate + &quot; newLoanStatus - &quot; + newLoanStatus + &quot; newLoanAction - &quot; + newLoanAction);</stringProp>
+log.info (&quot;Variables used Thread: &quot; + threadId + &quot; servicePointId - &quot; + servicePointId + &quot; servicePointName - &quot; + servicePointName + &quot; servicePointDiscoveryDisplayName - &quot; + servicePointDiscoveryDisplayName + &quot; servicePointCode - &quot; + servicePointCode);</stringProp>
         </JSR223PostProcessor>
         <hashTree/>
       </hashTree>

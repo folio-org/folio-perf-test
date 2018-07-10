@@ -406,12 +406,6 @@ def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
 log.info (&quot;Variables used Thread: &quot; + threadId + &quot; loanRulesAsTextFile - &quot; + loanRulesAsTextFile);</stringProp>
         </JSR223PostProcessor>
         <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
-          <boolProp name="displayJMeterProperties">false</boolProp>
-          <boolProp name="displayJMeterVariables">true</boolProp>
-          <boolProp name="displaySystemProperties">false</boolProp>
-        </DebugSampler>
-        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>
