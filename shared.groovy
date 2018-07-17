@@ -299,6 +299,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     if (modName.equals("mod-inventory")) {
       modJob = modJob.replace('8081', '9403')
     }
+    // mod-circulation uses port 9801, not 8081
+    if (modName.equals("mod-circulation")) {
+      modJob = modJob.replace('8081', '9801')
+    }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
       modJob += " verify.user=true"
