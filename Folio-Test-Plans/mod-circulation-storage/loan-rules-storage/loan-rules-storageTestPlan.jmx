@@ -219,7 +219,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;loanRulesAsTextFile&quot;: &quot;\nfallback-policy: ${__UUID()}: ffffffff-3333-4b5e-a7bd-064b8d177231\n    ${__UUID()}: ffffffff-4444-4b5e-a7bd-064b8d177231\n&quot;&#xd;
+  &quot;loanRulesAsTextFile&quot;: &quot;priority: t, s, c, b, a, m, g\nfallback-policy: d9cd0bed-1b49-4b5e-a7bd-064b8d177231&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -405,6 +405,12 @@
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
 log.info (&quot;Variables used Thread: &quot; + threadId + &quot; loanRulesAsTextFile - &quot; + loanRulesAsTextFile);</stringProp>
         </JSR223PostProcessor>
+        <hashTree/>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">false</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
         <hashTree/>
       </hashTree>
     </hashTree>
