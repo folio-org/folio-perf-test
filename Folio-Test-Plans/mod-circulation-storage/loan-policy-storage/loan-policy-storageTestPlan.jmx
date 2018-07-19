@@ -212,6 +212,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
+  &quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
   &quot;name&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;,&#xd;
   &quot;description&quot;: &quot;${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;,&#xd;
   &quot;loanable&quot;: true,&#xd;
@@ -316,6 +317,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
+  &quot;id&quot;: &quot;${newLoanPolicyStorageId}&quot;,&#xd;
   &quot;name&quot;: &quot;modified name ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;,&#xd;
   &quot;description&quot;: &quot;modified description ${__RandomString(64,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 )}&quot;,&#xd;
   &quot;loanable&quot;: true,&#xd;
