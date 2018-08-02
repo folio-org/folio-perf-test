@@ -135,10 +135,10 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -729,10 +729,10 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; userId - &quot
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1252,10 +1252,10 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; renewByBarcode
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/mod-circulation.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-circulation/renewals/loan-renewals,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
