@@ -219,7 +219,7 @@
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract institutionId from location-unit/institutions" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">institutionId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
@@ -410,7 +410,7 @@
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract campusId from location-units/campuses" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">campusId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
@@ -602,7 +602,7 @@
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract libraryId from location-units/libraries" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">libraryId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
