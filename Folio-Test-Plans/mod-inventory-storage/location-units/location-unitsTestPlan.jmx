@@ -168,7 +168,7 @@
         <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/location-units/location-units.csv,0)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/location-units/location-units.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration">30</stringProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
