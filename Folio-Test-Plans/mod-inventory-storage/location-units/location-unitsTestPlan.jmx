@@ -122,6 +122,42 @@
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Location-units Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -132,7 +168,7 @@
         <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/location-units/location-units.csv,0)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory-storage/location-units/location-units.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.duration">30</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
@@ -221,7 +257,7 @@
             <stringProp name="JSONPostProcessor.referenceNames">institutionId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">${randomUUIDForInstitutionId}</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
@@ -233,6 +269,14 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor to generate random UUID for institutionId if JSON Extractor fails to extract after POST location-units/institutions" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;randomUUIDForInstitutionId&quot;,UUID.randomUUID().toString());</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PreProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - institution from location-units/institutions by institutionId from POST above" enabled="true">
@@ -412,7 +456,7 @@
             <stringProp name="JSONPostProcessor.referenceNames">campusId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">${randomUUIDForCampuses}</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
@@ -424,6 +468,14 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor to generate random UUID for campusId if JSON Extractor fails to extract after POST location-units/campuses" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;randomUUIDForCampuses&quot;,UUID.randomUUID().toString());</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PreProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - campus from location-units/campuses by campusId from POST above" enabled="true">
@@ -604,7 +656,7 @@
             <stringProp name="JSONPostProcessor.referenceNames">libraryId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">${randomUUIDForLibraries}</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
@@ -616,6 +668,14 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor to generate random UUID for libraryId if JSON Extractor fails to extract after POST location-units/libraries" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;randomUUIDForLibraries&quot;,UUID.randomUUID().toString());</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PreProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET 200 - library from location-units/libraries by libraryId from POST above" enabled="true">
@@ -1052,3 +1112,4 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; institutionId 
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
+
