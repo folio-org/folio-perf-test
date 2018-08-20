@@ -19,15 +19,22 @@ System requirements
 
 Test Strategies
 ---------------
-Metrics
+### Metrics:
 This is a list of metrics that are gathered during this experiment:
 
 Average response times (ART) for each transaction
 Min and Max response times
+Median
 Failure rate and errors/warnings in the logs.
 
-Top three metrics are collected using JMeter Summary reports
+These metrics are collected as part of Performance Report which are generated as build artifact
 
+### Tools:
+Tools used for these test cases is JMeter. Utilized non-GUI JMeter.
+
+For example, non-GUI commandline to generate report:
+jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-inventory-storage/instance-storage/instance-storageTestPlan.jmx -j jmeter_46_instance-storageTestPlan.jmx.log
+ 
 Quick start
 -----------
 
