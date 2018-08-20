@@ -17,6 +17,17 @@ System requirements
 
 * Jenkins access to AWS
 
+Test Strategies
+---------------
+Metrics
+This is a list of metrics that are gathered during this experiment:
+
+Average response times (ART) for each transaction
+Min and Max response times
+Failure rate and errors/warnings in the logs.
+
+Top three metrics are collected using JMeter Summary reports
+
 Quick start
 -----------
 
