@@ -50,7 +50,7 @@ Reports are generating in Jenkins using JMeter Performance plugin - https://wiki
 * Entire Stack(environment) is created fresh from scratch everyday by populating dataset in database then running JMeter on top of it and once tests complete running, tear down the environment.
 * JMeter scripts are running against ~3 million Harvard dataset
 
-### Workflow used for most of the APIs:
+### Workflow used to test all APIs:
 * Create new data by doing POST http request and cleaning it by doing DELETE http request once test completes.
 
 
