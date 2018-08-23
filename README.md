@@ -38,6 +38,8 @@ For example, non-GUI commandline to generate report:
 jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-inventory-storage/instance-storage/instance-storageTestPlan.jmx -j jmeter_46_instance-storageTestPlan.jmx.log
 
 Reports are generating in Jenkins using JMeter Performance plugin - https://wiki.jenkins.io/display/JENKINS/Performance+Plugin 
+
+Tests are scheduled to run in Jenkins pipeline - https://jenkins-aws.indexdata.com/job/Automation/job/folio-perf-test/
  
 ### SLA Goals:
 * The average response time (AVG RT) for the JMeter captured transaction should not be more than 1000 milliseconds.
