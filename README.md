@@ -22,35 +22,36 @@ Test Strategies
 ### Metrics:
 This is a list of metrics that are gathered during this experiment:
 
-Average response times (ART) for each transaction
-Min and Max response times
-Median
-Failure rate and errors/warnings in the logs.
+* Average response times (ART) for each transaction
+* Min and Max response times
+* Median
+* Failure rate and errors/warnings in the logs
+* Throughtput
 
 These metrics are collected as part of Performance Report which are generated as build artifact
 
 ### Tools:
-Tools used for these test cases is JMeter. Utilized non-GUI JMeter.
+Tools used for these test cases is JMeter - https://jmeter.apache.org/ Utilized non-GUI JMeter.
 
 For example, non-GUI commandline to generate report:
+
 jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-inventory-storage/instance-storage/instance-storageTestPlan.jmx -j jmeter_46_instance-storageTestPlan.jmx.log
+
+Reports are generating in Jenkins using JMeter Performance plugin - https://wiki.jenkins.io/display/JENKINS/Performance+Plugin 
  
 ### SLA Goals:
 * The average response time (AVG RT) for the JMeter captured transaction should not be more than 1000 milliseconds.
-
 * The percent of CPU utilization on any module should not be more than 50%.
-
 * JMeter tests running nightly in Jenkins pipeline as a job will fail if even a single test fails 
 
 
 ### Environment:
 * Engine: PostgreSQL 9.6.8
 * Entire Stack(environment) is created fresh from scratch everyday by populating dataset in database then running JMeter on top of it and once tests complete running, tear down the environment.
-
 * JMeter scripts are running against ~3 million Harvard dataset
 
-### Workflow used:
-* Create data by doing POST and cleaning it once test completes. This applies to every API which is been tested.
+### Workflow used for most of the APIs:
+* Create new data by doing POST http request and cleaning it by doing DELETE http request once test completes.
 
 
 Quick start
