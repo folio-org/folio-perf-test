@@ -234,7 +234,9 @@ def getMods(mdRepo) {
       continue
     }
     // skip non-qualified UI modules
-    if (modName.startsWith("folio_react") || modName.startsWith("folio_stripes-smart-components") ) {
+    if (modName.startsWith("folio_react") ||
+      modName.startsWith("folio_stripes-smart-components") ||
+      modName.startsWith("folio_ui-testing")) {
       continue
     }
     def modVer = group[0][2]
@@ -285,10 +287,6 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     installMods.add(installTemplate.replace('${modId}', modId))
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
-      continue
-    }
-    // skip folio_ui-testing MD
-    if (!modName.startsWith("folio_ui-testing")) {
       continue
     }
     port += 1
