@@ -287,6 +287,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     if (!modName.startsWith("mod-")) {
       continue
     }
+    // skip folio_ui-testing MD
+    if (!modName.startsWith("folio_ui-testing")) {
+      continue
+    }
     port += 1
     def modJob = modJobTemplate.replace('${modName}', modName)
     // mod-kb-ebsco has a different way to run Docker
