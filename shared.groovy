@@ -31,12 +31,9 @@ def getContext() {
 }
 
 def createEnv(ctx) {
-  try {
-    sh("aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}")
+  if (stackExists(ctx)) {
     echo "Skip creating ${ctx.envName}"
-    return
-  } catch (e) {
-    echo "Creating ${ctx.envName}"
+    return;
   }
   def cmd = "aws --output json cloudformation create-stack --stack-name ${ctx.envName}"
   cmd += " --template-body file://cloudformation/folio.yml"
@@ -171,6 +168,10 @@ def runJmeterTests(ctx) {
 }
 
 def teardownEnv(ctx) {
+  if (!stackExists(ctx)) {
+    echo "Skip tearing down ${ctx.envName}"
+    return;
+  }
   if (!ctx.stackId) {
     def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
     def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
@@ -328,6 +329,16 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   def installPayload = "[" + installMods.join(",") + "]"
   echo "installPayload: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
+}
+
+// test if stack exists
+def stackExists(ctx) {
+  try {
+    sh("aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}")
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 // stop existing FOLIO dockers 
