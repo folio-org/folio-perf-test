@@ -31,6 +31,13 @@ def getContext() {
 }
 
 def createEnv(ctx) {
+  try {
+    sh("aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}")
+    echo "Skip creating ${ctx.envName}"
+    return
+  } catch (e) {
+    echo "Creating ${ctx.envName}"
+  }
   def cmd = "aws --output json cloudformation create-stack --stack-name ${ctx.envName}"
   cmd += " --template-body file://cloudformation/folio.yml"
   cmd += " --parameters ParameterKey=EnvName,ParameterValue=${ctx.envName}"
@@ -75,6 +82,7 @@ def waitForEnv(ctx) {
 }
 
 def bootstrapDb(ctx) {
+  stopFolioDockers(ctx, ctx.dbIp)
   def dbJob = readFile("config/db.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y postgresql96 jq wget"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dbJob}"
@@ -93,6 +101,7 @@ def bootstrapDb(ctx) {
 }
 
 def bootstrapOkapi(ctx) {
+  stopFolioDockers(ctx, ctx.okapiIp)
   def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
@@ -114,6 +123,7 @@ def bootstrapOkapi(ctx) {
 }
 
 def bootstrapModules(ctx) {
+  stopFolioDockers(ctx, ctx.modsIp)
   def pgconf = readFile("config/pg.json").trim()
   pgconf = pgconf.replace('${db_host}', ctx.dbPvtIp)
   echo "pgconf: ${pgconf}"
@@ -318,6 +328,16 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   def installPayload = "[" + installMods.join(",") + "]"
   echo "installPayload: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
+}
+
+// stop existing FOLIO dockers 
+def stopFolioDockers(ctx, ip) {
+  def dockerCmd = "docker stop `docker ps -q`"
+  try {
+    sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ip} '${dockerCmd}'"
+    sleep 3
+  } catch (e) {
+  }
 }
 
 return this
