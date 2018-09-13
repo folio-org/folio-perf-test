@@ -33,10 +33,6 @@ node {
       accessKeyVariable: 'AWS_ACCESS_KEY_ID',  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
       sshagent(credentials:["${context.sshKeyId}"]) {
 
-        stage("Wait for Environment") {
-          sharedLib.waitForEnv(context)
-        }
-
         stage("Tear down environment") {
           sharedLib.teardownEnv(context)
         }
