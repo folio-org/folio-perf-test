@@ -1,0 +1,4 @@
+Instance-format load profile
+---------------------------------
+* Normal load for instance-format API is between 0 - 200 concurrent users
+* As we continue to increase number of concurrent users to 1200, API is practically impossible to work. It takes more than a minute per endpoint to get some response back. DELETE http request can take around 1.5 to 2 minutes to complete. Network traffic will spike heavily, subsequently CPU usage will increase close to 90%. It also depends on what time of the day requests are being triggered. During heavy network traffic, API will timeout or JMeter tests will fail or will receive no http response due to database locking. 
