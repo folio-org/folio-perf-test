@@ -1,0 +1,4 @@
+Location-units load profile
+---------------------------------
+* The average load for location-units API is between 0 - 100 concurrent users
+* As we continue to increase the number of concurrent users to 1000, API breaks. It takes more than 1.5 minutes for most of the endpoints to get some response back. Individually, DELETE HTTP request can take on an average 2 minutes or more to get the HTTP response back. It also depends on machine configuration and what time of the day requests are being triggered. During heavy network traffic, API will timeout or JMeter tests will fail or will not receive any HTTP response due to database locking.

@@ -1,0 +1,4 @@
+Loan-types load profile
+---------------------------------
+* The average load for loan-types API is between 0 - 100 concurrent users
+* As we continue to increase the number of concurrent users to 250, API will break. It takes more than a minute per endpoint to get some response back. Individually, DELETE and GET after delete HTTP requests consistently take on average 2 minutes to complete. During this time, CPU usage spikes close to 90%. It also depends on machine configuration and what time of the day requests are triggered. During heavy network traffic, API will timeout or JMeter tests will fail or will not receive any HTTP response due to database locking.
