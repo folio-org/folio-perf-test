@@ -1,0 +1,4 @@
+Loan-policy-storage load profile
+----------------------------------------
+* The average load for loan-policy-storage API is between 0 - 200 concurrent users
+* As we continue to increase the number of concurrent users to 1300, API breaks. It takes more than a minute per endpoint to get a response back. Individually, PUT, GET and DELETE HTTP endpoint to retrieve, Update and Delete a loan-policy item respectively takes most of the latency. It also depends on machine configuration and what time of the day requests are being triggered. During heavy network traffic, API will timeout or JMeter tests will fail or will not receive any HTTP response due to database locking.
