@@ -53,7 +53,7 @@ Tests are scheduled to run in Jenkins pipeline - https://jenkins-aws.indexdata.c
 * JMeter scripts are running against ~3 million Harvard dataset
 
 ### Workflow used to test all APIs:
-* Create new data by doing POST http request and cleaning it by doing DELETE http request once test completes.
+* Create new data by doing POST HTTP request, run JMeter tests and clean it by doing DELETE HTTP request once test completes.
 
 
 Quick start
