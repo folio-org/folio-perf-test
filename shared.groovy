@@ -248,6 +248,7 @@ def getMods(mdRepo) {
     if (modName.startsWith("folio_react") ||
       modName.startsWith("folio_stripes-smart-components") ||
       modName.startsWith("folio_ui-testing") ||
+      modName.startsWith("folio_platform") ||
       modName.startsWith("folio_eslint")) {
       continue
     }
