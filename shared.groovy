@@ -247,7 +247,8 @@ def getMods(mdRepo) {
     // skip non-qualified UI modules
     if (modName.startsWith("folio_react") ||
       modName.startsWith("folio_stripes-smart-components") ||
-      modName.startsWith("folio_ui-testing")) {
+      modName.startsWith("folio_ui-testing") ||
+      modName.startsWith("folio_eslint")) {
       continue
     }
     def modVer = group[0][2]
@@ -341,7 +342,7 @@ def stackExists(ctx) {
   }
 }
 
-// stop existing FOLIO dockers 
+// stop existing FOLIO dockers
 def stopFolioDockers(ctx, ip) {
   def dockerCmd = "docker stop `docker ps -q`"
   try {
