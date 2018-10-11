@@ -130,7 +130,8 @@ def bootstrapModules(ctx) {
 
   def mods = getMods(ctx.stableFolio + "/install.json")
   echo "mods: ${mods}"
-  registerMods(mods, ctx.mdRepo, ctx.okapiIp)
+  mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
+  echo "valid mods: ${mods}"
   deployMods(mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
 }
 
@@ -244,14 +245,6 @@ def getMods(mdRepo) {
     if (!modName.startsWith("mod-") && !modName.startsWith("folio_")) {
       continue
     }
-    // skip non-qualified UI modules
-    if (modName.startsWith("folio_react") ||
-      modName.startsWith("folio_stripes-smart-components") ||
-      modName.startsWith("folio_ui-testing") ||
-      modName.startsWith("folio_platform") ||
-      modName.startsWith("folio_eslint")) {
-      continue
-    }
     def modVer = group[0][2]
     if (!latestMods.containsKey(modName) || compareVersion(modVer, latestMods.get(modName))) {
       latestMods.put(modName, modVer)
@@ -277,11 +270,18 @@ def compareVersion(a, b) {
 
 // register modules
 def registerMods(mods, mdRepo, okapiIp) {
+  def validMods = [:]
   for (entry in mods.entrySet()) {
     def modId = entry.getKey() + "-" + entry.getValue()
     def md = httpRequest "${mdRepo}/_/proxy/modules/${modId}"
+    if (md.status != 200) {
+      echo "skip ${modId}"
+      continue;
+    }
+    validMods.put(entry.getKey(), entry.getValue())
     httpRequest httpMode: 'POST', requestBody: md.content, url: "http://${okapiIp}:9130/_/proxy/modules?check=false"
   }
+  return validMods
 }
 
 // deploy modules
