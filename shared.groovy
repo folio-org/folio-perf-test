@@ -273,7 +273,7 @@ def registerMods(mods, mdRepo, okapiIp) {
   def validMods = [:]
   for (entry in mods.entrySet()) {
     def modId = entry.getKey() + "-" + entry.getValue()
-    def md = httpRequest "${mdRepo}/_/proxy/modules/${modId}"
+    def md = httpRequest url: "${mdRepo}/_/proxy/modules/${modId}", validResponseCodes: '100:399,404'
     if (md.status != 200) {
       echo "skip ${modId}"
       continue;
