@@ -205,8 +205,8 @@
           </ResponseAssertion>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Holdings InstanceId" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">holdingsRecordId;</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.holdingsRecords[*].id;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">instanceId;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.holdingsRecords[*].instanceId;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
