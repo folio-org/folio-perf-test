@@ -205,17 +205,10 @@
           </ResponseAssertion>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Holdings InstanceId" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">instanceId;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">holdingsRecordId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.holdingsRecords[*].instanceId;</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
           </JSONPostProcessor>
-          <hashTree/>
-          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <boolProp name="resetInterpreter">false</boolProp>
-            <stringProp name="script"></stringProp>
-          </BeanShellPostProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST holdings-storage - 201" enabled="true">
@@ -247,9 +240,10 @@
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Holdings Id" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">id;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">holdingsStorageId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.id;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">${randomUUIDForHoldingsStorageId}</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -262,6 +256,14 @@
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor to generate random UUID for institutionId if JSON Extractor fails to extract after POST location-units/institutions" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;randomUUIDForHoldingsStorageId&quot;,UUID.randomUUID().toString());</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET holdings-storage records by ID - 200" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
@@ -271,7 +273,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${id}</stringProp>
+          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${holdingsStorageId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -300,7 +302,7 @@
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
-  &quot;id&quot; : &quot;${id}&quot;,&#xd;
+  &quot;id&quot; : &quot;${holdingsStorageId}&quot;,&#xd;
   &quot;instanceId&quot; : &quot;${holdingsRecordId}&quot;,&#xd;
   &quot;holdingsStatements&quot; :  [ &quot;my first line of the holdings statement&quot;, &quot;another line&quot; ]&#xd;
 }</stringProp>
@@ -312,7 +314,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${id}</stringProp>
+          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${holdingsStorageId}</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -349,7 +351,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${id}</stringProp>
+          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${holdingsStorageId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -379,7 +381,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${id}</stringProp>
+          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${holdingsStorageId}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -409,7 +411,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${id}</stringProp>
+          <stringProp name="HTTPSampler.path">/holdings-storage/holdings/${holdingsStorageId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -548,6 +550,12 @@
 def threadId = vars.get(&quot;__jmeter.USER_TOKEN__&quot;);
 log.info (&quot;Variables used Thread: &quot; + threadId + &quot; id - &quot; + id);</stringProp>
         </JSR223PostProcessor>
+        <hashTree/>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">false</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
         <hashTree/>
       </hashTree>
     </hashTree>
