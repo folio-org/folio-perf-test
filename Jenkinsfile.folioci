@@ -21,7 +21,7 @@ def context
 
 
 node('folio-perf-test') {
-  timeout(90) {
+  timeout(180) {
 
     stage("Checkout") {
       cleanWs()

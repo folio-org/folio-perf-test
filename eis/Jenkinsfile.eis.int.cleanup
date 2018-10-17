@@ -20,7 +20,7 @@ def sharedLib
 def context
 
 node {
-  timeout(90) {
+  timeout(60) {
 
     stage("Checkout") {
       cleanWs()
