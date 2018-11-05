@@ -206,7 +206,11 @@
   &quot;code&quot;: &quot;${__RandomString(10,ABCDEFGHIJKLMNOPQRSTUVWXYZ/)}&quot;,&#xd;
   &quot;institutionId&quot;: &quot;${locationInstitutionId}&quot;,&#xd;
   &quot;campusId&quot;: &quot;${locationCampusId}&quot;,&#xd;
-  &quot;libraryId&quot;: &quot;${locationLibraryId}&quot;&#xd;
+  &quot;libraryId&quot;: &quot;${locationLibraryId}&quot;,&#xd;
+  &quot;primaryServicePoint&quot;: &quot;79faacf1-4ba4-42c7-8b2a-566b259e4641&quot;,&#xd;
+  &quot;servicePointIds&quot;: [&#xd;
+    &quot;79faacf1-4ba4-42c7-8b2a-566b259e4641&quot;&#xd;
+  ]&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -294,7 +298,11 @@
   &quot;code&quot;: &quot;${postLocationCode}&quot;,&#xd;
   &quot;institutionId&quot;: &quot;${locationInstitutionId}&quot;,&#xd;
   &quot;campusId&quot;: &quot;${locationCampusId}&quot;,&#xd;
-  &quot;libraryId&quot;: &quot;${locationLibraryId}&quot;&#xd;
+  &quot;libraryId&quot;: &quot;${locationLibraryId}&quot;,&#xd;
+  &quot;primaryServicePoint&quot;: &quot;79faacf1-4ba4-42c7-8b2a-566b259e4641&quot;,&#xd;
+  &quot;servicePointIds&quot;: [&#xd;
+    &quot;79faacf1-4ba4-42c7-8b2a-566b259e4641&quot;&#xd;
+  ]&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
