@@ -80,7 +80,7 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - GetRecord" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - GetRecord" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="verb" elementType="HTTPArgument">
@@ -155,7 +155,7 @@ log.info (&quot;GetRecord: variables used Thread: &quot; + threadId);</stringPro
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - Identify" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - Identify" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="verb" elementType="HTTPArgument">
@@ -251,7 +251,7 @@ log.info (&quot;Identify: variables used Thread: &quot; + threadId);</stringProp
             <stringProp name="script">log.info(&quot;---&gt; Initial request sending. Resumption Token: &quot; + vars.get(&quot;RESUMPTION_TOKEN&quot;));</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - ListIdentifiers (resumption token flow)" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - ListIdentifiers (resumption token flow)" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="verb" elementType="HTTPArgument">
@@ -296,7 +296,7 @@ log.info (&quot;Identify: variables used Thread: &quot; + threadId);</stringProp
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - ListIdentifiers (resumption token flow)" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - ListIdentifiers (resumption token flow)" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="verb" elementType="HTTPArgument">
@@ -400,7 +400,7 @@ log.info (&quot;ListIdentifiers: variables used Thread: &quot; + threadId);</str
             <stringProp name="script">log.info(&quot;---&gt; Initial request sending. Resumption Token: &quot; + vars.get(&quot;RESUMPTION_TOKEN&quot;));</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - GetRecords (resumption token flow)" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - GetRecords (resumption token flow)" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="verb" elementType="HTTPArgument">
@@ -445,7 +445,7 @@ log.info (&quot;ListIdentifiers: variables used Thread: &quot; + threadId);</str
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - GetRecords (resumption token flow)" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - GetRecords (resumption token flow)" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="verb" elementType="HTTPArgument">
@@ -514,7 +514,7 @@ log.info (&quot;ListRecords: variables used Thread: &quot; + threadId);</stringP
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - ListMetadataFormats (without identifier)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - ListMetadataFormats (without identifier)" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="verb" elementType="HTTPArgument">
@@ -552,7 +552,7 @@ log.info (&quot;ListRecords: variables used Thread: &quot; + threadId);</stringP
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - ListMetadataFormats (existing identifier)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - ListMetadataFormats (existing identifier)" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="verb" elementType="HTTPArgument">
@@ -620,7 +620,7 @@ log.info (&quot;ListMetadataFormats: variables used Thread: &quot; + threadId);<
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET (200) - ListSets" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EDGE-OAI-PMH GET (200) - ListSets" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="verb" elementType="HTTPArgument">
