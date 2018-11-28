@@ -35,7 +35,7 @@ Tools used for these test cases is JMeter - https://jmeter.apache.org/ Utilized 
 
 For example, non-GUI commandline to generate report:
 
-jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-inventory-storage/instance-storage/instance-storageTestPlan.jmx -j jmeter_46_instance-storageTestPlan.jmx.log
+`jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-inventory-storage/instance-storage/instance-storageTestPlan.jmx -j jmeter_46_instance-storageTestPlan.jmx.log`
 
 Reports are generating in Jenkins using JMeter Performance plugin - https://wiki.jenkins.io/display/JENKINS/Performance+Plugin 
 
