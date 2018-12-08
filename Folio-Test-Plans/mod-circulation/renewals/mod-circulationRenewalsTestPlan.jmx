@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Mod-circulation Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -166,15 +166,8 @@
         </HeaderManager>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - Users for creating new loan and check-out-by-barcode" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -246,16 +239,46 @@
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET all mod-circulation loans for creating loan and check-out-by-barcode" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - service-points" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
             </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract servicePointsId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">servicePointsId;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.servicepoints[*].id;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET all mod-circulation loans for creating loan and check-out-by-barcode" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -366,6 +389,7 @@ vars.put(&quot;FutureDateNewLoan&quot;,formattedDate);</stringProp>
 &quot;id&quot;: &quot;${loanId}&quot;,&#xd;
 &quot;userId&quot;: &quot;${userId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${itemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateNewLoan}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedin&quot;,&#xd;
@@ -404,15 +428,8 @@ vars.put(&quot;FutureDateNewLoan&quot;,formattedDate);</stringProp>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation DELETE 204 - Delete loan item with given {loanId}" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -446,7 +463,8 @@ vars.put(&quot;FutureDateNewLoan&quot;,formattedDate);</stringProp>
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;userBarcode&quot;: &quot;${userBarcode}&quot;,&#xd;
-  &quot;itemBarcode&quot;: &quot;${itemBarcode}&quot;&#xd;
+  &quot;itemBarcode&quot;: &quot;${itemBarcode}&quot;,&#xd;
+  &quot;servicePointId&quot;: &quot;${servicePointsId}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -495,6 +513,7 @@ vars.put(&quot;FutureDateNewLoan&quot;,formattedDate);</stringProp>
 &quot;id&quot;: &quot;${checkoutByBarcodeLoanId}&quot;,&#xd;
 &quot;userId&quot;: &quot;${checkoutByBarcodeUserId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${checkoutByBarcodeItemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateNewLoan}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedin&quot;,&#xd;
@@ -533,15 +552,8 @@ vars.put(&quot;FutureDateNewLoan&quot;,formattedDate);</stringProp>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation DELETE 204 - Delete loan item with given {checkoutByBarcodeLoanId}" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -760,15 +772,8 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; userId - &quot
         </HeaderManager>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - Users to do renew-by-barcode" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -804,15 +809,8 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; userId - &quot
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - inventory items to do renew-by-barcode" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -847,6 +845,43 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; userId - &quot
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - service-points" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract servicePointsId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">servicePointsId;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.servicepoints[*].id;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation POST mod-circulation/loans for renew-by-barcode" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -857,6 +892,7 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; userId - &quot
 &quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
 &quot;userId&quot;: &quot;${renewByBarcodeUserId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${renewByBarcodeItemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateRenewByBarcode}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedout&quot;,&#xd;
@@ -921,15 +957,8 @@ vars.put(&quot;FutureDateRenewByBarcode&quot;,formattedDate);</stringProp>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - extract User barcode using userId" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -972,7 +1001,8 @@ vars.put(&quot;FutureDateRenewByBarcode&quot;,formattedDate);</stringProp>
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;userBarcode&quot;: &quot;${userBarcode}&quot;,&#xd;
-  &quot;itemBarcode&quot;: &quot;${itemBarcode}&quot;&#xd;
+  &quot;itemBarcode&quot;: &quot;${itemBarcode}&quot;,&#xd;
+  &quot;servicePointId&quot;: &quot;${servicePointsId}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -1021,6 +1051,7 @@ vars.put(&quot;FutureDateRenewByBarcode&quot;,formattedDate);</stringProp>
 &quot;id&quot;: &quot;${renewByBarcodeLoanId}&quot;,&#xd;
 &quot;userId&quot;: &quot;${renewByBarcodeUserId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${renewByBarcodeItemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateRenewByBarcode}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedin&quot;,&#xd;
@@ -1059,15 +1090,8 @@ vars.put(&quot;FutureDateRenewByBarcode&quot;,formattedDate);</stringProp>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation DELETE 204 - Delete loan item with given {renewByBarcodeLoanId}" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -1283,15 +1307,8 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; renewByBarcode
         </HeaderManager>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - Users to do renew-by-id" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -1327,15 +1344,8 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; renewByBarcode
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - inventory items to do renew-by-id" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -1370,6 +1380,43 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; renewByBarcode
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation GET 200 - service-points" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract servicePointsId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">servicePointsId;</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.servicepoints[*].id;</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation POST mod-circulation/loans for renew-by-id" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -1380,6 +1427,7 @@ log.info (&quot;Variables used Thread: &quot; + threadId + &quot; renewByBarcode
 &quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
 &quot;userId&quot;: &quot;${renewByIdUserId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${renewByIdItemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateRenewById}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedout&quot;,&#xd;
@@ -1451,7 +1499,8 @@ vars.put(&quot;FutureDateRenewById&quot;,formattedDate);</stringProp>
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;userId&quot;: &quot;${userIdAfterPost}&quot;,&#xd;
-  &quot;itemId&quot;: &quot;${itemIdAfterPost}&quot;&#xd;
+  &quot;itemId&quot;: &quot;${itemIdAfterPost}&quot;,&#xd;
+  &quot;servicePointId&quot;: &quot;${servicePointsId}&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -1500,6 +1549,7 @@ vars.put(&quot;FutureDateRenewById&quot;,formattedDate);</stringProp>
 &quot;id&quot;: &quot;${renewByIdLoanId}&quot;,&#xd;
 &quot;userId&quot;: &quot;${renewByIdUserId}&quot;,&#xd;
 &quot;itemId&quot;:&quot;${renewByIdItemId}&quot;,&#xd;
+&quot;checkinServicePointId&quot;:&quot;${servicePointsId}&quot;,&#xd;
 &quot;loanDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;,&#xd;
 &quot;dueDate&quot;: &quot;${FutureDateRenewById}&quot;,&#xd;
 &quot;action&quot;: &quot;checkedin&quot;,&#xd;
@@ -1538,15 +1588,8 @@ vars.put(&quot;FutureDateRenewById&quot;,formattedDate);</stringProp>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation DELETE 204 - Delete loan item with given {renewByIdLoanId}" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
