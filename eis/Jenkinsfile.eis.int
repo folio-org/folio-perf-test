@@ -32,7 +32,7 @@ node {
   withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${context.awsKeyId}",
       accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
       usernamePassword(credentialsId: 'ebsco-rmapi-up', passwordVariable: 'RMAPI_PASSWORD',
-      usernameVariable: 'RMAPI_CUSTID')])
+      usernameVariable: 'RMAPI_CUSTID')]) {
       sshagent(credentials:["${context.sshKeyId}"]) {
 
         try {
