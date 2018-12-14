@@ -157,7 +157,7 @@ def runJmeterTests(ctx) {
 
   def jMeterKBConfTemplate = readFile("config/jmeterkb.csv").trim()
   def jMeterKBConf = jMeterKBConfTemplate.replace('kburl', 'https://api.ebsco.io')
-  jMeterKBConf = jMeterConf.replace('custid', env.RMAPI_CUSTID).replace('apikey', env.RMAPI_PASSWORD)
+  jMeterKBConf = jMeterKBConf.replace('custid', ${RMAPI_CUSTID}).replace('apikey', ${RMAPI_PASSWORD})
   writeFile(text: jMeterKBConf, file: "${jMeterInput}/kbconfig.csv")
 
   def cmdTemplate = "jmeter -Jjmeter.save.saveservice.output_format=xml -n"
