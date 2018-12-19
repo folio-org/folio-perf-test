@@ -134,7 +134,7 @@
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -236,12 +236,25 @@
           </ResponseAssertion>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract kb url" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">configKburl;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">configKbUrl;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.configs[0].value;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
             <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
           </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">if (vars.get(&quot;configKbUrl&quot;) == &quot;x&quot;) {	
+	props.put(&quot;restoreUrl&quot;, &quot;false&quot;);
+} else {
+	props.put(&quot;restoreUrl&quot;, &quot;true&quot;);
+}
+${__setProperty(configKbUrl, ${configKbUrl})};</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java GET config custid HTTP Request" enabled="true">
@@ -274,11 +287,24 @@
           </ResponseAssertion>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract kb custid" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">configCustid;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">configCustId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.configs[0].value;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">if (vars.get(&quot;configCustId&quot;) == &quot;x&quot;) {	
+	props.put(&quot;restoreCustId&quot;, &quot;false&quot;);
+} else {
+	props.put(&quot;restoreCustId&quot;, &quot;true&quot;);
+}
+${__setProperty(configCustId, ${configCustId})};</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java GET config apiKey HTTP Request" enabled="true">
@@ -289,7 +315,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/configurations/entries?query=(module==EKB and configName==api_access and code==kb.ebsco.apiKeyl)</stringProp>
+          <stringProp name="HTTPSampler.path">/configurations/entries?query=(module==EKB and configName==api_access and code==kb.ebsco.apiKey)</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -317,8 +343,21 @@
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
           </JSONPostProcessor>
           <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">if (vars.get(&quot;configApiKey&quot;) == &quot;x&quot;) {	
+	props.put(&quot;restoreApiKey&quot;, &quot;false&quot;);
+} else {
+	props.put(&quot;restoreApiKey&quot;, &quot;true&quot;);
+}
+${__setProperty(configApiKey, ${configApiKey})};</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -437,7 +476,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -775,7 +814,7 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -811,7 +850,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -839,79 +878,6 @@
               <assertionsResultsToSave>0</assertionsResultsToSave>
               <bytes>true</bytes>
               <sentBytes>true</sentBytes>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <threadCounts>true</threadCounts>
-              <idleTime>true</idleTime>
-              <connectTime>true</connectTime>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
-        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>true</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-              <sentBytes>true</sentBytes>
-              <url>true</url>
               <threadCounts>true</threadCounts>
               <idleTime>true</idleTime>
               <connectTime>true</connectTime>
@@ -1157,7 +1123,7 @@
           <hashTree/>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If previous KB url configured" enabled="true">
-          <stringProp name="IfController.condition">${configKburl} != &quot;x&quot;</stringProp>
+          <stringProp name="IfController.condition">${__P(restoreUrl)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
@@ -1174,7 +1140,7 @@
     &quot;code&quot;: &quot;kb.ebsco.url&quot;,&#xd;
     &quot;description&quot;: &quot;EBSCO RM-API URL&quot;,&#xd;
     &quot;enabled&quot;: true,&#xd;
-    &quot;value&quot;: &quot;${configKbUrl}&quot;&#xd;
+    &quot;value&quot;: &quot;${__property(configKbUrl)}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -1197,7 +1163,7 @@
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
-                <stringProp name="49586">200</stringProp>
+                <stringProp name="49587">201</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -1208,12 +1174,12 @@
           </hashTree>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If previous apikey configured" enabled="true">
-          <stringProp name="IfController.condition">${configApiKey} != &quot;x&quot;</stringProp>
-          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <stringProp name="IfController.condition">${__P(restoreApiKey)}</stringProp>
+          <boolProp name="IfController.evaluateAll">true</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java POST config kburl HTTP Request" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java POST config apikey HTTP Request" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
@@ -1225,7 +1191,7 @@
     &quot;code&quot;: &quot;kb.ebsco.apiKey&quot;,&#xd;
     &quot;description&quot;: &quot;EBSCO RM-API API Key&quot;,&#xd;
     &quot;enabled&quot;: true,&#xd;
-    &quot;value&quot;: &quot;${configApiKey}&quot;&#xd;
+    &quot;value&quot;: &quot;${__property(configApiKey)}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -1248,7 +1214,7 @@
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
-                <stringProp name="49586">200</stringProp>
+                <stringProp name="49587">201</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -1259,12 +1225,12 @@
           </hashTree>
         </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If previous custid configured" enabled="true">
-          <stringProp name="IfController.condition">${configCustId} != &quot;x&quot;</stringProp>
-          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <stringProp name="IfController.condition">${__P(restoreCustId)}</stringProp>
+          <boolProp name="IfController.evaluateAll">true</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java POST config kburl HTTP Request" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-kb-ebsco-java POST config custid HTTP Request" enabled="true">
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
@@ -1276,7 +1242,7 @@
     &quot;code&quot;: &quot;kb.ebsco.customerId&quot;,&#xd;
     &quot;description&quot;: &quot;EBSCO RM-API Customer ID&quot;,&#xd;
     &quot;enabled&quot;: true,&#xd;
-    &quot;value&quot;: &quot;${configCustId}&quot;&#xd;
+    &quot;value&quot;: &quot;${__property(configCustId)}&quot;&#xd;
 }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
@@ -1299,7 +1265,7 @@
           <hashTree>
             <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
               <collectionProp name="Asserion.test_strings">
-                <stringProp name="49586">200</stringProp>
+                <stringProp name="49587">201</stringProp>
               </collectionProp>
               <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
@@ -1309,7 +1275,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1345,7 +1311,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
