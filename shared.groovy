@@ -139,7 +139,7 @@ def populateData(ctx) {
   def cmd = readFile("config/data.sh").trim()
   cmd = cmd.replace('${dataName}', ctx.dataName)
   cmd = cmd.replace('${tenant}', ctx.tenant)
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} wget ${ctx.dataRepo}/${ctx.dataName}.tar.gz"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} rm -f ${ctx.dataName}.tar.gz && wget ${ctx.dataRepo}/${ctx.dataName}.tar.gz"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} tar -zxvf ${ctx.dataName}.tar.gz"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd ${ctx.dataName} && ${cmd}\""
 }
