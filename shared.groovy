@@ -164,6 +164,11 @@ def runJmeterTests(ctx) {
   cmdTemplate += " -l ${jMeterOutput}"
   def files = findFiles(glob: '**/*.jmx')
   for (file in files) {
+    // skip edge modules till env is ready
+    if (file.path.indexOf("edge-") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
     def cmd = cmdTemplate + " -t ${file}"
     cmd += " -j jmeter_${BUILD_NUMBER}_${file.name}.log"
     echo "${cmd}"
