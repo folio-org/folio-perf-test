@@ -327,8 +327,7 @@
   &quot;id&quot; : &quot;${id}&quot;,&#xd;
   &quot;source&quot;: &quot;Local: MARC&quot;,&#xd;
   &quot;title&quot;: &quot;This is test title for PUT HTTP request&quot;,&#xd;
-  &quot;instanceTypeId&quot;: &quot;2b94c631-fca9-a892-c730-03ee529ffe2c&quot;, &#xd;
-  &quot;alternativeTitles&quot;:[&quot;This is test alternative title for PUT HTTP request&quot;]&#xd;
+  &quot;instanceTypeId&quot;: &quot;2b94c631-fca9-a892-c730-03ee529ffe2c&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
