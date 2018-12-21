@@ -261,6 +261,12 @@ def getMods(mdRepo) {
       latestMods.put(modName, modVer)
     }
   }
+  def extraMods = readJSON text : readFile("config/extraMods.json").trim()
+  for (mod in extraMods) {
+    if (!latestMods.containsKey(mod.name)) {
+      latestMods.put(mod.name, mod.version)
+    }
+  }
   return latestMods
 }
 
