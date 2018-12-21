@@ -304,7 +304,7 @@
                 <stringProp name="Argument.value">{&#xd;
   &quot;id&quot; : &quot;${holdingsStorageId}&quot;,&#xd;
   &quot;instanceId&quot; : &quot;${holdingsRecordId}&quot;,&#xd;
-  &quot;holdingsStatements&quot; :  [ &quot;my first line of the holdings statement&quot;, &quot;another line&quot; ]&#xd;
+  &quot;holdingsStatements&quot; :  [ {&quot;statement&quot;:&quot;my first line of the holdings statement&quot;} ]&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
