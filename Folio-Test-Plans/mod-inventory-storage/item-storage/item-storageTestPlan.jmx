@@ -289,8 +289,7 @@
                 <stringProp name="Argument.value">{&#xd;
   &quot;id&quot; : &quot;${itemId}&quot;,&#xd;
   &quot;holdingsRecordId&quot;: &quot;${itemHoldingsRecordId}&quot;,&#xd;
-  &quot;pieceIdentifiers&quot;: [&quot;This is test identifier&quot;],&#xd;
-  &quot;notes&quot;: [&quot;This is test notes&quot;],&#xd;
+  &quot;formerIds&quot;: [&quot;${itemId}&quot;],&#xd;
   &quot;materialTypeId&quot;: &quot;${itemMaterialTypeId}&quot;,&#xd;
   &quot;permanentLoanTypeId&quot;: &quot;${itemPermanentLoanTypeId}&quot;&#xd;
 }</stringProp>
