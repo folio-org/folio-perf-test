@@ -64,7 +64,7 @@
       </SetupThreadGroup>
       <hashTree>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Login Controller" enabled="true">
-          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/commom/login.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/login.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>
@@ -82,7 +82,7 @@
       </SetupThreadGroup>
       <hashTree>
         <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Save Config Controller" enabled="true">
-          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/commom/setup_save_rmapi_config.jmx</stringProp>
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_save_rmapi_config.jmx</stringProp>
         </IncludeController>
         <hashTree/>
       </hashTree>
