@@ -170,6 +170,11 @@ def runJmeterTests(ctx) {
       echo "skip ${file}"
       continue;
     }
+    // skip common modules - they are included by others
+    if (file.path.indexOf("common") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
     def cmd = cmdTemplate + " -t ${file}"
     cmd += " -j jmeter_${BUILD_NUMBER}_${file.name}.log"
     echo "${cmd}"
