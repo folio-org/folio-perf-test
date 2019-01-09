@@ -39,19 +39,16 @@
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">
-def propName = props.get(&apos;permissionName&apos;);
-propName = propName.substring(1,propName.length()-1);
+          <stringProp name="cacheKey">false</stringProp>
+          <stringProp name="script">def propName = props.get(&apos;permissionName&apos;);
 vars.put(&apos;permissionName&apos;, propName);
 
 def propertyId = props.get(&apos;userPermissionId&apos;);
-vars.put(&apos;userPermissionId&apos;, propertyId);
-</stringProp>
+vars.put(&apos;userPermissionId&apos;, propertyId);</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If user permission id exists" enabled="true">
-          <stringProp name="IfController.condition">${__javaScript(props.get(&quot;userPermissionId&quot;) != &quot;${userPermissionId}&quot;)}</stringProp>
+          <stringProp name="IfController.condition">${__javaScript(props.get(&quot;userPermissionId&quot;) != &quot;${userPermissionId}&quot; &amp;&amp; props.get(&quot;totalCount&quot;) == 1)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
         <hashTree>

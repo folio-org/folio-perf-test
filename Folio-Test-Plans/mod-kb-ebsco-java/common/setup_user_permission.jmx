@@ -58,8 +58,8 @@
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">${__setProperty(permissionName,&quot;kb-ebsco.all&quot;)}
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="script">props.put(&quot;permissionName&quot;,&apos;kb-ebsco.all&apos;);
 vars.put(&apos;permissionName&apos;,&apos;kb-ebsco.all&apos;); </stringProp>
           </JSR223PreProcessor>
           <hashTree/>
@@ -90,8 +90,54 @@ vars.put(&apos;permissionName&apos;,&apos;kb-ebsco.all&apos;); </stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Permission info HTTP Request" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/perms/permissions?query=permissionName==${permissionName}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">totalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.totalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
+            <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="script">props.put(&quot;totalCount&quot;, ${totalRecords});</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If permission does not exist" enabled="true">
-          <stringProp name="IfController.condition">${__jexl3(${userPermissions}.indexOf(vars.get(&quot;permissionName&quot;)) == -1)}
+          <stringProp name="IfController.condition">${__jexl3(${userPermissions}.indexOf(vars.get(&quot;permissionName&quot;)) == -1 &amp;&amp; ${totalRecords} == 1)}
 </stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
         </IfController>
@@ -137,7 +183,7 @@ vars.put(&apos;permissionName&apos;,&apos;kb-ebsco.all&apos;); </stringProp>
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="cacheKey">false</stringProp>
               <stringProp name="script">${__setProperty(userPermissionId,${userPermissionId})}
 </stringProp>
             </JSR223PostProcessor>
@@ -174,7 +220,7 @@ vars.put(&apos;permissionName&apos;,&apos;kb-ebsco.all&apos;); </stringProp>
           </HTTPSamplerProxy>
           <hashTree>
             <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
-              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="cacheKey">false</stringProp>
               <stringProp name="filename"></stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="script">def json = new  groovy.json.JsonSlurper().parseText(vars.get(&apos;userPermissions&apos;))
