@@ -143,7 +143,9 @@ def populateData(ctx) {
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} rm -f ${ctx.dataName}.tar.gz"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} wget ${ctx.dataRepo}/${ctx.dataName}.tar.gz"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} tar -zxvf ${ctx.dataName}.tar.gz"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd ${ctx.dataName} && ${cmd}\""
+  // change to always use perf name for convenience
+  // sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd ${ctx.dataName} && ${cmd}\""
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd perf && ${cmd}\""
 }
 
 def runJmeterTests(ctx) {
