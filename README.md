@@ -18,7 +18,7 @@ System requirements
 * Jenkins access to AWS
 
 Test Strategies
----------------
+----------------
 ### Metrics:
 This is a list of metrics that are gathered during this experiment:
 
