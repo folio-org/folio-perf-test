@@ -19,7 +19,7 @@ Parameters:
   InstanceAmiId:
     Description: Image ID for EC2 instance
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    Default: /aws/service/ecs/optimized-ami/amazon-linux/recommended/image_id
+    Default: /aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id
   InstanceTypeOkapi:
     Description: EC2 instance type for OKAPI server
     Type: String
