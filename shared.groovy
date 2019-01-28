@@ -81,8 +81,9 @@ def waitForEnv(ctx) {
 def bootstrapDb(ctx) {
   stopFolioDockers(ctx, ctx.dbIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum remove -y ecs-init"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo amazon-linux-extras install -y postgresql10"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y jq wget"
   def dbJob = readFile("config/db.sh").trim()
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y postgresql96 jq wget"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dbJob}"
   def dockerCmd = 'docker ps | grep foliodb | wc -l'
   timeout(10) {
