@@ -80,6 +80,7 @@ def waitForEnv(ctx) {
 
 def bootstrapDb(ctx) {
   stopFolioDockers(ctx, ctx.dbIp)
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum remove -y ecs-init"
   def dbJob = readFile("config/db.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y postgresql96 jq wget"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dbJob}"
@@ -99,6 +100,7 @@ def bootstrapDb(ctx) {
 
 def bootstrapOkapi(ctx) {
   stopFolioDockers(ctx, ctx.okapiIp)
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo yum remove -y ecs-init"
   def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
@@ -121,6 +123,7 @@ def bootstrapOkapi(ctx) {
 
 def bootstrapModules(ctx) {
   stopFolioDockers(ctx, ctx.modsIp)
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo yum remove -y ecs-init"
   def pgconf = readFile("config/pg.json").trim()
   pgconf = pgconf.replace('${db_host}', ctx.dbPvtIp)
   echo "pgconf: ${pgconf}"
