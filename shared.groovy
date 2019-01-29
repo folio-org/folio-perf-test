@@ -80,7 +80,7 @@ def waitForEnv(ctx) {
 
 def bootstrapDb(ctx) {
   stopFolioDockers(ctx, ctx.dbIp)
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum remove -y ecs-init"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo service ecs stop"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo amazon-linux-extras install -y postgresql10"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y jq wget"
   def dbJob = readFile("config/db.sh").trim()
@@ -101,7 +101,7 @@ def bootstrapDb(ctx) {
 
 def bootstrapOkapi(ctx) {
   stopFolioDockers(ctx, ctx.okapiIp)
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo yum remove -y ecs-init"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo service ecs stop"
   def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
@@ -124,7 +124,7 @@ def bootstrapOkapi(ctx) {
 
 def bootstrapModules(ctx) {
   stopFolioDockers(ctx, ctx.modsIp)
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo yum remove -y ecs-init"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo service ecs stop"
   def pgconf = readFile("config/pg.json").trim()
   pgconf = pgconf.replace('${db_host}', ctx.dbPvtIp)
   echo "pgconf: ${pgconf}"
