@@ -248,6 +248,34 @@
             <stringProp name="60">60</stringProp>
             <stringProp name="1567">10</stringProp>
           </collectionProp>
+          <collectionProp name="1351501426">
+            <stringProp name="48625">100</stringProp>
+            <stringProp name="48625">100</stringProp>
+            <stringProp reference="../../collectionProp/stringProp[3]"/>
+            <stringProp reference="../../collectionProp/stringProp[4]"/>
+            <stringProp reference="../../collectionProp/stringProp[5]"/>
+          </collectionProp>
+          <collectionProp name="-726140238">
+            <stringProp name="49586">200</stringProp>
+            <stringProp name="49586">200</stringProp>
+            <stringProp reference="../../collectionProp/stringProp[3]"/>
+            <stringProp reference="../../collectionProp/stringProp[4]"/>
+            <stringProp reference="../../collectionProp/stringProp[5]"/>
+          </collectionProp>
+          <collectionProp name="-927634841">
+            <stringProp name="51508">400</stringProp>
+            <stringProp name="50547">300</stringProp>
+            <stringProp reference="../../collectionProp/stringProp[3]"/>
+            <stringProp reference="../../collectionProp/stringProp[4]"/>
+            <stringProp reference="../../collectionProp/stringProp[5]"/>
+          </collectionProp>
+          <collectionProp name="776860865">
+            <stringProp name="55352">800</stringProp>
+            <stringProp name="51508">400</stringProp>
+            <stringProp reference="../../collectionProp/stringProp[3]"/>
+            <stringProp reference="../../collectionProp/stringProp[4]"/>
+            <stringProp reference="../../collectionProp/stringProp[5]"/>
+          </collectionProp>
         </collectionProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
