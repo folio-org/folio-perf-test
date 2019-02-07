@@ -237,6 +237,7 @@ def setupDns(ctx) {
 
   def dnsTemplate = readFile("config/dns.json").trim()
   def dns = dnsTemplate.replace('${domain}', ctx.dns)
+  dns = dns.replace('${envName}', ctx.envName)
   dns = dns.replace('${okapiIp}', ctx.okapiIp)
   dns = dns.replace('${modsIp}', ctx.modsIp)
   dns = dns.replace('${dbIp}', ctx.dbIp)

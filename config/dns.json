@@ -3,7 +3,7 @@
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "perf-okapi.${domain}",
+        "Name": "${envName}-okapi.${domain}",
         "Type": "A",
         "TTL": 5,
         "ResourceRecords": [
@@ -16,7 +16,7 @@
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "perf-mods.${domain}",
+        "Name": "${envName}-mods.${domain}",
         "Type": "A",
         "TTL": 5,
         "ResourceRecords": [
@@ -29,7 +29,7 @@
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
-        "Name": "perf-db.${domain}",
+        "Name": "${envName}-db.${domain}",
         "Type": "A",
         "TTL": 5,
         "ResourceRecords": [
