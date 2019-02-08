@@ -182,6 +182,12 @@ def runJmeterTests(ctx) {
       echo "skip ${file}"
       continue;
     }
+
+  // skip kb-ebsco modules per rm api request
+    if (file.path.indexOf("kb-ebsco-java") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
     def cmd = cmdTemplate + " -t ${file}"
     cmd += " -j jmeter_${BUILD_NUMBER}_${file.name}.log"
     echo "${cmd}"
