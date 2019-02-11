@@ -172,7 +172,12 @@ def runJmeterTests(ctx) {
   cmdTemplate += " -l ${jMeterOutput}"
   def files = findFiles(glob: '**/*.jmx')
   for (file in files) {
-    // skip edge modules till env is ready
+    // skip benchmark files
+	if (file.path.indexOf("benchmark") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
+	// skip edge modules till env is ready
     if (file.path.indexOf("edge-") > 0) {
       echo "skip ${file}"
       continue;
