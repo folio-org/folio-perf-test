@@ -28,18 +28,10 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="false">
-        <stringProp name="scriptLanguage">groovy</stringProp>
-        <stringProp name="parameters"></stringProp>
-        <stringProp name="filename"></stringProp>
-        <stringProp name="cacheKey">true</stringProp>
-        <stringProp name="script"></stringProp>
-      </JSR223PreProcessor>
-      <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Login Config" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
-        <stringProp name="filename">C:/Users/evaluk/Documents/folio-perf-test/Folio-Test-Plans/platform-workflow-performance/login.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
@@ -77,6 +69,21 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </SetupThreadGroup>
       <hashTree>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">false</stringProp>
+          <stringProp name="script">
+
+def threadFile = null;
+
+ threadfile = new File(&quot;Folio-Test-Plans/mod-inventory/threads.csv&quot;);
+def threads = threadfile.readLines()
+def threadsSplit = threads[0].split(&quot;,&quot;);
+vars.put(&quot;userLimit&quot;,  (Integer.parseInt(threadsSplit[0])+ 1).toString())</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -195,7 +202,7 @@ props.remove(&quot;retrievedLoanids&quot;)</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/instances?limit=${SampleSize}</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -244,7 +251,7 @@ props.put(&quot;instanceids&quot;, prev.getResponseDataAsString());
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/items</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/items?query=(status.name=%22Available%22)&amp;${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -293,7 +300,7 @@ props.put(&quot;itemIds&quot;, prev.getResponseDataAsString());
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/users?query=(active==true)&amp;limit=125</stringProp>
+          <stringProp name="HTTPSampler.path">/users?query=(active==true)&amp;limit=${userLimit}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -338,16 +345,16 @@ props.put(&quot;userIds&quot;, prev.getResponseDataAsString());</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor 1" enabled="true">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query users by barcode PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -438,14 +445,14 @@ vars.put(&quot;userId&quot;,userBarcode );</stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="GET query users by barcode JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">id;patronGroupId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.users[0].id;.users[0].patronGroup</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1;1</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;x</stringProp>
           </JSONPostProcessor>
           <hashTree/>
-          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor 4" enabled="true">
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="GET query users by barcode PostProcessor" enabled="true">
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
@@ -487,16 +494,16 @@ log.info(&quot;patron ids after to json &quot; + jsonOutput.toJson(curPatronIds)
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor 2" enabled="true">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query groups by patronGroupId PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -593,16 +600,16 @@ vars.put(&quot;patronGroupId&quot;, curIds.patrons[${__threadNum} - 1])</stringP
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor 3" enabled="true">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query loans by userId PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -699,16 +706,16 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor 4" enabled="true">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query proxiesfor by proxyUserId PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -744,7 +751,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Workflow: GET query proxiesfor by proxyUserId" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Performance: GET query proxiesfor by proxyUserId" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -805,10 +812,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -824,12 +831,13 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
 def jsonSlurper = new JsonSlurper();
 def RawUserIds = props.get(&quot;userIds&quot;)
 def allUserIds =  jsonSlurper.parseText(RawUserIds)
-def userBarcode = allUserIds.users[${__threadNum} ].barcode
+def userBarcode = allUserIds.users[${__threadNum}  ].barcode
 vars.put(&quot;userBarcode&quot;,userBarcode );
 
 def RawInstanceIds = props.get(&quot;itemIds&quot;);
 def allInstanceIds =  jsonSlurper.parseText(RawInstanceIds)
-def itemBarcode = allInstanceIds.items[${__threadNum} ].barcode
+def itemBarcode = allInstanceIds.items[${__threadNum} - 1 ].barcode
+log.info(&quot;current threads item &quot; + ${__threadNum} + allInstanceIds.items[${__threadNum} - 1])
 vars.put(&quot;itemBarcode&quot;,itemBarcode );</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
@@ -865,7 +873,7 @@ vars.put(&quot;itemBarcode&quot;,itemBarcode );</stringProp>
 	&quot;userBarcode&quot;:&quot;${userBarcode}&quot;,&#xd;
 	&quot;loanDate&quot;:&quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssZ)}&quot;,&#xd;
 	&quot;id&quot;:&quot;${__UUID()}&quot;, &#xd;
-	&quot;servicePointId&quot; : &quot;${__UUID()}&quot;&#xd;
+	&quot;servicePointId&quot; : &quot;3a40852d-49fd-4df2-a1f9-6e2641a6e91f&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -886,11 +894,11 @@ vars.put(&quot;itemBarcode&quot;,itemBarcode );</stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="POST check-out-by-barcode JSON Extractor" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">loanPolicyId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">.loanPolicyId</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">${itemBarcode}</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="POST check-out-by-barcode postProcessor" enabled="true">
@@ -912,9 +920,8 @@ def curIds =  jsonSlurper.parseText(RawLoanIds)
 
 curIds.loans.add(vars.get(&quot;loanPolicyId&quot;) )
 
-
 props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
-log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds));
+
 
 
 </stringProp>
@@ -963,10 +970,10 @@ log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds)
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1069,10 +1076,10 @@ vars.put(&quot;loanPolicyId&quot;, curIds.loans[${__threadNum} - 1])</stringProp
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1175,10 +1182,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1313,10 +1320,10 @@ log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds)
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1358,7 +1365,7 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1])</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Workflow: GET query loans by itemId and status.name Open" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Performance: GET query loans by itemId and status.name Open" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1446,81 +1453,19 @@ vars.put(&quot;loan&quot;, JsonOutput.toJson(json.loans[0]));</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group PUT loan by id" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group POST checkin-by-barcode" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="PUT loan by id PreProcessor" enabled="true">
-          <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="parameters"></stringProp>
-          <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">import groovy.json.JsonSlurper;
-
-
-def jsonSlurper = new JsonSlurper();
-def rawUserIds = props.get(&quot;retrievedItemids&quot;)
-def curIds =  jsonSlurper.parseText(rawUserIds)
-
-vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
-        </JSR223PreProcessor>
-        <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-          <collectionProp name="HeaderManager.headers">
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">x-okapi-token</stringProp>
-              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">x-okapi-tenant</stringProp>
-              <stringProp name="Header.value">${tenant}</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Accept</stringProp>
-              <stringProp name="Header.value">application/json, text/plain</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">content-type</stringProp>
-              <stringProp name="Header.value">application/json</stringProp>
-            </elementProp>
-          </collectionProp>
-        </HeaderManager>
-        <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Performance: PUT loan by id" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${loan}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">circulation/loans/${loanId}</stringProp>
-          <stringProp name="HTTPSampler.method">PUT</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
-        <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
@@ -1558,15 +1503,82 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="POST checkin-by-barcode PreProcessor" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+
+def jsonSlurper = new JsonSlurper();
+def rawUserIds = props.get(&quot;retrievedLoanids&quot;)
+def curIds =  jsonSlurper.parseText(rawUserIds)
+
+vars.put(&quot;itemBarcode&quot;, curIds.loans[${__threadNum} - 1])
+</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Performance: POST checkin-by-barcode" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;itemBarcode&quot;: &quot;${itemBarcode}&quot;,&#xd;
+  &quot;servicePointId&quot;: &quot;3a40852d-49fd-4df2-a1f9-6e2641a6e91f&quot;,&#xd;
+  &quot;checkInDate&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;hh:mm:ssX)}&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/circulation/check-in-by-barcode</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group GET query users by id" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1669,10 +1681,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1690,7 +1702,7 @@ def jsonSlurper = new JsonSlurper();
 def rawUserIds = props.get(&quot;itemIds&quot;)
 def curIds =  jsonSlurper.parseText(rawUserIds)
 
-vars.put(&quot;itemid&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
+vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
@@ -1876,7 +1888,35 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
-          <stringProp name="script"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// assertion
+if (vars.get(&quot;assertion&quot;) != null) {
+  def jsonSlurper = new JsonSlurper();
+  def resp = jsonSlurper.parseText(prev.getResponseDataAsString());
+  def size = resp.instances.size();
+  def found = false;
+  for (i = 0; i &lt; size; i++) {
+    def idSize = resp.instances[i].identifiers.size();
+    for (j = 0; j &lt; idSize; j++) {
+      if (resp.instances[i].identifiers[j].value.contains(vars.get(&quot;idVal&quot;))) {
+        log.info(&quot;Found &quot; + vars.get(&quot;idVal&quot;));
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+  if (!found) {
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;idVal&quot;));
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Cannot find identifier: &quot; + vars.get(&quot;idVal&quot;));
+  }
+} else {
+  log.warn(&quot;No assertion was performed.&quot;);
+}</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Assertion>
         <hashTree/>
@@ -2000,7 +2040,35 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
-          <stringProp name="script"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// assertion
+if (vars.get(&quot;assertion&quot;) != null) {
+  def jsonSlurper = new JsonSlurper();
+  def resp = jsonSlurper.parseText(prev.getResponseDataAsString());
+  def size = resp.instances.size();
+  def found = false;
+  for (i = 0; i &lt; size; i++) {
+    def idSize = resp.instances[i].identifiers.size();
+    for (j = 0; j &lt; idSize; j++) {
+      if (resp.instances[i].identifiers[j].value.contains(vars.get(&quot;idVal&quot;))) {
+        log.info(&quot;Found &quot; + vars.get(&quot;idVal&quot;));
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+  if (!found) {
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;idVal&quot;));
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Cannot find identifier: &quot; + vars.get(&quot;idVal&quot;));
+  }
+} else {
+  log.warn(&quot;No assertion was performed.&quot;);
+}</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223Assertion>
         <hashTree/>
@@ -2065,6 +2133,43 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
         </ResultCollector>
         <hashTree/>
       </hashTree>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
