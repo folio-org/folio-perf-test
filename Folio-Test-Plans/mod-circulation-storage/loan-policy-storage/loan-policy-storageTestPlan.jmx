@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Loan-policy-storage Test Plan" enabled="true">
       <stringProp name="TestPlan.comments">Performance/Load tests the loan-policy-storage Folio module via Okapi</stringProp>
@@ -169,15 +169,8 @@
         </HeaderManager>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-circulation-storage GET Retrieve a list of loan-policy items - 200" enabled="true">
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
@@ -219,17 +212,13 @@
   &quot;loansPolicy&quot;: {&#xd;
     &quot;profileId&quot;: &quot;ROLLING&quot;,&#xd;
     &quot;period&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;MONTH&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,10)},&#xd;
+      &quot;intervalId&quot;: &quot;Months&quot;&#xd;
     },&#xd;
     &quot;closedLibraryDueDateManagementId&quot;: &quot;KEEP_CURRENT_DATE&quot;,&#xd;
-    &quot;existingRequestsPeriod&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;WEEK&quot;&#xd;
-    },&#xd;
     &quot;gracePeriod&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;DAYS&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,10)},&#xd;
+      &quot;intervalId&quot;: &quot;Days&quot;&#xd;
     }&#xd;
   },&#xd;
   &quot;renewable&quot;: true,&#xd;
@@ -238,8 +227,8 @@
     &quot;renewFromId&quot;: &quot;CURRENT_DUE_DATE&quot;,&#xd;
     &quot;differentPeriod&quot;: true,&#xd;
     &quot;period&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,30)},&#xd;
-      &quot;intervalId&quot;: &quot;DAYS&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,30)},&#xd;
+      &quot;intervalId&quot;: &quot;Days&quot;&#xd;
     }&#xd;
   }&#xd;
 }</stringProp>
@@ -324,17 +313,13 @@
   &quot;loansPolicy&quot;: {&#xd;
     &quot;profileId&quot;: &quot;INDEFINITE&quot;,&#xd;
     &quot;period&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;MONTH&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,10)},&#xd;
+      &quot;intervalId&quot;: &quot;Months&quot;&#xd;
     },&#xd;
     &quot;closedLibraryDueDateManagementId&quot;: &quot;KEEP_CURRENT_DATE&quot;,&#xd;
-    &quot;existingRequestsPeriod&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;WEEK&quot;&#xd;
-    },&#xd;
     &quot;gracePeriod&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,10)},&#xd;
-      &quot;intervalId&quot;: &quot;DAYS&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,10)},&#xd;
+      &quot;intervalId&quot;: &quot;Days&quot;&#xd;
     }&#xd;
   },&#xd;
   &quot;renewable&quot;: true,&#xd;
@@ -343,8 +328,8 @@
     &quot;renewFromId&quot;: &quot;CURRENT_DUE_DATE&quot;,&#xd;
     &quot;differentPeriod&quot;: true,&#xd;
     &quot;period&quot;: {&#xd;
-      &quot;duration&quot;: ${__Random(0,30)},&#xd;
-      &quot;intervalId&quot;: &quot;DAYS&quot;&#xd;
+      &quot;duration&quot;: ${__Random(1,30)},&#xd;
+      &quot;intervalId&quot;: &quot;Days&quot;&#xd;
     }&#xd;
   }&#xd;
 }</stringProp>
