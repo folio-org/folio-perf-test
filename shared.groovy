@@ -17,6 +17,7 @@ def getContext() {
 
     mdRepo : "${params.MdRepo}",
     stableFolio : "${params.StableFolio}",
+    fixedFolio : "${params.FixedFolio}",
     dataRepo : "${params.SampleDataRepo}",
     dataName : "${params.SampleDataName}",
 
@@ -132,7 +133,7 @@ def bootstrapModules(ctx) {
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.modsIp}:/tmp"
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.dbIp}:/tmp"
 
-  def mods = getMods(ctx.stableFolio + "/install.json")
+  def mods = getMods(ctx.fixedFolio, ctx.stableFolio + "/install.json")
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
@@ -269,9 +270,16 @@ def getStackOutput(output, key) {
 }
 
 // get modules
-def getMods(mdRepo) {
-  def resp = httpRequest "${mdRepo}"
-  def mods = readJSON text: resp.content
+def getMods(fixedFolio, mdRepo) {
+  def mods;
+  if (fixedFolio) {
+    echo "fixed install.json: ${fixedFolio}"
+    mods = readJSON text: fixedFolio
+  } else {
+    def resp = httpRequest "${mdRepo}"
+    echo "new install.json: ${resp.content}"
+    mods = readJSON text: resp.content
+  }
   def latestMods = [:]
   for (mod in mods) {
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
@@ -303,7 +311,7 @@ def compareVersion(a, b) {
     def numA = verA[i].replace('-SNAPSHOT', "").toInteger()
     def numB = verB[i].replace('-SNAPSHOT', "").toInteger()
     if (numA != numB) {
-    return numA > numB
+      return numA > numB
     }
   }
   return verA.size() > verB.size()
