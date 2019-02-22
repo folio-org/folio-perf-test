@@ -78,7 +78,7 @@
 
 def threadFile = null;
 
- threadfile = new File(&quot;Folio-Test-Plans/mod-inventory/threads.csv&quot;);
+ threadfile = new File(&quot;Folio-Test-Plans/platform-workflow-performance/threads.csv&quot;);
 def threads = threadfile.readLines()
 def threadsSplit = threads[0].split(&quot;,&quot;);
 vars.put(&quot;userLimit&quot;,  (Integer.parseInt(threadsSplit[0])+ 1).toString())</stringProp>
@@ -202,7 +202,7 @@ props.remove(&quot;retrievedLoanids&quot;)</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/instances?limit=${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -251,7 +251,7 @@ props.put(&quot;instanceids&quot;, prev.getResponseDataAsString());
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/items?query=(status.name=%22Available%22)&amp;${__CSVRead(C:\Users\evaluk\Documents\folio-perf-test\Folio-Test-Plans\platform-workflow-performance\threads.csv,0)}</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/items?query=(status.name=%22Available%22)&amp;${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -345,10 +345,10 @@ props.put(&quot;userIds&quot;, prev.getResponseDataAsString());</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -494,10 +494,10 @@ log.info(&quot;patron ids after to json &quot; + jsonOutput.toJson(curPatronIds)
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -600,10 +600,10 @@ vars.put(&quot;patronGroupId&quot;, curIds.patrons[${__threadNum} - 1])</stringP
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -706,10 +706,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -812,10 +812,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -970,10 +970,10 @@ props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1076,10 +1076,10 @@ vars.put(&quot;loanPolicyId&quot;, curIds.loans[${__threadNum} - 1])</stringProp
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1182,10 +1182,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1320,10 +1320,10 @@ log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds)
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1457,10 +1457,10 @@ vars.put(&quot;loan&quot;, JsonOutput.toJson(json.loans[0]));</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1575,10 +1575,10 @@ vars.put(&quot;itemBarcode&quot;, curIds.loans[${__threadNum} - 1])
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1681,10 +1681,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,2)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,0)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/mod-inventory/threads.csv,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(Folio-Test-Plans/platform-workflow-performance/threads.csv,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
