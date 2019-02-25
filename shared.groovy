@@ -337,7 +337,7 @@ def registerMods(mods, mdRepo, okapiIp) {
 def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   def port = 9200
   def modJobTemplate = readFile("config/mods.sh").trim()
-  def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
+  // def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
   def modGraphqlTemplate = readFile("config/mod-graphql.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
@@ -354,10 +354,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     }
     port += 1
     def modJob = modJobTemplate.replace('${modName}', modName)
-    // mod-kb-ebsco has a different way to run Docker
-    if (modName.equals("mod-kb-ebsco")) {
-      modJob = modKbEbscoTemplate.replace('${modName}', modName)
-    }
+    // // mod-kb-ebsco has a different way to run Docker
+    // if (modName.equals("mod-kb-ebsco")) {
+    //   modJob = modKbEbscoTemplate.replace('${modName}', modName)
+    // }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
       modJob = modGraphqlTemplate.replace('${modName}', modName)
