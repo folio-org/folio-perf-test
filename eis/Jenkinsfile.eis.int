@@ -38,7 +38,7 @@ node {
 
         try {
           stage("setup vars") {
-             sharedLib.setUpVars(context)
+             sharedLib.setupVars(context)
           }
           // stage("Create Environment") {
           //   sharedLib.createEnv(context)
