@@ -30,7 +30,15 @@ def getContext() {
   ]
   return ctx
 }
-
+def setupVars(ctx) {
+  def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
+  def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
+  getStackOutputIps(resp, ctx)
+  echo "${ctx}"
+  if (ctx.dns) {
+    setupDns(ctx)
+  }
+}
 def createEnv(ctx) {
   if (stackExists(ctx)) {
     echo "Skip creating ${ctx.envName}"
@@ -56,13 +64,7 @@ def createEnv(ctx) {
 }
 
 def waitForEnv(ctx) {
-  def cmd = "aws --output json cloudformation describe-stacks --stack-name ${ctx.envName}"
-  def resp = readJSON text: sh(script: "${cmd}", returnStdout: true)
-  getStackOutputIps(resp, ctx)
-  echo "${ctx}"
-  if (ctx.dns) {
-    setupDns(ctx)
-  }
+
   def dockerCmd = 'docker ps -l'
   timeout(10) {
     waitUntil {
@@ -174,10 +176,6 @@ def runJmeterTests(ctx) {
   def files = findFiles(glob: '**/*.jmx')
   for (file in files) {
     // skip broken tests
-	  if (file.path.indexOf("platform-workflow-performance") > 0) {
-      echo "skip ${file}"
-      continue;
-    }
 	  if (file.path.indexOf("loan-rules") > 0) {
       echo "skip ${file}"
       continue;
