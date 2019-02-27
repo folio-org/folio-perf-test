@@ -153,7 +153,7 @@ def populateData(ctx) {
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd perf && ${cmd}\""
 }
 
-def runJmeterTests(ctx) {
+def runJmeterTests(ctx, platformOnly=false) {
   def jMeterInput = "Folio-Test-Plans"
   def jMeterOutput = "jmeter_perf.jtl"
 
@@ -171,10 +171,11 @@ def runJmeterTests(ctx) {
 
   def cmdTemplate = "jmeter -Jjmeter.save.saveservice.output_format=xml -n"
   cmdTemplate += " -l ${jMeterOutput}"
-  def files = findFiles(glob: '**/*.jmx')
+  def pattern = platformOnly ? 'Folio-Test-Plans/platform-workflow-performance/*.jmx' : '**/*.jmx'
+  def files = findFiles(glob: pattern)
   for (file in files) {
     // skip broken tests
-	  if (file.path.indexOf("platform-workflow-performance") > 0) {
+	  if (file.path.indexOf("platform-workflow-performance") > 0 && !platformOnly) {
       echo "skip ${file}"
       continue;
     }
@@ -197,8 +198,7 @@ def runJmeterTests(ctx) {
       echo "skip ${file}"
       continue;
     }
-
-  // skip kb-ebsco modules per rm api request
+    // skip kb-ebsco modules per rm api request
     if (file.path.indexOf("kb-ebsco-java") > 0) {
       echo "skip ${file}"
       continue;
