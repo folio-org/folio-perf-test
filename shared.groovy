@@ -173,14 +173,7 @@ def runJmeterTests(ctx) {
   cmdTemplate += " -l ${jMeterOutput}"
   def files = findFiles(glob: '**/*.jmx')
   for (file in files) {
-    if(!file.path.indexOf("platform-workflow-performance")) {
-      continue;
-    }
     // skip broken tests
-	  if (file.path.indexOf("platform-workflow-performance") > 0) {
-      echo "skip ${file}"
-      continue;
-    }
 	  if (file.path.indexOf("loan-rules") > 0) {
       echo "skip ${file}"
       continue;
