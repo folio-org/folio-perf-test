@@ -40,37 +40,37 @@ node {
           stage("setup vars") {
              sharedLib.setupVars(context)
           }
-          // stage("Create Environment") {
-          //   sharedLib.createEnv(context)
-          // }
+          stage("Create Environment") {
+            sharedLib.createEnv(context)
+          }
 
-          // stage("Wait for Environment") {
-          //   sharedLib.waitForEnv(context)
-          // }
+          stage("Wait for Environment") {
+            sharedLib.waitForEnv(context)
+          }
 
-          // stage("Bootstrap DB") {
-          //   sharedLib.bootstrapDb(context)
-          // }
+          stage("Bootstrap DB") {
+            sharedLib.bootstrapDb(context)
+          }
 
-          // stage("Bootstrap Okapi") {
-          //   sharedLib.bootstrapOkapi(context)
-          // }
+          stage("Bootstrap Okapi") {
+            sharedLib.bootstrapOkapi(context)
+          }
 
-          // stage("Bootstrap modules") {
-          //   sharedLib.bootstrapModules(context)
-          // }
+          stage("Bootstrap modules") {
+            sharedLib.bootstrapModules(context)
+          }
 
-          // stage("Populate data") {
-          //   sharedLib.populateData(context)
-          // }
+          stage("Populate data") {
+            sharedLib.populateData(context)
+          }
 
           stage("Running JMeter tests") {
             sharedLib.runJmeterTests(context)
           }
         } finally {
-          // stage("Tear down environment") {
-          //   sharedLib.teardownEnv(context)
-          // }
+          stage("Tear down environment") {
+            sharedLib.teardownEnv(context)
+          }
         }
       }
     }
