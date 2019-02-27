@@ -37,7 +37,7 @@
 
 def threadFile = null;
 
- threadfile = new File(&quot;C:\\Users\\evaluk\\Documents\\folio-perf-test\\Folio-Test-Plans\\platform-workflow-performance\\threads.csv&quot;);
+ threadfile = new File(&quot;Folio-Test-Plans/platform-workflow-performance/threads.csv&quot;);
  
 def threads = threadfile.readLines()
 def threadsSplit = threads[0].split(&quot;,&quot;);
