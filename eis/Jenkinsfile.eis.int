@@ -37,9 +37,6 @@ node {
       sshagent(credentials:["${context.sshKeyId}"]) {
 
         try {
-          stage("setup vars") {
-             sharedLib.setupVars(context)
-          }
           stage("Create Environment") {
             sharedLib.createEnv(context)
           }
