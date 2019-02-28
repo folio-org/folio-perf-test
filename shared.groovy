@@ -153,7 +153,7 @@ def populateData(ctx) {
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd perf && ${cmd}\""
 }
 
-def runJmeterTests(ctx) {
+def runJmeterTests(ctx, platformOnly=false) {
   def jMeterInput = "Folio-Test-Plans"
   def jMeterOutput = "jmeter_perf.jtl"
 
@@ -171,14 +171,24 @@ def runJmeterTests(ctx) {
 
   def cmdTemplate = "jmeter -Jjmeter.save.saveservice.output_format=xml -n"
   cmdTemplate += " -l ${jMeterOutput}"
-  def files = findFiles(glob: '**/*.jmx')
+  def pattern = platformOnly ? 'Folio-Test-Plans/platform-workflow-performance/*.jmx' : '**/*.jmx'
+  def files = findFiles(glob: pattern)
   for (file in files) {
-    // skip benchmark files
-	if (file.path.indexOf("benchmark") > 0) {
+    // skip broken tests
+	  if (file.path.indexOf("platform-workflow-performance") > 0 && !platformOnly) {
       echo "skip ${file}"
       continue;
     }
-	// skip edge modules till env is ready
+	  if (file.path.indexOf("loan-rules") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
+    // skip benchmark files
+	  if (file.path.indexOf("benchmark") > 0) {
+      echo "skip ${file}"
+      continue;
+    }
+	  // skip edge modules till env is ready
     if (file.path.indexOf("edge-") > 0) {
       echo "skip ${file}"
       continue;
@@ -188,8 +198,7 @@ def runJmeterTests(ctx) {
       echo "skip ${file}"
       continue;
     }
-
-  // skip kb-ebsco modules per rm api request
+    // skip kb-ebsco modules per rm api request
     if (file.path.indexOf("kb-ebsco-java") > 0) {
       echo "skip ${file}"
       continue;
@@ -337,7 +346,8 @@ def registerMods(mods, mdRepo, okapiIp) {
 def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
   def port = 9200
   def modJobTemplate = readFile("config/mods.sh").trim()
-  def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
+  // def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
+  def modGraphqlTemplate = readFile("config/mod-graphql.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
   def installMods = []
@@ -353,9 +363,13 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     }
     port += 1
     def modJob = modJobTemplate.replace('${modName}', modName)
-    // mod-kb-ebsco has a different way to run Docker
-    if (modName.equals("mod-kb-ebsco")) {
-      modJob = modKbEbscoTemplate.replace('${modName}', modName)
+    // // mod-kb-ebsco has a different way to run Docker
+    // if (modName.equals("mod-kb-ebsco")) {
+    //   modJob = modKbEbscoTemplate.replace('${modName}', modName)
+    // }
+    // mod-graphql has a different way to run Docker
+    if (modName.equals("mod-graphql")) {
+      modJob = modGraphqlTemplate.replace('${modName}', modName)
     }
     modJob = modJob.replace('${port}', '' + port)
     modJob = modJob.replace('${modVer}', "" + modVer)
