@@ -270,7 +270,7 @@ props.put(&quot;instanceids&quot;, prev.getResponseDataAsString());
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/items?query=(status.name=%22Available%22)&amp;${__P(stressThreads)}</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/items?query=(status.name=%22Available%22)&amp;limit=${__P(stressThreads)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
