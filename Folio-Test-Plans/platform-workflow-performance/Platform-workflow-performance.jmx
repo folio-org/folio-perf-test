@@ -65,7 +65,7 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Login Config" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
-        <stringProp name="filename">Folio-Test-Plans/platform-workflow-performance/login.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans/login.csv</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
