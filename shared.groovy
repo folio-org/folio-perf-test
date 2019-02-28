@@ -106,7 +106,7 @@ def bootstrapOkapi(ctx) {
   def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
-  okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp)
+  okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp )
   okapiJob = okapiJob.replace('${dbPvtIp}', ctx.dbPvtIp)
   okapiJob = okapiJob.replace('${okapiVersion}', okapiVersion)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} \"${okapiJob}\""
