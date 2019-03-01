@@ -38,7 +38,7 @@
 def threadFile = null;
 
  threadfile = new File(&quot;Folio-Test-Plans/platform-workflow-performance/threads.csv&quot;);
- 
+
 def threads = threadfile.readLines()
 def threadsSplit = threads[0].split(&quot;,&quot;);
 vars.put(&quot;userLimit&quot;,  (Integer.parseInt(threadsSplit[0])+ 1).toString())
@@ -65,7 +65,7 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Login Config" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
-        <stringProp name="filename">Folio-Test-Plans/login.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
         <boolProp name="quotedData">false</boolProp>
         <boolProp name="recycle">true</boolProp>
@@ -1866,8 +1866,8 @@ if (size &gt; 0) {
 if (fallback) {
   log.warn(&quot;fall back to use default identifier type/value, no assertion&quot;);
   vars.remove(&quot;assertion&quot;);
-  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);	
-  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);	
+  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);
+  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);
 }
 log.info(&quot;picked identifier type: &quot; + vars.get(&quot;idType&quot;));
 log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</stringProp>
@@ -2028,8 +2028,8 @@ if (size &gt; 0) {
 if (fallback) {
   log.warn(&quot;fall back to use default identifier type/value, no assertion&quot;);
   vars.remove(&quot;assertion&quot;);
-  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);	
-  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);	
+  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);
+  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);
 }
 log.info(&quot;picked identifier type: &quot; + vars.get(&quot;idType&quot;));
 log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</stringProp>
