@@ -106,7 +106,7 @@ def bootstrapOkapi(ctx) {
   def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
-  okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp)
+  okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp )
   okapiJob = okapiJob.replace('${dbPvtIp}', ctx.dbPvtIp)
   okapiJob = okapiJob.replace('${okapiVersion}', okapiVersion)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} \"${okapiJob}\""
@@ -175,10 +175,6 @@ def runJmeterTests(ctx, platformOnly=false) {
   def files = findFiles(glob: pattern)
   for (file in files) {
     // skip broken tests
-	  if (file.path.indexOf("platform-workflow-performance") > 0 && !platformOnly) {
-      echo "skip ${file}"
-      continue;
-    }
 	  if (file.path.indexOf("loan-rules") > 0) {
       echo "skip ${file}"
       continue;
