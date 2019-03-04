@@ -1531,10 +1531,10 @@ vars.put(&quot;loan&quot;, JsonOutput.toJson(json.loans[0]));</stringProp>
 
 
 def jsonSlurper = new JsonSlurper();
-def rawUserIds = props.get(&quot;retrievedLoanids&quot;)
-def curIds =  jsonSlurper.parseText(rawUserIds)
+def RawInstanceIds = props.get(&quot;itemIds&quot;);
+def allInstanceIds =  jsonSlurper.parseText(RawInstanceIds)
 
-vars.put(&quot;itemBarcode&quot;, curIds.loans[${__threadNum} - 1])
+vars.put(&quot;itemBarcode&quot;, allInstanceIds.items[${__threadNum} - 1 ].barcode)
 </stringProp>
         </JSR223PreProcessor>
         <hashTree/>
