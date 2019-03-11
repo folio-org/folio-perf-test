@@ -59,7 +59,7 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
         <stringProp name="HTTPSampler.path"></stringProp>
         <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-        <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">120000</stringProp>
       </ConfigTestElement>
       <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Login Config" enabled="true">
@@ -1062,8 +1062,11 @@ props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
 def jsonSlurper = new JsonSlurper();
 def rawUserIds = props.get(&quot;retrievedLoanids&quot;)
 def curIds =  jsonSlurper.parseText(rawUserIds)
-
-vars.put(&quot;loanPolicyId&quot;, curIds.loans[${__threadNum} - 1])</stringProp>
+def value = curIds.loans[${__threadNum} - 1]
+if(value == null) {
+	log.info(&quot;loanPolicyId value is null &quot; + rawUserIds);
+}
+vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
