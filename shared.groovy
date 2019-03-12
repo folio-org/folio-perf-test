@@ -362,7 +362,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // mod-agreements and mod-licenses have different way to run Docker
     if (modName.equals("mod-agreements") || modName.equals("mod-license")) {
       modJob = modErmTemplate.replace('${modName}', modName)
-      modJob = modErmTemplate.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
