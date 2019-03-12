@@ -137,7 +137,7 @@ def bootstrapModules(ctx) {
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
-  deployMods(mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
+  deployMods(mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.dbPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
 }
 
 def populateData(ctx) {
@@ -334,10 +334,11 @@ def registerMods(mods, mdRepo, okapiIp) {
 }
 
 // deploy modules
-def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
+def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUser) {
   def port = 9200
   def modJobTemplate = readFile("config/mods.sh").trim()
   // def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
+  def modErmTemplate = readFile("config/mod-erm.sh").trim()
   def modGraphqlTemplate = readFile("config/mod-graphql.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
@@ -358,6 +359,11 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, tenant, sshCmd, sshUser) {
     // if (modName.equals("mod-kb-ebsco")) {
     //   modJob = modKbEbscoTemplate.replace('${modName}', modName)
     // }
+    // mod-agreements and mod-licenses have different way to run Docker
+    if (modName.equals("mod-agreements") || modName.equals("mod-license")) {
+      modJob = modErmTemplate.replace('${modName}', modName)
+      modJob = modErmTemplate.replace('${dbHost}', dbPvtIp)
+    }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
       modJob = modGraphqlTemplate.replace('${modName}', modName)
