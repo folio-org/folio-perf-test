@@ -359,10 +359,14 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // if (modName.equals("mod-kb-ebsco")) {
     //   modJob = modKbEbscoTemplate.replace('${modName}', modName)
     // }
-    // mod-agreements and mod-licenses have different way to run Docker
-    if (modName.equals("mod-agreements") || modName.equals("mod-licenses")) {
+    // erm modules run differently
+    if (modName.equals("mod-agreements") || modName.equals("mod-licenses")
+      || modName.equals("mod-erm-usage")) {
       modJob = modErmTemplate.replace('${modName}', modName)
       modJob = modJob.replace('${dbHost}', dbPvtIp)
+      if (modName.equals("mod-erm-usage")) {
+        modJob = modJob.replace('8080', '8081')
+      }
     }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
