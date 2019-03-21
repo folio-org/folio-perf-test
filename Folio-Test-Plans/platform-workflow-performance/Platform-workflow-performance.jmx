@@ -169,10 +169,14 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
-            <stringProp name="script">props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
+            <stringProp name="script">import groovy.json.JsonOutput;
+
+def jsonOutput = new JsonOutput();
+
+props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
 props.remove(&quot;retrieveduserIds&quot;)
 props.remove(&quot;retrievedpatrongroupIds&quot;)
-props.remove(&quot;retrievedLoanids&quot;)
+props.put(&quot;retrievedLoanids&quot;, jsonOutput.toJson([loans :[]]))
 
 props.remove(&quot;instanceids&quot;)
 props.remove(&quot;itemIds&quot;)
@@ -514,7 +518,7 @@ vars.put(&quot;userId&quot;,userBarcode );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="GET query users by barcode JSON Extractor" enabled="true">
@@ -627,7 +631,7 @@ vars.put(&quot;patronGroupId&quot;, curIds.patrons[${__threadNum} - 1])</stringP
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -733,7 +737,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -839,7 +843,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -963,7 +967,7 @@ vars.put(&quot;itemBarcode&quot;,itemBarcode );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="POST check-out-by-barcode JSON Extractor" enabled="true">
@@ -1038,7 +1042,7 @@ props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group GET query proxiesfor by proxyUserId" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group GET loan policy by id" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1051,7 +1055,7 @@ props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query proxiesfor by proxyUserId PreProcessor" enabled="true">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query GET loan policy by id PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -1106,7 +1110,7 @@ vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1212,7 +1216,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1318,7 +1322,7 @@ vars.put(&quot;itemBarcode&quot;, curIds.items[${__threadNum} - 1].barcode)</str
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
@@ -1456,7 +1460,7 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
@@ -1619,7 +1623,7 @@ vars.put(&quot;itemBarcode&quot;, allInstanceIds.items[${__threadNum} - 1 ].barc
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
@@ -1688,7 +1692,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1794,7 +1798,7 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1841,7 +1845,7 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -1902,7 +1906,7 @@ vars.put(&quot;locationVal&quot;, curIds.locations[r.nextInt(  curIds.totalRecor
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2008,7 +2012,7 @@ vars.put(&quot;idVal&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2114,7 +2118,7 @@ vars.put(&quot;idVal&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2220,7 +2224,7 @@ vars.put(&quot;idVal&quot;, curIds.instances[${__threadNum} - 1].id)</stringProp
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2326,7 +2330,7 @@ vars.put(&quot;idVal&quot;, curIds.instances[${__threadNum} - 1].id)</stringProp
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2455,7 +2459,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -2617,7 +2621,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
