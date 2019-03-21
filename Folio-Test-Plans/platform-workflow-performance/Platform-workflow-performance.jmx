@@ -169,10 +169,14 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
-            <stringProp name="script">props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
+            <stringProp name="script">import groovy.json.JsonOutput;
+
+def jsonOutput = new JsonOutput();
+
+props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
 props.remove(&quot;retrieveduserIds&quot;)
 props.remove(&quot;retrievedpatrongroupIds&quot;)
-props.remove(&quot;retrievedLoanids&quot;)
+props.put(&quot;retrievedLoanids&quot;, jsonOutput.toJson([loans :[]])
 
 props.remove(&quot;instanceids&quot;)
 props.remove(&quot;itemIds&quot;)
