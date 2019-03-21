@@ -176,7 +176,7 @@ def jsonOutput = new JsonOutput();
 props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
 props.remove(&quot;retrieveduserIds&quot;)
 props.remove(&quot;retrievedpatrongroupIds&quot;)
-props.put(&quot;retrievedLoanids&quot;, jsonOutput.toJson([loans :[]])
+props.put(&quot;retrievedLoanids&quot;, jsonOutput.toJson([loans :[]]))
 
 props.remove(&quot;instanceids&quot;)
 props.remove(&quot;itemIds&quot;)
