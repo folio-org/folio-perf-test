@@ -391,7 +391,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // replace folioci to folioorg for non-snapshot version
     if (!modVer.toUpperCase().contains("SNAPSHOT") &&
       modVer.substring(modVer.lastIndexOf(".") + 1).toInteger() < 100000) {
-      echo "change Docker Hub from folioci to folioorg for: $modName-$modVer"
+      echo "change Docker Hub from folioci to folioorg for $modName-$modVer"
       modJob = modJob.replace('folioci', 'folioorg')
     }
     sh "${sshCmd} -l ${sshUser} ${modsIp} ${modJob}"
