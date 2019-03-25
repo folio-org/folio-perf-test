@@ -1068,7 +1068,9 @@ def rawUserIds = props.get(&quot;retrievedLoanids&quot;)
 def curIds =  jsonSlurper.parseText(rawUserIds)
 def value = curIds.loans[${__threadNum} - 1]
 if(value == null) {
-	log.info(&quot;loanPolicyId value is null &quot; + rawUserIds);
+  log.info(&quot;loanPolicyId value is null &quot; + rawUserIds)
+  log.info(&quot;fall back to use the first loanPolicyId &quot; + curIds.loans[0])
+  value = curIds.loans[0]
 }
 vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
         </JSR223PreProcessor>
