@@ -388,6 +388,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     if (modName.equals("mod-login")) {
       modJob += " verify.user=true"
     }
+    // replace folioci to folioorg for non-snapshot version
+    if (!modVer.contains("SNAPSHOT")) {
+      modJob = modJob.replace('folioci', 'folioorg');
+    }
     sh "${sshCmd} -l ${sshUser} ${modsIp} ${modJob}"
     def discoveryPayload = discoveryTemplate.replace('${modId}', modId)
     discoveryPayload = discoveryPayload.replace('${modUrl}', "http://${modsPvtIp}:${port}")
