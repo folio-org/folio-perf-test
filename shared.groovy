@@ -103,7 +103,8 @@ def bootstrapDb(ctx) {
 def bootstrapOkapi(ctx) {
   stopFolioDockers(ctx, ctx.okapiIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo service ecs stop"
-  def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
+  def okapiVersionResp = httpRequest url: "${ctx.stableFolio}:9130/_/version",
+    customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
   okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp )
@@ -113,7 +114,8 @@ def bootstrapOkapi(ctx) {
   timeout(5) {
     waitUntil {
       try {
-        httpRequest "http://${ctx.okapiIp}:9130/_/version"
+        httpRequest url: "http://${ctx.okapiIp}:9130/_/version",
+          customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
         true
       } catch (e) {
         sleep 10
@@ -385,6 +387,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
       modJob += " verify.user=true"
+    }
+    // replace folioci to folioorg for non-snapshot version
+    if (!modVer.toUpperCase().contains("SNAPSHOT") &&
+      modVer.substring(modVer.lastIndexOf(".") + 1).toInteger() < 100000) {
+      echo "change Docker Hub from folioci to folioorg for $modName-$modVer"
+      modJob = modJob.replace('folioci', 'folioorg')
     }
     sh "${sshCmd} -l ${sshUser} ${modsIp} ${modJob}"
     def discoveryPayload = discoveryTemplate.replace('${modId}', modId)
