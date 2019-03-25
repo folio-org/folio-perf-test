@@ -103,7 +103,8 @@ def bootstrapDb(ctx) {
 def bootstrapOkapi(ctx) {
   stopFolioDockers(ctx, ctx.okapiIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo service ecs stop"
-  def okapiVersionResp = httpRequest "${ctx.stableFolio}:9130/_/version"
+  def okapiVersionResp = httpRequest url: "${ctx.stableFolio}:9130/_/version"
+    customHeaders: [[name: 'x-okapi-tenant', value: 'diku']]
   def okapiVersion = okapiVersionResp.content
   def okapiJob = readFile("config/okapi.sh").trim()
   okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp )
