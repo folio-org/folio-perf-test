@@ -1422,7 +1422,13 @@ def jsonSlurper = new JsonSlurper();
 def rawUserIds = props.get(&quot;retrievedItemids&quot;)
 def curIds =  jsonSlurper.parseText(rawUserIds)
 
-vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1])</stringProp>
+def itemId = curIds.items[${__threadNum} - 1]
+if (itemId == null) {
+  log.info(&quot;itemId value is null &quot; + curIds)
+  log.info(&quot;fall back to use the first item id &quot; + curIds.items[0])
+  itemId = curIds.items[0]
+}
+vars.put(&quot;itemId&quot;, itemId);</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
@@ -1974,7 +1980,7 @@ def curIds =  jsonSlurper.parseText(rawUserIds)
 
 
 Random r = new Random()
-vars.put(&quot;locationVal&quot;, curIds.locations[r.nextInt(  curIds.totalRecords )].id)</stringProp>
+vars.put(&quot;locationVal&quot;, curIds.locations[r.nextInt(  curIds.locations.size() )].id)</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
