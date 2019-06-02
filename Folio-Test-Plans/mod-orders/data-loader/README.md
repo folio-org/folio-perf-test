@@ -22,7 +22,7 @@ as well as in general, regardless of the type of order.
 
 The script can be run both from the JMeter GUI and the console by command: 
 
-jmeter -Jjmeter.save.saveservice.output_format=xml -n -l jmeter_perf.jtl -t Folio-Test-Plans/mod-orders/data-loader/Orders-DataLoader.jmx -j jmeter_Orders_DataLoader.jmx.log.
+jmeter -Jjmeter.saveaveservice.output_format=xml -n -l jmetererf.jtl -t Orders-DataLoader.jmx -j jmeter_Orders_DataLoader.jmx.log
 
 In this case, the console output will contain information about the initial and 
 final number of order and order-line records.
