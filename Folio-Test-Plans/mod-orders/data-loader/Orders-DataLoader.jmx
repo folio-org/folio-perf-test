@@ -1,0 +1,2412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Orders DataLoader" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="vendorId" elementType="Argument">
+            <stringProp name="Argument.name">vendorId</stringProp>
+            <stringProp name="Argument.value">${__P(vendorId)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="instanceId" elementType="Argument">
+            <stringProp name="Argument.name">instanceId</stringProp>
+            <stringProp name="Argument.value">${__P(instanceId)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="instanceTitle" elementType="Argument">
+            <stringProp name="Argument.name">instanceTitle</stringProp>
+            <stringProp name="Argument.value">${__P(instanceTitle)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
+        <stringProp name="filename">config.csv</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
+        <boolProp name="ignoreFirstLine">false</boolProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="DataLoader Percentage Config" enabled="true">
+        <stringProp name="filename">percentage.csv</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">total, open, pending, closed, physical, electronic, p/e_mix</stringProp>
+        <boolProp name="ignoreFirstLine">false</boolProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">${host}</stringProp>
+        <stringProp name="HTTPSampler.port">${port}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Login" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Folio Login" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;username&quot;: &quot;${user}&quot;, &quot;password&quot;: &quot;${password}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/authn/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49587">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor - Extract token" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+            <stringProp name="RegexExtractor.refname">x-okapi-token</stringProp>
+            <stringProp name="RegexExtractor.regex">x-okapi-token: (.+)</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Save token" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">log.info(&quot;Successfully logged in...&quot;);
+props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
+log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="DataLoader" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__CSVRead(percentage.csv,0)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="SetUp" enabled="true"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Active Vendor" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/vendor-storage/vendors?limit=1&amp;vendor_status==Active</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract vendorId" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">vendorId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.vendors[*].id</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+              <stringProp name="Sample.scope">all</stringProp>
+              <stringProp name="Scope.variable">vvvv</stringProp>
+              <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Save vendorId" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="script">props.put(&quot;vendorId&quot;, &quot;${vendorId}&quot;);
+log.info(&quot;Data loading will be processed for vendorId: ${vendorId}&quot;);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Existed Instance" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/inventory/instances?limit=1</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract instanceId, instanceTitle" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">instanceId;instanceTitle;</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">.instances[*].id;.instances[*].title;</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">0;0;</stringProp>
+              <stringProp name="Sample.scope">all</stringProp>
+              <stringProp name="Scope.variable"></stringProp>
+              <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOIND;</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Save instanceId, instanceTitle" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="script">props.put(&quot;instanceId&quot;, &quot;${instanceId}&quot;);
+props.put(&quot;instanceTitle&quot;, &quot;${instanceTitle}&quot;);
+log.info(&quot;Data loading will be processed for instanceId: ${instanceId}&quot;);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Orders" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/orders/composite-orders?limit=1</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - orders - totalRecords" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">initialOrdersTotalRecords</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">.totalRecords</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+              <stringProp name="Sample.scope">all</stringProp>
+              <stringProp name="Scope.variable">orderId</stringProp>
+              <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Initial state" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="script">log.info(&quot;Initial number of orders: ${initialOrdersTotalRecords}&quot;);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Order Lines" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">orders/order-lines?limit=1</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - order-lines - totalRecords" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">initialOrderLinesTotalRecords</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">.totalRecords</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+              <stringProp name="Sample.scope">all</stringProp>
+              <stringProp name="Scope.variable">orderId</stringProp>
+              <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Initial state" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="script">log.info(&quot;Initial number of order-lines: ${initialOrderLinesTotalRecords}&quot;);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Loader" enabled="true"/>
+        <hashTree>
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Pending Order" enabled="true">
+            <intProp name="ThroughputController.style">1</intProp>
+            <boolProp name="ThroughputController.perThread">false</boolProp>
+            <intProp name="ThroughputController.maxThroughput">1</intProp>
+            <stringProp name="ThroughputController.percentThroughput">${pending}</stringProp>
+          </ThroughputController>
+          <hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Electronic Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${electronic}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Electronic Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Electronic Resource&quot;,&#xd;
+	&quot;id&quot;: &quot;f722e375-4137-4684-8f25-2655962a60e6&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Pending" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Physical Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${physical}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Physical Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Physical Resource&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Pending" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="P/E Mix Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${p/e_mix}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : P/E Mix" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;P/E Mix&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Pending" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Open Order" enabled="true">
+            <intProp name="ThroughputController.style">1</intProp>
+            <boolProp name="ThroughputController.perThread">false</boolProp>
+            <intProp name="ThroughputController.maxThroughput">1</intProp>
+            <stringProp name="ThroughputController.percentThroughput">${open}</stringProp>
+          </ThroughputController>
+          <hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Electronic Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${electronic}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Electronic Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Electronic Resource&quot;,&#xd;
+	&quot;id&quot;: &quot;f722e375-4137-4684-8f25-2655962a60e6&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Open" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Open&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Physical Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${physical}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Physical Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Physical Resource&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Open" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Open&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="P/E Mix Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${p/e_mix}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : P/E Mix" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;P/E Mix&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Open" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Open&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Closed Order" enabled="true">
+            <intProp name="ThroughputController.style">1</intProp>
+            <boolProp name="ThroughputController.perThread">false</boolProp>
+            <intProp name="ThroughputController.maxThroughput">1</intProp>
+            <stringProp name="ThroughputController.percentThroughput">${closed}</stringProp>
+          </ThroughputController>
+          <hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Electronic Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${electronic}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Electronic Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Electronic Resource&quot;,&#xd;
+	&quot;id&quot;: &quot;f722e375-4137-4684-8f25-2655962a60e6&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Closed" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Closed&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Physical Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${physical}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor -orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : Physical Resource" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;Physical Resource&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Closed" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Closed&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+            <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="P/E Mix Resource" enabled="true">
+              <intProp name="ThroughputController.style">1</intProp>
+              <boolProp name="ThroughputController.perThread">false</boolProp>
+              <intProp name="ThroughputController.maxThroughput">1</intProp>
+              <stringProp name="ThroughputController.percentThroughput">${p/e_mix}</stringProp>
+            </ThroughputController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Pending&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - orderId, poNumber" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">orderId;poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">.id;.poNumber;</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="Sample.scope">all</stringProp>
+                  <stringProp name="Scope.variable">orderId</stringProp>
+                  <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;NOT_FOUND;</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order Line : P/E Mix" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;source&quot;: {&#xd;
+		&quot;code&quot;: &quot;FOLIO&quot;&#xd;
+	},&#xd;
+	&quot;cost&quot;: {&#xd;
+		&quot;currency&quot;: &quot;USD&quot;,&#xd;
+		&quot;listUnitPrice&quot;: 10,&#xd;
+		&quot;quantityPhysical&quot;: 1,&#xd;
+		&quot;listUnitPriceElectronic&quot;: 10,&#xd;
+		&quot;quantityElectronic&quot;: 1&#xd;
+	},&#xd;
+	&quot;vendorDetail&quot;: {&#xd;
+		&quot;instructions&quot;: &quot;&quot;,&#xd;
+		&quot;vendorAccount&quot;: &quot;1234&quot;&#xd;
+	},&#xd;
+	&quot;details&quot;: {&#xd;
+		&quot;subscriptionInterval&quot;: 0,&#xd;
+		&quot;productIds&quot;: [{&#xd;
+				&quot;productId&quot;: &quot;15571245&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;9781561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;1561454907&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;2008055968&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}, {&#xd;
+				&quot;productId&quot;: &quot;ocn294998755&quot;,&#xd;
+				&quot;productIdType&quot;: &quot;ISBN&quot;&#xd;
+			}&#xd;
+		]&#xd;
+	},&#xd;
+	&quot;purchaseOrderId&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;eresource&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding&quot;,&#xd;
+		&quot;accessProvider&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;&#xd;
+	},&#xd;
+	&quot;physical&quot;: {&#xd;
+		&quot;createInventory&quot;: &quot;Instance, Holding, Item&quot;,&#xd;
+		&quot;materialSupplier&quot;: &quot;e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1&quot;,&#xd;
+		&quot;materialType&quot;: &quot;1a54b431-2e4f-452d-9cae-9cee66c9a892&quot;&#xd;
+	},&#xd;
+	&quot;locations&quot;: [{&#xd;
+			&quot;locationId&quot;: &quot;758258bc-ecc1-41b8-abca-f7b610822ffd&quot;,&#xd;
+			&quot;quantityPhysical&quot;: 1,&#xd;
+			&quot;quantityElectronic&quot;: 1&#xd;
+		}&#xd;
+	],&#xd;
+	&quot;instanceId&quot;: &quot;${instanceId}&quot;,&#xd;
+	&quot;title&quot;: &quot;${instanceTitle}&quot;,&#xd;
+	&quot;orderFormat&quot;: &quot;P/E Mix&quot;,&#xd;
+	&quot;acquisitionMethod&quot;: &quot;Purchase&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/order-lines</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49587">201</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Order : Closed" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+	&quot;id&quot;: &quot;${orderId}&quot;,&#xd;
+	&quot;notes&quot;: [],&#xd;
+	&quot;poNumber&quot;: &quot;${poNumber}&quot;,&#xd;
+	&quot;orderType&quot;: &quot;One-Time&quot;,&#xd;
+	&quot;totalEstimatedPrice&quot;: 10,&#xd;
+	&quot;totalItems&quot;: 1,&#xd;
+	&quot;vendor&quot;: &quot;${vendorId}&quot;,&#xd;
+	&quot;workflowStatus&quot;: &quot;Closed&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/orders/composite-orders/${orderId}</stringProp>
+                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 204" enabled="true">
+                  <collectionProp name="Asserion.test_strings">
+                    <stringProp name="49590">204</stringProp>
+                  </collectionProp>
+                  <stringProp name="Assertion.custom_message"></stringProp>
+                  <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                  <boolProp name="Assertion.assume_success">false</boolProp>
+                  <intProp name="Assertion.test_type">16</intProp>
+                </ResponseAssertion>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="TearDown" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </PostThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Orders" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/orders/composite-orders?limit=1</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - orders - totalRecords" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">finalOrdersTotalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.totalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            <stringProp name="Sample.scope">all</stringProp>
+            <stringProp name="Scope.variable">orderId</stringProp>
+            <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Final state" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="script">log.info(&quot;Final number of orders: ${finalOrdersTotalRecords}&quot;);</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Order Lines" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">orders/order-lines?limit=1</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 200" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - order-lines - totalRecords" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">finalOrderLinesTotalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.totalRecords</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            <stringProp name="Sample.scope">all</stringProp>
+            <stringProp name="Scope.variable">orderId</stringProp>
+            <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Final state" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="script">log.info(&quot;Final number of order-lines: ${finalOrderLinesTotalRecords}&quot;);</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
