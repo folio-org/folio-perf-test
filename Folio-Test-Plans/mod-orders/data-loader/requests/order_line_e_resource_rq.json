@@ -49,6 +49,5 @@
 	"instanceId": "${instanceId}",
 	"title": "${instanceTitle}",
 	"acquisitionMethod": "Purchase",
-	"orderFormat": "Electronic Resource",
-	"id": "f722e375-4137-4684-8f25-2655962a60e6"
+	"orderFormat": "Electronic Resource"
 }
