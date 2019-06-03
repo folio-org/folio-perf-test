@@ -310,7 +310,7 @@ log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
             <stringProp name="HTTPSampler.port"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/vendor-storage/vendors?limit=1&amp;vendor_status==Active</stringProp>
+            <stringProp name="HTTPSampler.path">/organizations-storage/organizations?limit=1&amp;query=status==Active AND isVendor==true</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -333,7 +333,7 @@ log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - Extract vendorId" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">vendorId</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.vendors[*].id</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.organizations[*].id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
               <stringProp name="Sample.scope">all</stringProp>
               <stringProp name="Scope.variable">vvvv</stringProp>
@@ -1817,7 +1817,7 @@ log.info(&quot;Data loading will be processed for instanceId: ${instanceId}&quot
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">orders/order-lines?limit=0</stringProp>
+          <stringProp name="HTTPSampler.path">/orders/order-lines?limit=0</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
