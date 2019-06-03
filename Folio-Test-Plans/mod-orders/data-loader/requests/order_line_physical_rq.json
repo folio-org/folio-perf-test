@@ -1,0 +1,53 @@
+{
+	"source": {
+		"code": "FOLIO"
+	},
+	"cost": {
+		"currency": "USD",
+		"listUnitPrice": 10,
+		"quantityPhysical": 1
+	},
+	"vendorDetail": {
+		"instructions": "",
+		"vendorAccount": "1234"
+	},
+	"details": {
+		"subscriptionInterval": 0,
+		"productIds": [{
+				"productId": "15571245",
+				"productIdType": "ISBN"
+			}, {
+				"productId": "9781561454907",
+				"productIdType": "ISBN"
+			}, {
+				"productId": "1561454907",
+				"productIdType": "ISBN"
+			}, {
+				"productId": "2008055968",
+				"productIdType": "ISBN"
+			}, {
+				"productId": "ocn294998755",
+				"productIdType": "ISBN"
+			}
+		]
+	},
+	"purchaseOrderId": "${orderId}",
+	"eresource": {
+		"createInventory": "Instance, Holding",
+		"accessProvider": "e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1"
+	},
+	"physical": {
+		"createInventory": "Instance, Holding, Item",
+		"materialSupplier": "e0fb5df2-cdf1-11e8-a8d5-f2801f1b9fd1",
+		"materialType": "1a54b431-2e4f-452d-9cae-9cee66c9a892"
+	},
+	"locations": [{
+			"locationId": "758258bc-ecc1-41b8-abca-f7b610822ffd",
+			"quantityPhysical": 1
+		}
+	],
+	"instanceId": "${instanceId}",
+	"title": "${instanceTitle}",
+	"orderFormat": "Physical Resource",
+	"acquisitionMethod": "Purchase"
+}
