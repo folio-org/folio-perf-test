@@ -1,0 +1,5 @@
+{
+	"vendor": "${vendorId}",
+	"workflowStatus": "Pending",
+	"orderType": "One-Time"
+}
