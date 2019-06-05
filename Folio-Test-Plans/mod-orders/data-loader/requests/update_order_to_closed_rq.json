@@ -1,0 +1,10 @@
+{
+	"id": "${orderId}",
+	"notes": [],
+	"poNumber": "${poNumber}",
+	"orderType": "One-Time",
+	"totalEstimatedPrice": 10,
+	"totalItems": 1,
+	"vendor": "${vendorId}",
+	"workflowStatus": "Closed"
+}
