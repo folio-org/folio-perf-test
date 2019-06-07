@@ -11,7 +11,8 @@ properties([
     string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
     string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
     string(name: 'StableFolio', defaultValue: 'https://folio-snapshot.aws.indexdata.com', description: 'Use stable version of modules'),
-    text(name: 'FixedFolio', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
+    string(name: 'FixedOkapi', defaultValue: '', description: 'Use specified version of Okapi'),
+    text(name: 'FixedMods', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
     string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
     string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
   ])
