@@ -17,7 +17,8 @@ def getContext() {
 
     mdRepo : "${params.MdRepo}",
     stableFolio : "${params.StableFolio}",
-    fixedFolio : "${params.FixedFolio}",
+    fixedOkapi : "${params.FixedOkapi}",
+    fixedMods : "${params.FixedMods}",
     dataRepo : "${params.SampleDataRepo}",
     dataName : "${params.SampleDataName}",
 
@@ -103,11 +104,19 @@ def bootstrapDb(ctx) {
 def bootstrapOkapi(ctx) {
   stopFolioDockers(ctx, ctx.okapiIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo service ecs stop"
-  def okapiUrl = ctx.stableFolio.replaceAll(".aws", "-okapi.aws")
-  def okapiVersionResp = httpRequest url: "${okapiUrl}/_/version",
-    customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
-  def okapiVersion = okapiVersionResp.content
+  def okapiVersion
+  if (ctx.fixedOkapi) {
+    okapiVersion = ctx.fixedOkapi
+  } else {
+    def okapiUrl = ctx.stableFolio.replaceAll(".aws", "-okapi.aws")
+    def okapiVersionResp = httpRequest url: "${okapiUrl}/_/version",
+      customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
+    okapiVersion = okapiVersionResp.content
+  }
   def okapiJob = readFile("config/okapi.sh").trim()
+  if (okapiVersion.indexOf("SNAPSHOT") > 0) {
+    okapiJob = okapiJob.replace("folioorg", "folioci")
+  }
   okapiJob = okapiJob.replace('${okapiPvtIp}', ctx.okapiPvtIp )
   okapiJob = okapiJob.replace('${dbPvtIp}', ctx.dbPvtIp)
   okapiJob = okapiJob.replace('${okapiVersion}', okapiVersion)
@@ -136,7 +145,7 @@ def bootstrapModules(ctx) {
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.modsIp}:/tmp"
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.dbIp}:/tmp"
 
-  def mods = getMods(ctx.fixedFolio, ctx.stableFolio + "/okapi-install.json")
+  def mods = getMods(ctx.fixedMods, ctx.stableFolio + "/okapi-install.json")
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
@@ -273,11 +282,11 @@ def getStackOutput(output, key) {
 }
 
 // get modules
-def getMods(fixedFolio, mdRepo) {
+def getMods(fixedMods, mdRepo) {
   def mods;
-  if (fixedFolio) {
-    echo "fixed install.json: ${fixedFolio}"
-    mods = readJSON text: fixedFolio
+  if (fixedMods) {
+    echo "fixed install.json: ${fixedMods}"
+    mods = readJSON text: fixedMods
   } else {
     def resp = httpRequest "${mdRepo}"
     echo "new install.json: ${resp.content}"
