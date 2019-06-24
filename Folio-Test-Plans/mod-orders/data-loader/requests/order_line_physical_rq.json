@@ -15,19 +15,19 @@
 		"subscriptionInterval": 0,
 		"productIds": [{
 				"productId": "15571245",
-				"productIdType": "ISBN"
+				"productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
 			}, {
 				"productId": "9781561454907",
-				"productIdType": "ISBN"
+				"productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
 			}, {
 				"productId": "1561454907",
-				"productIdType": "ISBN"
+				"productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
 			}, {
 				"productId": "2008055968",
-				"productIdType": "ISBN"
+				"productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
 			}, {
 				"productId": "ocn294998755",
-				"productIdType": "ISBN"
+				"productIdType": "8261054f-be78-422d-bd51-4ed9f33c3422"
 			}
 		]
 	},
