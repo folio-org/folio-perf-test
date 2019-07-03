@@ -591,13 +591,9 @@ SampleResult.setIgnore();</stringProp>
           <hashTree/>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set search word" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">def wordIndex = vars.get(&quot;wordIndex&quot;)as Integer
-def searchWords = vars.get(&quot;possibleSearchWords&quot;).split(&quot;,&quot;) as List
-def searchWord = searchWords.get(wordIndex % searchWords.size())
-vars.put(&quot;searchWord&quot;, searchWord);
-SampleResult.setIgnore()</stringProp>
+            <stringProp name="filename">Folio-Test-Plans/mod-kb-ebsco-java/common/getWordFromList.groovy</stringProp>
+            <stringProp name="parameters">${__V(possibleSearchWords)} ${__V(wordIndex)} searchWord</stringProp>
+            <stringProp name="script"></stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Sampler>
           <hashTree/>
@@ -682,13 +678,9 @@ SampleResult.setIgnore()</stringProp>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set providerId" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">def providerIdIndex = vars.get(&quot;providerIdIndex&quot;)as Integer
-def providerIds = props.get(&quot;providerId_ALL&quot;).split(&quot;,&quot;) as List
-def providerId = providerIds.get(providerIdIndex % providerIds.size()).trim()
-vars.put(&quot;providerId&quot;, providerId);
-SampleResult.setIgnore()</stringProp>
+            <stringProp name="filename">Folio-Test-Plans/mod-kb-ebsco-java/common/getWordFromList.groovy</stringProp>
+            <stringProp name="parameters">${__P(providerId_ALL)} ${__V(providerIdIndex)} providerId</stringProp>
+            <stringProp name="script"></stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Sampler>
           <hashTree/>
@@ -727,13 +719,9 @@ SampleResult.setIgnore()</stringProp>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set providerId" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">def providerIdIndex = vars.get(&quot;providerIdIndex&quot;)as Integer
-def providerIds = props.get(&quot;providerId_ALL&quot;).split(&quot;,&quot;) as List
-def providerId = providerIds.get(providerIdIndex % providerIds.size()).trim()
-vars.put(&quot;providerId&quot;, providerId);
-SampleResult.setIgnore()</stringProp>
+            <stringProp name="filename">Folio-Test-Plans/mod-kb-ebsco-java/common/getWordFromList.groovy</stringProp>
+            <stringProp name="parameters">${__P(providerId_ALL)} ${__V(providerIdIndex)} providerId</stringProp>
+            <stringProp name="script"></stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Sampler>
           <hashTree/>
@@ -810,13 +798,9 @@ SampleResult.setIgnore()</stringProp>
           <hashTree/>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Set search word" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">def wordIndex = vars.get(&quot;packageWordIndex&quot;)as Integer
-def searchWords = vars.get(&quot;possibleSearchWords&quot;).split(&quot;,&quot;) as List
-def searchWord = searchWords.get(wordIndex % searchWords.size())
-vars.put(&quot;searchWord&quot;, searchWord);
-SampleResult.setIgnore()</stringProp>
+            <stringProp name="filename">Folio-Test-Plans/mod-kb-ebsco-java/common/getWordFromList.groovy</stringProp>
+            <stringProp name="parameters">${__V(possibleSearchWords)} ${__V(packageWordIndex)} searchWord</stringProp>
+            <stringProp name="script"></stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223Sampler>
           <hashTree/>
