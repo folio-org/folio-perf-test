@@ -23,6 +23,11 @@
             <stringProp name="Argument.value">7620724099</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="DefaultContributorName" elementType="Argument">
+            <stringProp name="Argument.name">DefaultContributorName</stringProp>
+            <stringProp name="Argument.value">john smith</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -48,20 +53,6 @@ props.put(&quot;stressRamp&quot;, Integer.parseInt(threadsSplit[1]).toString())
 props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())</stringProp>
       </JSR223PreProcessor>
       <hashTree/>
-      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
-        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments"/>
-        </elementProp>
-        <stringProp name="HTTPSampler.domain"></stringProp>
-        <stringProp name="HTTPSampler.port"></stringProp>
-        <stringProp name="HTTPSampler.protocol"></stringProp>
-        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-        <stringProp name="HTTPSampler.path"></stringProp>
-        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
-        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-        <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
-      </ConfigTestElement>
-      <hashTree/>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Login Config" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
@@ -85,7 +76,7 @@ props.put(&quot;stressCount&quot;, Integer.parseInt(threadsSplit[2]).toString())
         <stringProp name="HTTPSampler.path"></stringProp>
         <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
       </ConfigTestElement>
       <hashTree/>
       <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Login/Load Data Thread Group" enabled="true">
@@ -518,7 +509,7 @@ vars.put(&quot;userId&quot;,userBarcode );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="GET query users by barcode JSON Extractor" enabled="true">
@@ -667,7 +658,7 @@ vars.put(&quot;userName&quot;,userName );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
@@ -735,47 +726,10 @@ vars.put(&quot;userId&quot;,userId );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>false</xml>
-            <fieldNames>true</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-            <sentBytes>true</sentBytes>
-            <url>true</url>
-            <threadCounts>true</threadCounts>
-            <idleTime>true</idleTime>
-            <connectTime>true</connectTime>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group GET query group by patronGroupId" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -841,7 +795,7 @@ vars.put(&quot;patronGroupId&quot;, curIds.patrons[${__threadNum} - 1])</stringP
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -947,7 +901,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1071,7 +1025,7 @@ vars.put(&quot;itemBarcode&quot;,itemBarcode );</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="POST check-out-by-barcode JSON Extractor" enabled="true">
@@ -1159,7 +1113,7 @@ props.put(&quot;retrievedLoanids&quot;,jsonOutput.toJson(curIds))
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query GET loan policy by id PreProcessor" enabled="false">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query GET loan policy by id PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -1179,7 +1133,7 @@ if(value == null) {
 vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">x-okapi-token</stringProp>
@@ -1200,7 +1154,7 @@ vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET loan-policy-storage/loan-policies?query(id==&quot;{loanPolicyId}&quot;)" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET loan-policy-storage/loan-policies?query(id==&quot;{loanPolicyId}&quot;)" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1216,10 +1170,10 @@ vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1270,7 +1224,7 @@ vars.put(&quot;loanPolicyId&quot;, value)</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query loan-policies by id PreProcessor" enabled="false">
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="GET query loan-policies by id PreProcessor" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
@@ -1285,7 +1239,7 @@ def curIds =  jsonSlurper.parseText(rawUserIds)
 vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">x-okapi-token</stringProp>
@@ -1306,7 +1260,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET circulation/loans?query=(userId={id} and status.name&lt;&gt;Closed)&amp;limit=1" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET circulation/loans?query=(userId={id} and status.name&lt;&gt;Closed)&amp;limit=1" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1322,10 +1276,10 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1 ])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1428,7 +1382,7 @@ vars.put(&quot;itemBarcode&quot;, curIds.items[${__threadNum} - 1].barcode)</str
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
@@ -1572,7 +1526,7 @@ vars.put(&quot;itemId&quot;, itemId);</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
@@ -1735,7 +1689,7 @@ vars.put(&quot;itemBarcode&quot;, allInstanceIds.items[${__threadNum} - 1 ].barc
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
@@ -1789,7 +1743,7 @@ vars.put(&quot;itemBarcode&quot;, allInstanceIds.items[${__threadNum} - 1 ].barc
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1880,7 +1834,7 @@ vars.put(&quot;itemBarcode&quot;, allInstanceIds.items[${__threadNum} - 1 ].barc
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1986,7 +1940,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2092,7 +2046,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2198,7 +2152,7 @@ vars.put(&quot;itemId&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2306,7 +2260,7 @@ vars.put(&quot;locationVal&quot;, curIds.locations[r.nextInt(  curIds.locations.
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2412,7 +2366,7 @@ vars.put(&quot;idVal&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2518,7 +2472,7 @@ vars.put(&quot;idVal&quot;, curIds.items[${__threadNum} - 1].id)</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2624,7 +2578,7 @@ vars.put(&quot;idVal&quot;, curIds.instances[${__threadNum} - 1].id)</stringProp
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2730,7 +2684,7 @@ vars.put(&quot;idVal&quot;, curIds.instances[${__threadNum} - 1].id)</stringProp
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2859,7 +2813,182 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="49586">200</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.custom_message"></stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <boolProp name="Assertion.assume_success">false</boolProp>
+          <intProp name="Assertion.test_type">16</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// assertion
+if (vars.get(&quot;assertion&quot;) != null) {
+  def jsonSlurper = new JsonSlurper();
+  def resp = jsonSlurper.parseText(prev.getResponseDataAsString());
+  def size = resp.instances.size();
+  def found = false;
+  for (i = 0; i &lt; size; i++) {
+    def idSize = resp.instances[i].identifiers.size();
+    for (j = 0; j &lt; idSize; j++) {
+      if (resp.instances[i].identifiers[j].value.contains(vars.get(&quot;idVal&quot;))) {
+        log.info(&quot;Found &quot; + vars.get(&quot;idVal&quot;));
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+  if (!found) {
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;idVal&quot;));
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Cannot find identifier: &quot; + vars.get(&quot;idVal&quot;));
+  }
+} else {
+  log.warn(&quot;No assertion was performed.&quot;);
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="FOLIO-2154 search instance by identifier type and value (new syntax)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// pick a random identifier from the sample data
+def jsonSlurper = new JsonSlurper();
+def resp = jsonSlurper.parseText(props.get(&quot;instanceids&quot;));
+def size = resp.instances.size();
+def fallback = true;
+if (size &gt; 0) {
+  // find a good candidate
+  Random rand = new Random();
+  def cnt = 0;
+  while (fallback &amp;&amp; cnt &lt; 10) {
+    def pick = rand.nextInt(size);
+    def obj = resp.instances[pick].identifiers;
+    for (i = 0; i &lt; obj.size(); i++) {
+      // split to handle data like &quot;0889222177 (pbk.)&quot;
+      def val = obj[i].value.trim().split()[0];
+      // regex to skip data like &quot;(DE-599)ZDB2905315-8&quot;
+      if (val ==~ /[0-9A-Za-z\-\_]+/) {
+        vars.put(&quot;idType&quot;, obj[i].identifierTypeId);
+        vars.put(&quot;idVal&quot;, val);
+        vars.put(&quot;assertion&quot;, &quot;true&quot;);
+        fallback = false;
+        break;
+      } else {
+        log.info(&quot;skip sample identifier: &quot; + obj[i].value);
+      }
+    }
+    cnt++;
+  }
+}
+if (fallback) {
+  log.warn(&quot;fall back to use default identifier type/value, no assertion&quot;);
+  vars.remove(&quot;assertion&quot;);
+  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);
+  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);
+}
+log.info(&quot;picked identifier type: &quot; + vars.get(&quot;idType&quot;));
+log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=identifiers =/@value/@identifierTypeId={idType} &quot;{idVal}&quot;" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=identifiers=%2F%40value%2F%40identifierTypeId%3D${idType}%20%22${idVal}%22</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -2959,6 +3088,19 @@ if (vars.get(&quot;assertion&quot;) != null) {
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
         <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
@@ -3005,7 +3147,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=(identifiers adj &quot;\&quot;value\&quot;: \&quot;{idVal}*\&quot;&quot;) sortby title" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=(identifiers adj &quot;\&quot;value\&quot;: {idVal}*&quot;) sortby title" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -3013,7 +3155,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=%28identifiers%20adj%20%22%5C%22value%5C%22%3A%20%5C%22${idVal}%2A%5C%22%22%29%20sortby%20title</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=%28identifiers%20adj%20%22%5C%22value%5C%22%3A%20${idVal}%2A%22%29%20sortby%20title</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -3021,7 +3163,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
@@ -3070,6 +3212,57 @@ if (vars.get(&quot;assertion&quot;) != null) {
           <intProp name="Assertion.test_type">16</intProp>
         </ResponseAssertion>
         <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="FOLIO-2154 search instance by identifier value only (new syntax)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
           <collectionProp name="HeaderManager.headers">
             <elementProp name="" elementType="Header">
@@ -3082,6 +3275,283 @@ if (vars.get(&quot;assertion&quot;) != null) {
             </elementProp>
           </collectionProp>
         </HeaderManager>
+        <hashTree/>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// pick a random identifier from the sample data
+def jsonSlurper = new JsonSlurper();
+def resp = jsonSlurper.parseText(props.get(&quot;instanceids&quot;));
+def size = resp.instances.size();
+def fallback = true;
+if (size &gt; 0) {
+  // find a good candidate
+  Random rand = new Random();
+  def cnt = 0;
+  while (fallback &amp;&amp; cnt &lt; 10) {
+    def pick = rand.nextInt(size);
+    def obj = resp.instances[pick].identifiers;
+    for (i = 0; i &lt; obj.size(); i++) {
+      // split to handle data like &quot;0889222177 (pbk.)&quot;
+      def val = obj[i].value.trim().split()[0];
+      // regex to skip data like &quot;(DE-599)ZDB2905315-8&quot;
+      if (val ==~ /[0-9A-Za-z\-\_]+/) {
+        vars.put(&quot;idType&quot;, obj[i].identifierTypeId);
+        vars.put(&quot;idVal&quot;, val);
+        vars.put(&quot;assertion&quot;, &quot;true&quot;);
+        fallback = false;
+        break;
+      } else {
+        log.info(&quot;skip sample identifier: &quot; + obj[i].value);
+      }
+    }
+    cnt++;
+  }
+}
+if (fallback) {
+  log.warn(&quot;fall back to use default identifier type/value, no assertion&quot;);
+  vars.remove(&quot;assertion&quot;);
+  vars.put(&quot;idType&quot;, &quot;${DefaultIdType}&quot;);
+  vars.put(&quot;idVal&quot;, &quot;${DefaultIdValue}&quot;);
+}
+log.info(&quot;picked identifier type: &quot; + vars.get(&quot;idType&quot;));
+log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=identifiers =/@value/@identifierTypeId={idType} &quot;{idVal}&quot;" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=(identifiers%20%3D%2F%40value%20%22${idVal}%22)%20sortby%20title</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// assertion
+if (vars.get(&quot;assertion&quot;) != null) {
+  def jsonSlurper = new JsonSlurper();
+  def resp = jsonSlurper.parseText(prev.getResponseDataAsString());
+  def size = resp.instances.size();
+  def found = false;
+  for (i = 0; i &lt; size; i++) {
+    def idSize = resp.instances[i].identifiers.size();
+    for (j = 0; j &lt; idSize; j++) {
+      if (resp.instances[i].identifiers[j].value.contains(vars.get(&quot;idVal&quot;))) {
+        log.info(&quot;Found &quot; + vars.get(&quot;idVal&quot;));
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+  if (!found) {
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;idVal&quot;));
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Cannot find identifier: &quot; + vars.get(&quot;idVal&quot;));
+  }
+} else {
+  log.warn(&quot;No assertion was performed.&quot;);
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="49586">200</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.custom_message"></stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <boolProp name="Assertion.assume_success">false</boolProp>
+          <intProp name="Assertion.test_type">16</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="FOLIO-2154 search instance by contributors new array syntax" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// pick a random identifier from the sample data
+def jsonSlurper = new JsonSlurper();
+def resp = jsonSlurper.parseText(props.get(&quot;instanceids&quot;));
+def size = resp.instances.size();
+def fallback = true;
+if (size &gt; 0) {
+  // find a good candidate
+  Random rand = new Random();
+  def cnt = 0;
+  while (fallback &amp;&amp; cnt &lt; 10) {
+    def pick = rand.nextInt(size);
+    def obj = resp.instances[pick].contributors;
+    for (i = 0; i &lt; obj.size(); i++) {
+      def val = obj[i].name.trim();
+      vars.put(&quot;contributorName&quot;, val);
+      vars.put(&quot;assertion&quot;, &quot;true&quot;);
+      fallback = false;
+      break;
+    }
+    cnt++;
+  }
+}
+if (fallback) {
+  log.warn(&quot;fall back to use default contributor name, no assertion&quot;);
+  vars.remove(&quot;assertion&quot;);
+  vars.put(&quot;contributorName&quot;, &quot;${DefaultContributorName}&quot;);
+}
+log.info(&quot;picked contributor name: &quot; + vars.get(&quot;contributorName&quot;));</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=(contributors =/@name &quot;{name}&quot;) sortby title" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=(contributors%20%3D%2F%40name%20%22${contributorName}%22)%20sortby%20title</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper;
+
+// assertion
+if (vars.get(&quot;assertion&quot;) != null) {
+  def jsonSlurper = new JsonSlurper();
+  def resp = jsonSlurper.parseText(prev.getResponseDataAsString());
+  def size = resp.instances.size();
+  def found = false;
+  for (i = 0; i &lt; size; i++) {
+    def idSize = resp.instances[i].identifiers.size();
+    for (j = 0; j &lt; idSize; j++) {
+      if (resp.instances[i].contributors[j].name.contains(vars.get(&quot;contributorName&quot;))) {
+        log.info(&quot;Found &quot; + vars.get(&quot;contributorName&quot;));
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      break;
+    }
+  }
+  if (!found) {
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;contributorName&quot;));
+    AssertionResult.setFailure(true);
+    AssertionResult.setFailureMessage(&quot;Cannot find contributor: &quot; + vars.get(&quot;contributorName&quot;));
+  }
+} else {
+  log.warn(&quot;No assertion was performed.&quot;);
+}</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="49586">200</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.custom_message"></stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+          <boolProp name="Assertion.assume_success">false</boolProp>
+          <intProp name="Assertion.test_type">16</intProp>
+        </ResponseAssertion>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -3186,7 +3656,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3292,7 +3762,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3398,7 +3868,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3504,7 +3974,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3595,7 +4065,7 @@ vars.put(&quot;id&quot;, curIds.users[${__threadNum} - 1])</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3701,7 +4171,7 @@ vars.put(&quot;userId&quot;, curIds.users[${__threadNum} - 1].id);</stringProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">300000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -3742,6 +4212,43 @@ vars.put(&quot;userId&quot;, curIds.users[${__threadNum} - 1].id);</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
       <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
