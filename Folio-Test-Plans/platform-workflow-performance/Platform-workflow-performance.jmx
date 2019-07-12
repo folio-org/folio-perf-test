@@ -3322,7 +3322,7 @@ log.info(&quot;picked identifier value: &quot; + vars.get(&quot;idVal&quot;));</
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=identifiers =/@value/@identifierTypeId={idType} &quot;{idVal}&quot;" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=(identifiers =/@value &quot;{idVal}&quot;) sortby title" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
