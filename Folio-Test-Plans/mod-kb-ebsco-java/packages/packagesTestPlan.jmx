@@ -527,7 +527,7 @@ private String getRandomTag(List&lt;String&gt; possibleTags) {
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/eholdings/packages?q=${searchWord}&amp;sort=relevance&amp;count=10</stringProp>
+              <stringProp name="HTTPSampler.path">/eholdings/packages?q=${searchWord}&amp;sort=relevance&amp;count=25&amp;page=${page}</stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
