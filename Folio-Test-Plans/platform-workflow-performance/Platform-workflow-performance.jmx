@@ -1382,32 +1382,7 @@ log.info(&quot;picked offset: &quot; + vars.get(&quot;offset&quot;));
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
-        <hashTree>
-          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="GET query items by barcode PostProcessor" enabled="true">
-            <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import groovy.json.JsonSlurper;
-import groovy.json.JsonOutput;
-
-def jsonSlurper = new JsonSlurper();
-def jsonOutput = new JsonOutput();
-def RawLoanIds = props.get(&quot;retrievedItemids&quot;)
-if(RawLoanIds == null) {
-	RawLoanIds = jsonOutput.toJson([items :[]]);
-}
-def curIds =  jsonSlurper.parseText(RawLoanIds)
-
-
-curIds.items.add(vars.get(&quot;itemId&quot;) )
-
-
-props.put(&quot;retrievedItemids&quot;,jsonOutput.toJson(curIds))
-log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds));</stringProp>
-          </JSR223PostProcessor>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
           <collectionProp name="Asserion.test_strings">
             <stringProp name="49586">200</stringProp>
@@ -1684,39 +1659,7 @@ vars.put(&quot;itemBarcode&quot;, curIds.items[${__threadNum} - 1].barcode)</str
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
         </HTTPSamplerProxy>
-        <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">itemId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">.items[0].id</stringProp>
-            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">x</stringProp>
-          </JSONPostProcessor>
-          <hashTree/>
-          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="GET query items by barcode PostProcessor" enabled="true">
-            <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import groovy.json.JsonSlurper;
-import groovy.json.JsonOutput;
-
-def jsonSlurper = new JsonSlurper();
-def jsonOutput = new JsonOutput();
-def RawLoanIds = props.get(&quot;retrievedItemids&quot;)
-if(RawLoanIds == null) {
-	RawLoanIds = jsonOutput.toJson([items :[]]);
-}
-def curIds =  jsonSlurper.parseText(RawLoanIds)
-
-
-curIds.items.add(vars.get(&quot;itemId&quot;) )
-
-
-props.put(&quot;retrievedItemids&quot;,jsonOutput.toJson(curIds))
-log.info(&quot;retrievedLoanids after to json &quot; + jsonOutput.toJson(curIds));</stringProp>
-          </JSR223PostProcessor>
-          <hashTree/>
-        </hashTree>
+        <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
