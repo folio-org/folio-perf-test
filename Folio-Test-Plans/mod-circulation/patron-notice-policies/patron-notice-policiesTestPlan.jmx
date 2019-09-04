@@ -167,7 +167,7 @@ log.info(&quot; &gt;&gt;&gt; x-okapi-token: &quot;+ vars.get(&quot;x-okapi-token
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/users?limit=30&amp;query=active=true</stringProp>
+          <stringProp name="HTTPSampler.path">/users?limit=100&amp;query=active=true</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -252,7 +252,7 @@ log.info(&quot; &gt;&gt;&gt; userBarcode: &quot; + userBarcode);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/items?query=status.name==Available&amp;limit=1000</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/items?query=status.name==Available or status.name==In transit&amp;limit=1000</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -286,11 +286,21 @@ log.info(&quot; &gt;&gt;&gt; userBarcode: &quot; + userBarcode);</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
-def itemBarcode = &quot;${itemBarcode}&quot;;
-JMeterUtils.setProperty(&quot;itemBarcode&quot;, itemBarcode);
+def response = prev.getResponseDataAsString();
+def itemsJson = new JsonSlurper().parseText(response);
+def itemsIdsJson = new groovy.json.JsonBuilder();
 
-log.info(&quot; &gt;&gt;&gt; itemBarcode: &quot; + itemBarcode);</stringProp>
+itemsIdsJson {
+	itemIds itemsJson.items.collect{
+		  it.barcode
+		}
+	}
+
+JMeterUtils.setProperty(&quot;itemsIdsJson&quot;, itemsIdsJson.toString());
+log.info(&quot; &gt;&gt;&gt; itemsIdsJson: &quot; + itemsIdsJson);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -511,7 +521,7 @@ log.info(&quot; &gt;&gt;&gt; newRulesJson: &quot; + newRulesJson);</stringProp>
           </ResponseAssertion>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">noticesLimitId;</stringProp>
+            <stringProp name="JSONPostProcessor.referenceNames">noticesLimitConfigId;</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">id;</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">0;</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
@@ -524,10 +534,14 @@ log.info(&quot; &gt;&gt;&gt; newRulesJson: &quot; + newRulesJson);</stringProp>
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
 
-def noticesLimitId = &quot;${noticesLimitId}&quot;;
-JMeterUtils.setProperty(&quot;noticesLimitId&quot;, noticesLimitId);
+def noticesLimitConfigId = &quot;${noticesLimitConfigId}&quot;;
+def noticesLimit = &quot;${noticesLimit}&quot;;
 
-log.info(&quot; &gt;&gt;&gt; noticesLimitId: &quot; + noticesLimitId);</stringProp>
+JMeterUtils.setProperty(&quot;noticesLimitConfigId&quot;, noticesLimitConfigId);
+JMeterUtils.setProperty(&quot;noticesLimit&quot;, noticesLimit);
+
+log.info(&quot; &gt;&gt;&gt; noticesLimitConfigId: &quot; + noticesLimitConfigId);
+log.info(&quot; &gt;&gt;&gt; noticesLimit: &quot; + noticesLimit);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -694,8 +708,8 @@ String templateName = &quot;Test name_&quot; + templateId;
 JMeterUtils.setProperty(&quot;templateId&quot;, templateId);
 JMeterUtils.setProperty(&quot;templateName&quot;, templateName);
 
-log.info(&quot;&gt;&gt;&gt;&gt;&gt; templateId: &quot; + templateId);
-log.info(&quot;&gt;&gt;&gt;&gt;&gt; templateName: &quot; + templateName);</stringProp>
+log.info(&quot; &gt;&gt;&gt; templateId: &quot; + templateId);
+log.info(&quot; &gt;&gt;&gt; templateName: &quot; + templateName);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -818,7 +832,7 @@ JMeterUtils.setProperty(&quot;noticePolicyDescription&quot;, noticePolicyDescrip
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="DataLoader noticesLimit Config" enabled="true">
           <stringProp name="filename">Folio-Test-Plans/mod-circulation/patron-notice-policies/noticePolicyConfig.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="variableNames">numberOfTemplates</stringProp>
+          <stringProp name="variableNames">numberOfTemplates,numberOfCheckout</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
@@ -887,7 +901,10 @@ def noticePolicyName = JMeterUtils.getProperty(&quot;noticePolicyName&quot;);
 def noticePolicyDescription = JMeterUtils.getProperty(&quot;noticePolicyDescription&quot;);
 
 def numberOfTemplates = ${numberOfTemplates};
-log.info(&quot; &gt;&gt;&gt; number of templates for notification: &quot; + numberOfTemplates);
+def numberOfCheckout = ${numberOfCheckout};
+
+JMeterUtils.setProperty(&quot;numberOfTemplates&quot;, &quot;${numberOfTemplates}&quot;);
+JMeterUtils.setProperty(&quot;numberOfCheckout&quot;, &quot;${numberOfCheckout}&quot;);
 
 def templateId = JMeterUtils.getProperty(&quot;templateId&quot;);
 
@@ -940,7 +957,7 @@ JMeterUtils.setProperty(&quot;noticePolicyBuilder&quot;, noticePolicyBuilder.toS
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">${__P(numberOfCheckout)}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
@@ -1007,16 +1024,65 @@ JMeterUtils.setProperty(&quot;noticePolicyBuilder&quot;, noticePolicyBuilder.toS
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import java.text.SimpleDateFormat;
+            <stringProp name="script">import org.apache.jmeter.assertions.AssertionResult;
 import org.apache.jmeter.util.JMeterUtils;
- 
+import java.text.SimpleDateFormat;
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
+// #1 Create `loanDate`
 SimpleDateFormat dateFormatGmt = new SimpleDateFormat(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSZ&quot;);
 dateFormatGmt.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));
-
 def loanDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &quot;Z&quot;);
-JMeterUtils.setProperty(&quot;loanDate&quot;, loanDate);
 
-log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
+JMeterUtils.setProperty(&quot;loanDate&quot;, loanDate);
+log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);
+
+// #2 Defind `itemBarcode`
+def itemsIdsStr = JMeterUtils.getProperty(&quot;itemsIdsJson&quot;);
+def itemsIdsJson = new JsonSlurper().parseText(itemsIdsStr);
+def ids = itemsIdsJson.itemIds;
+
+def id = ids[0]
+if(id == null) {
+	def errorMsg = &quot; &gt;&gt;&gt; There are no available items in the system!&quot;;
+	log.error(errorMsg);
+     AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
+	assertionResult.setFailureMessage(errorMsg);
+     assertionResult.setFailure(true); 
+} else {
+	JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
+	log.info(&quot; &gt;&gt;&gt; itemBarcode: &quot; + id);		
+}
+
+itemsIdsJson.itemIds.remove(id); //remove(itemBarcode);
+
+def jsonBuilder = new groovy.json.JsonBuilder(); // rewrite itemIds to json
+jsonBuilder itemIds:  itemsIdsJson.itemIds
+
+JMeterUtils.setProperty(&quot;itemsIdsJson&quot;, jsonBuilder.toString());
+
+// #3 Create `checkInItemIds` for check-in
+def checkInItemIdsStr = JMeterUtils.getProperty(&quot;checkInItemIds&quot;);
+List&lt;String&gt; checkInItemIds;
+
+if(checkInItemIdsStr == null){
+ 	checkInItemIds = new ArrayList&lt;&gt;();
+}else {
+  	checkInItemIds = checkInItemIdsStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
+  	def first = checkInItemIds[0];
+  	if(!first?.trim()){
+  		checkInItemIds.remove(first);
+  	}
+}
+
+if(id != null){
+	checkInItemIds.add(id); // add itemBarcode id 
+}
+
+JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
+log.info(&quot; &gt;&gt;&gt; checkInItemIds: &quot; + checkInItemIds.toString());
+</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1047,7 +1113,7 @@ log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="DataLoader expected result" enabled="true">
           <stringProp name="filename">Folio-Test-Plans/mod-circulation/patron-notice-policies/expectedResult.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
-          <stringProp name="variableNames">expectedNumberOfEmails</stringProp>
+          <stringProp name="variableNames">expectedNumberOfEmails,emailStatus,delayTime</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
@@ -1077,11 +1143,11 @@ log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Delay 5 min" enabled="true">
-          <stringProp name="ConstantTimer.delay">300000</stringProp>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Test Delay Time" enabled="true">
+          <stringProp name="ConstantTimer.delay">${__CSVRead(Folio-Test-Plans/mod-circulation/patron-notice-policies/expectedResult.csv,2)}</stringProp>
         </ConstantTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-email GET: all FAILURE emails" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-email GET: all emails by status" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1089,7 +1155,7 @@ log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/email?query=status=FAILURE</stringProp>
+          <stringProp name="HTTPSampler.path">/email?query=status=${__P(emailStatus)}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1100,6 +1166,29 @@ log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">import org.apache.jmeter.util.JMeterUtils;
+
+def emailStatus = &quot;${emailStatus}&quot;;
+def delayTime = &quot;${delayTime}&quot;;
+def noticesLimit = JMeterUtils.getProperty(&quot;noticesLimit&quot;);
+def numberOfTemplates = JMeterUtils.getProperty(&quot;numberOfTemplates&quot;);
+def numberOfCheckout = JMeterUtils.getProperty(&quot;numberOfCheckout&quot;);
+
+JMeterUtils.setProperty(&quot;emailStatus&quot;, emailStatus);
+JMeterUtils.setProperty(&quot;delayTime&quot;, delayTime);
+
+log.info(&quot; &gt;&gt;&gt; email status: &quot; + emailStatus);
+log.info(&quot; &gt;&gt;&gt; delay time for test in millis: &quot; + delayTime);
+log.info(&quot; &gt;&gt;&gt; notices limit in mod-configuration: &quot; + noticesLimit);
+log.info(&quot; &gt;&gt;&gt; number of templates in the patron notice: &quot; + numberOfTemplates);
+log.info(&quot; &gt;&gt;&gt; number of checkout: &quot; + numberOfCheckout);</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
@@ -1136,13 +1225,12 @@ log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);</stringProp>
 def totalRecords = &quot;${totalRecords}&quot;;
 def expectedNumberOfEmails = &quot;${expectedNumberOfEmails}&quot;;
 
-log.info(&quot; &gt;&gt;&gt;&gt;&gt;&gt; totalRecords: &quot; + totalRecords);
-log.info(&quot; &gt;&gt;&gt;&gt;&gt;&gt; expectedNumberOfEmails: &quot; + expectedNumberOfEmails);
+log.info(&quot; &gt;&gt;&gt; totalRecords: &quot; + totalRecords);
+log.info(&quot; &gt;&gt;&gt; expectedNumberOfEmails: &quot; + expectedNumberOfEmails);
 
 if(!totalRecords.equals(expectedNumberOfEmails)){
-	def errorMsg = &quot;Expected number of emails:&quot; + expectedNumberOfEmails + &quot;, received: &quot; + totalRecords;
+	def errorMsg = &quot; &gt;&gt;&gt; Expected number of emails :&quot; + expectedNumberOfEmails + &quot;, received: &quot; + totalRecords;
 	log.error(errorMsg);
-	
      AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
 	assertionResult.setFailureMessage(errorMsg);
      assertionResult.setFailure(true); 
@@ -1151,14 +1239,14 @@ if(!totalRecords.equals(expectedNumberOfEmails)){
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Reset system to its initial state" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Check in" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">${__P(numberOfCheckout)}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1221,15 +1309,42 @@ if(!totalRecords.equals(expectedNumberOfEmails)){
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="script">import java.text.SimpleDateFormat;
+            <stringProp name="script">import org.apache.jmeter.assertions.AssertionResult;
 import org.apache.jmeter.util.JMeterUtils;
- 
+import java.text.SimpleDateFormat;
+
+// #1 Create `checkInDate`
 SimpleDateFormat dateFormatGmt = new SimpleDateFormat(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSZ&quot;);
 dateFormatGmt.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));
-
 def checkInDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &quot;Z&quot;);
+
 JMeterUtils.setProperty(&quot;checkInDate&quot;, checkInDate);
-log.info(&quot; &gt;&gt;&gt; checkInDate: &quot; + checkInDate);</stringProp>
+log.info(&quot; &gt;&gt;&gt; checkInDate: &quot; + checkInDate);
+
+// #2 Defind `itemBarcode`
+def checkInItemIdsStr = JMeterUtils.getProperty(&quot;checkInItemIds&quot;);
+if(checkInItemIdsStr == null){
+ 	checkInItemIds = new ArrayList&lt;&gt;();
+} else {
+  	checkInItemIds = checkInItemIdsStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
+}
+
+def id = checkInItemIds[0];
+if(id == null){
+ 	def errorMsg = &quot; &gt;&gt;&gt; Not defined item id!&quot;;
+	log.error(errorMsg);
+     AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
+	assertionResult.setFailureMessage(errorMsg);
+     assertionResult.setFailure(true); 
+}
+
+checkInItemIds.remove(id);
+
+JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
+JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
+
+log.info(&quot; &gt;&gt;&gt; checkInItemIds: &quot; + checkInItemIds);
+log.info(&quot; &gt;&gt;&gt; itemBarcode: &quot; + id);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1243,7 +1358,42 @@ log.info(&quot; &gt;&gt;&gt; checkInDate: &quot; + checkInDate);</stringProp>
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-email DELETE: all failure emails" enabled="true">
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Reset system to initial state" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">X-Okapi-Tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">X-Okapi-Token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-email DELETE: all emails by status" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -1251,7 +1401,7 @@ log.info(&quot; &gt;&gt;&gt; checkInDate: &quot; + checkInDate);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/delayedTask/expiredMessages?expirationDate=${__P(emailDate)}&amp;emailStatus=FAILURE</stringProp>
+          <stringProp name="HTTPSampler.path">/delayedTask/expiredMessages?expirationDate=${__P(emailDate)}&amp;emailStatus=${__P(emailStatus)}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1434,7 +1584,7 @@ JMeterUtils.setProperty(&quot;noticePolicyCleanerBuilder&quot;, noticePolicyBuil
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/configurations/entries/${__P(noticesLimitId)}</stringProp>
+          <stringProp name="HTTPSampler.path">/configurations/entries/${__P(noticesLimitConfigId)}</stringProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

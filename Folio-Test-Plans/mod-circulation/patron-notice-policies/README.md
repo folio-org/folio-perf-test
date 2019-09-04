@@ -1,5 +1,7 @@
 Patron notice policy load profile
 -----------------------------------------------
+Performance testing - time-based patron loan notices (one item)
+
 CSV files:
 1.`config.csv`
 Description:
@@ -17,6 +19,8 @@ Description:
 * The file contains expected test result
 Parameters:
 * expectedNumberOfEmails : number of emails processed
+* emailStatus : status of emails to be checked
+* delayTime : time waiting for the test result (time in milliseconds)
 
 3.`noticeSchedulerConfiguration.csv`
 Description:
@@ -30,4 +34,5 @@ Parameters:
 Description:
 * The configuration file for creating notifications
 Parameters:
-* numberOfTemplates - number of templates for notification
+* numberOfTemplates : number of templates for notification
+* numberOfCheckout : number of checkout for creation schedule notifications
