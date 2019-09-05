@@ -13,7 +13,7 @@
     </TestPlan>
     <hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
-        <stringProp name="filename">Folio-Test-Plans/mod-circulation/patron-notice-policies/config.csv</stringProp>
+        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
         <stringProp name="fileEncoding">UTF-8</stringProp>
         <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
         <boolProp name="ignoreFirstLine">false</boolProp>
@@ -1175,6 +1175,7 @@ log.info(&quot; &gt;&gt;&gt; checkInItemIds: &quot; + checkInItemIds.toString())
 
 def emailStatus = &quot;${emailStatus}&quot;;
 def delayTime = &quot;${delayTime}&quot;;
+def expectedNumberOfEmails = &quot;${expectedNumberOfEmails}&quot;;
 def noticesLimit = JMeterUtils.getProperty(&quot;noticesLimit&quot;);
 def numberOfTemplates = JMeterUtils.getProperty(&quot;numberOfTemplates&quot;);
 def numberOfCheckout = JMeterUtils.getProperty(&quot;numberOfCheckout&quot;);
@@ -1182,11 +1183,12 @@ def numberOfCheckout = JMeterUtils.getProperty(&quot;numberOfCheckout&quot;);
 JMeterUtils.setProperty(&quot;emailStatus&quot;, emailStatus);
 JMeterUtils.setProperty(&quot;delayTime&quot;, delayTime);
 
-log.info(&quot; &gt;&gt;&gt; email status: &quot; + emailStatus);
 log.info(&quot; &gt;&gt;&gt; delay time for test in millis: &quot; + delayTime);
 log.info(&quot; &gt;&gt;&gt; notices limit in mod-configuration: &quot; + noticesLimit);
 log.info(&quot; &gt;&gt;&gt; number of templates in the patron notice: &quot; + numberOfTemplates);
-log.info(&quot; &gt;&gt;&gt; number of checkout: &quot; + numberOfCheckout);</stringProp>
+log.info(&quot; &gt;&gt;&gt; number of checkout: &quot; + numberOfCheckout);
+log.info(&quot; &gt;&gt;&gt; email status: &quot; + emailStatus);
+log.info(&quot; &gt;&gt;&gt; expected number of processed emails: &quot; + expectedNumberOfEmails);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
