@@ -119,7 +119,7 @@
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
 
-log.info(&quot; &gt;&gt;&gt; x-okapi-token: &quot;+ vars.get(&quot;x-okapi-token&quot;));</stringProp>
+log.info(&quot;x-okapi-token: &quot;+ vars.get(&quot;x-okapi-token&quot;));</stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
@@ -205,7 +205,7 @@ log.info(&quot; &gt;&gt;&gt; x-okapi-token: &quot;+ vars.get(&quot;x-okapi-token
 def userBarcode = &quot;${userBarcode}&quot;;
 JMeterUtils.setProperty(&quot;userBarcode&quot;, userBarcode);
 
-log.info(&quot; &gt;&gt;&gt; userBarcode: &quot; + userBarcode);</stringProp>
+log.info(&quot;userBarcode: &quot; + userBarcode);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -300,12 +300,12 @@ itemsIdsJson {
 	}
 
 JMeterUtils.setProperty(&quot;itemsIdsJson&quot;, itemsIdsJson.toString());
-log.info(&quot; &gt;&gt;&gt; itemsIdsJson: &quot; + itemsIdsJson);</stringProp>
+log.info(&quot;itemsIdsJson: &quot; + itemsIdsJson);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Circulation rules" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Change circulation rules" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -389,7 +389,7 @@ def firstLoanId = response.substring(firstIndexOf + shiftRight, firstIndexOf + s
 def newRulesJson = response.replace(firstLoanId, lastLoanId);
 JMeterUtils.setProperty(&quot;newRulesJson&quot;, newRulesJson);
 
-log.info(&quot; &gt;&gt;&gt; newRulesJson: &quot; + newRulesJson);</stringProp>
+log.info(&quot;newCirculationRulesJson: &quot; + newRulesJson);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -540,8 +540,8 @@ def noticesLimit = &quot;${noticesLimit}&quot;;
 JMeterUtils.setProperty(&quot;noticesLimitConfigId&quot;, noticesLimitConfigId);
 JMeterUtils.setProperty(&quot;noticesLimit&quot;, noticesLimit);
 
-log.info(&quot; &gt;&gt;&gt; noticesLimitConfigId: &quot; + noticesLimitConfigId);
-log.info(&quot; &gt;&gt;&gt; noticesLimit: &quot; + noticesLimit);</stringProp>
+log.info(&quot;noticesLimitConfigId: &quot; + noticesLimitConfigId);
+log.info(&quot;noticesLimit: &quot; + noticesLimit);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -629,8 +629,8 @@ def servicePointName = &quot;${servicePointName}&quot;;
 JMeterUtils.setProperty(&quot;servicePointId&quot;, servicePointId);
 JMeterUtils.setProperty(&quot;servicePointName&quot;, servicePointName);
 
-log.info(&quot; &gt;&gt;&gt; servicePointId: &quot; + servicePointId);
-log.info(&quot; &gt;&gt;&gt; servicePointName: &quot; + servicePointName);</stringProp>
+log.info(&quot;servicePointId: &quot; + servicePointId);
+log.info(&quot;servicePointName: &quot; + servicePointName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
@@ -708,8 +708,8 @@ String templateName = &quot;Test name_&quot; + templateId;
 JMeterUtils.setProperty(&quot;templateId&quot;, templateId);
 JMeterUtils.setProperty(&quot;templateName&quot;, templateName);
 
-log.info(&quot; &gt;&gt;&gt; templateId: &quot; + templateId);
-log.info(&quot; &gt;&gt;&gt; templateName: &quot; + templateName);</stringProp>
+log.info(&quot;templateId: &quot; + templateId);
+log.info(&quot;templateName: &quot; + templateName);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -805,9 +805,9 @@ def noticePolicyId = &quot;${noticePolicyId}&quot;;
 def noticePolicyName = &quot;${noticePolicyName}&quot;;
 def noticePolicyDescription = &quot;${noticePolicyDescription}&quot;;
 
-log.info(&quot; &gt;&gt;&gt; noticePolicyId: &quot; + noticePolicyId);
-log.info(&quot; &gt;&gt;&gt; noticePolicyName: &quot; + noticePolicyName);
-log.info(&quot; &gt;&gt;&gt; noticePolicyDescription: &quot; + noticePolicyDescription);
+log.info(&quot;noticePolicyId: &quot; + noticePolicyId);
+log.info(&quot;noticePolicyName: &quot; + noticePolicyName);
+log.info(&quot;noticePolicyDescription: &quot; + noticePolicyDescription);
 
 JMeterUtils.setProperty(&quot;noticePolicyId&quot;, noticePolicyId);
 JMeterUtils.setProperty(&quot;noticePolicyName&quot;, noticePolicyName);
@@ -913,7 +913,7 @@ for(int i = 0; i &lt; templateIds.length; i++) {
     templateIds[i] = templateId;
 }
 
-log.info(&quot; &gt;&gt;&gt; templateIds: &quot; + templateIds);
+log.info(&quot;templateIds: &quot; + templateIds);
 
 def sendByBuilder = new groovy.json.JsonBuilder();
 sendByBuilder duration: 1, intervalId: &quot;Hours&quot;;
@@ -1036,7 +1036,7 @@ dateFormatGmt.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));
 def loanDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &quot;Z&quot;);
 
 JMeterUtils.setProperty(&quot;loanDate&quot;, loanDate);
-log.info(&quot; &gt;&gt;&gt; loanDate: &quot; + loanDate);
+log.info(&quot;loanDate: &quot; + loanDate);
 
 // #2 Defind `itemBarcode`
 def itemsIdsStr = JMeterUtils.getProperty(&quot;itemsIdsJson&quot;);
@@ -1045,14 +1045,14 @@ def ids = itemsIdsJson.itemIds;
 
 def id = ids[0]
 if(id == null) {
-	def errorMsg = &quot; &gt;&gt;&gt; There are no available items in the system!&quot;;
+	def errorMsg = &quot;There are no available items in the system!&quot;;
 	log.error(errorMsg);
      AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
 	assertionResult.setFailureMessage(errorMsg);
      assertionResult.setFailure(true); 
 } else {
 	JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
-	log.info(&quot; &gt;&gt;&gt; itemBarcode: &quot; + id);		
+	log.info(&quot;itemBarcode: &quot; + id);		
 }
 
 itemsIdsJson.itemIds.remove(id); //remove(itemBarcode);
@@ -1081,7 +1081,7 @@ if(id != null){
 }
 
 JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
-log.info(&quot; &gt;&gt;&gt; checkInItemIds: &quot; + checkInItemIds.toString());
+log.info(&quot;checkInItemIds: &quot; + checkInItemIds.toString());
 </stringProp>
           </JSR223PreProcessor>
           <hashTree/>
@@ -1183,12 +1183,12 @@ def numberOfCheckout = JMeterUtils.getProperty(&quot;numberOfCheckout&quot;);
 JMeterUtils.setProperty(&quot;emailStatus&quot;, emailStatus);
 JMeterUtils.setProperty(&quot;delayTime&quot;, delayTime);
 
-log.info(&quot; &gt;&gt;&gt; delay time for test in millis: &quot; + delayTime);
-log.info(&quot; &gt;&gt;&gt; notices limit in mod-configuration: &quot; + noticesLimit);
-log.info(&quot; &gt;&gt;&gt; number of templates in the patron notice: &quot; + numberOfTemplates);
-log.info(&quot; &gt;&gt;&gt; number of checkout: &quot; + numberOfCheckout);
-log.info(&quot; &gt;&gt;&gt; email status: &quot; + emailStatus);
-log.info(&quot; &gt;&gt;&gt; expected number of processed emails: &quot; + expectedNumberOfEmails);</stringProp>
+log.info(&quot;delay time for test in millis: &quot; + delayTime);
+log.info(&quot;notices limit in mod-configuration: &quot; + noticesLimit);
+log.info(&quot;number of templates in the patron notice: &quot; + numberOfTemplates);
+log.info(&quot;number of checkout: &quot; + numberOfCheckout);
+log.info(&quot;email status: &quot; + emailStatus);
+log.info(&quot;expected number of processed emails: &quot; + expectedNumberOfEmails);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1227,11 +1227,11 @@ log.info(&quot; &gt;&gt;&gt; expected number of processed emails: &quot; + expec
 def totalRecords = &quot;${totalRecords}&quot;;
 def expectedNumberOfEmails = &quot;${expectedNumberOfEmails}&quot;;
 
-log.info(&quot; &gt;&gt;&gt; totalRecords: &quot; + totalRecords);
-log.info(&quot; &gt;&gt;&gt; expectedNumberOfEmails: &quot; + expectedNumberOfEmails);
+log.info(&quot;totalRecords: &quot; + totalRecords);
+log.info(&quot;expectedNumberOfEmails: &quot; + expectedNumberOfEmails);
 
 if(!totalRecords.equals(expectedNumberOfEmails)){
-	def errorMsg = &quot; &gt;&gt;&gt; Expected number of emails :&quot; + expectedNumberOfEmails + &quot;, received: &quot; + totalRecords;
+	def errorMsg = &quot;Expected number of emails :&quot; + expectedNumberOfEmails + &quot;, received: &quot; + totalRecords;
 	log.error(errorMsg);
      AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
 	assertionResult.setFailureMessage(errorMsg);
@@ -1248,7 +1248,7 @@ if(!totalRecords.equals(expectedNumberOfEmails)){
           <stringProp name="LoopController.loops">${__P(numberOfCheckout)}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -1321,7 +1321,7 @@ dateFormatGmt.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));
 def checkInDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &quot;Z&quot;);
 
 JMeterUtils.setProperty(&quot;checkInDate&quot;, checkInDate);
-log.info(&quot; &gt;&gt;&gt; checkInDate: &quot; + checkInDate);
+log.info(&quot;checkInDate: &quot; + checkInDate);
 
 // #2 Defind `itemBarcode`
 def checkInItemIdsStr = JMeterUtils.getProperty(&quot;checkInItemIds&quot;);
@@ -1333,7 +1333,7 @@ if(checkInItemIdsStr == null){
 
 def id = checkInItemIds[0];
 if(id == null){
- 	def errorMsg = &quot; &gt;&gt;&gt; Not defined item id!&quot;;
+ 	def errorMsg = &quot;Not defined item id!&quot;;
 	log.error(errorMsg);
      AssertionResult assertionResult = new AssertionResult(&quot;AssertionResult&quot;);
 	assertionResult.setFailureMessage(errorMsg);
@@ -1345,8 +1345,8 @@ checkInItemIds.remove(id);
 JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
 JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
 
-log.info(&quot; &gt;&gt;&gt; checkInItemIds: &quot; + checkInItemIds);
-log.info(&quot; &gt;&gt;&gt; itemBarcode: &quot; + id);</stringProp>
+log.info(&quot;checkInItemIds: &quot; + checkInItemIds);
+log.info(&quot;itemBarcode: &quot; + id);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1523,10 +1523,6 @@ JMeterUtils.setProperty(&quot;noticePolicyCleanerBuilder&quot;, noticePolicyBuil
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Delay 200 millis" enabled="true">
-          <stringProp name="ConstantTimer.delay">200</stringProp>
-        </ConstantTimer>
-        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="mod-template-engine DELETE:  template by id" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
