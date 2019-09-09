@@ -415,7 +415,7 @@ if(stringWithBarcodes == null){
 
 def itemBarcodesJson = new groovy.json.JsonBuilder();
 itemBarcodesJson {
-	itemIds barcodeList.collect{
+	itemBarcodeIds barcodeList.collect{
 		  it
 		}
 	}
@@ -1394,7 +1394,7 @@ log.info(&quot;loanDate: &quot; + loanDate);
 // #2 Defind `itemBarcodes`
 def itemBarcodesStr = JMeterUtils.getProperty(&quot;itemBarcodesJson&quot;);
 def itemBarcodesJson = new JsonSlurper().parseText(itemBarcodesStr);                       
-def ids = itemBarcodesJson.itemIds;
+def ids = itemBarcodesJson.itemBarcodeIds;
 
 def id = ids[0]
 if(id == null) {
@@ -1408,33 +1408,33 @@ if(id == null) {
 	log.info(&quot;itemBarcode: &quot; + id);		
 }
 
-itemBarcodesJson.itemIds.remove(id); //remove(itemBarcode);          
+itemBarcodesJson.itemBarcodeIds.remove(id); //remove(itemBarcode);          
 
-def jsonBuilder = new groovy.json.JsonBuilder(); // rewrite itemIds to json
-jsonBuilder itemIds:  itemBarcodesJson.itemIds                                                   
+def jsonBuilder = new groovy.json.JsonBuilder(); // rewrite itemBarcodeIds to json
+jsonBuilder itemBarcodeIds:  itemBarcodesJson.itemBarcodeIds                                                   
 
 JMeterUtils.setProperty(&quot;itemBarcodesJson&quot;, jsonBuilder.toString());
 
-// #3 Create `checkInItemIds` for check-in
-def checkInItemIdsStr = JMeterUtils.getProperty(&quot;checkInItemIds&quot;);
-List&lt;String&gt; checkInItemIds;
+// #3 Create `checkInItemBarcodes` for check-in
+def checkInItemBarcodesStr = JMeterUtils.getProperty(&quot;checkInItemBarcodes&quot;);
 
-if(checkInItemIdsStr == null){
- 	checkInItemIds = new ArrayList&lt;&gt;();
+List&lt;String&gt; checkInItemBarcodes;
+if(checkInItemBarcodesStr == null){
+ 	checkInItemBarcodes = new ArrayList&lt;&gt;();
 }else {
-  	checkInItemIds = checkInItemIdsStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
-  	def first = checkInItemIds[0];
+  	checkInItemBarcodes = checkInItemBarcodesStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
+  	def first = checkInItemBarcodes[0];
   	if(!first?.trim()){
-  		checkInItemIds.remove(first);
+  		checkInItemBarcodes.remove(first);
   	}
 }
 
 if(id != null){
-	checkInItemIds.add(id); // add itemBarcode id 
+	checkInItemBarcodes.add(id); // add itemBarcode id 
 }
 
-JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
-log.info(&quot;checkInItemIds: &quot; + checkInItemIds.toString());
+JMeterUtils.setProperty(&quot;checkInItemBarcodes&quot;, checkInItemBarcodes.toString());
+log.info(&quot;checkInItemBarcodes: &quot; + checkInItemBarcodes.toString());
 </stringProp>
           </JSR223PreProcessor>
           <hashTree/>
@@ -1750,15 +1750,17 @@ def checkInDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &q
 JMeterUtils.setProperty(&quot;checkInDate&quot;, checkInDate);
 log.info(&quot;checkInDate: &quot; + checkInDate);
 
-// #2 Defind `itemBarcode`
-def checkInItemIdsStr = JMeterUtils.getProperty(&quot;checkInItemIds&quot;);
-if(checkInItemIdsStr == null){
- 	checkInItemIds = new ArrayList&lt;&gt;();
+// #2 Defind `itemBarcodes`
+def checkInItemBarcodesStr = JMeterUtils.getProperty(&quot;checkInItemBarcodes&quot;);
+
+List&lt;String&gt; checkInItemBarcodes;
+if(checkInItemBarcodesStr == null){
+ 	checkInItemBarcodes = new ArrayList&lt;&gt;();
 } else {
-  	checkInItemIds = checkInItemIdsStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
+  	checkInItemBarcodes = checkInItemBarcodesStr.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;).split(&apos;,&apos;).collect{it.trim() as String};
 }
 
-def id = checkInItemIds[0];
+def id = checkInItemBarcodes[0];
 if(id == null){
  	def errorMsg = &quot;Not defined item id!&quot;;
 	log.error(errorMsg);
@@ -1767,12 +1769,12 @@ if(id == null){
      assertionResult.setFailure(true); 
 }
 
-checkInItemIds.remove(id);
+checkInItemBarcodes.remove(id);
 
 JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
-JMeterUtils.setProperty(&quot;checkInItemIds&quot;, checkInItemIds.toString());
+JMeterUtils.setProperty(&quot;checkInItemBarcodes&quot;, checkInItemBarcodes.toString());
 
-log.info(&quot;checkInItemIds: &quot; + checkInItemIds);
+log.info(&quot;checkInItemBarcodes: &quot; + checkInItemBarcodes);
 log.info(&quot;itemBarcode: &quot; + id);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
