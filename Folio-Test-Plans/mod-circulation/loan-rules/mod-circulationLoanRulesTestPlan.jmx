@@ -303,7 +303,7 @@ vars.put(&quot;loanRulesAsTextFile&quot;, loanRulesAsTextFile);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/circulation/loan-rules/apply?item_type_id=${__UUID()}&amp;loan_type_id=${__UUID()}&amp;patron_type_id=${__UUID()}&amp;shelving_location_id=${__UUID()}</stringProp>
+          <stringProp name="HTTPSampler.path">/circulation/loan-rules/apply?item_type_id=${__UUID()}&amp;loan_type_id=${__UUID()}&amp;patron_type_id=${__UUID()}&amp;location_id=${__UUID()}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -333,7 +333,7 @@ vars.put(&quot;loanRulesAsTextFile&quot;, loanRulesAsTextFile);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/circulation/loan-rules/apply-all?item_type_id=${__UUID()}&amp;loan_type_id=${__UUID()}&amp;patron_type_id=${__UUID()}&amp;shelving_location_id=${__UUID()}</stringProp>
+          <stringProp name="HTTPSampler.path">/circulation/loan-rules/apply-all?item_type_id=${__UUID()}&amp;loan_type_id=${__UUID()}&amp;patron_type_id=${__UUID()}&amp;location_id=${__UUID()}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
