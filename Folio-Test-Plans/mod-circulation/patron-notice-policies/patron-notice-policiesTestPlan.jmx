@@ -133,7 +133,7 @@
             <stringProp name="RegexExtractor.refname">x-okapi-token</stringProp>
             <stringProp name="RegexExtractor.regex">x-okapi-token: (.+)</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
-            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.default">Default token</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
           </RegexExtractor>
           <hashTree/>
@@ -148,43 +148,6 @@ log.info(&quot;port: ${port}&quot;);
 log.info(&quot;x-okapi-token: &quot;+ vars.get(&quot;x-okapi-token&quot;));</stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223PostProcessor>
-          <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-            <boolProp name="ResultCollector.error_logging">false</boolProp>
-            <objProp>
-              <name>saveConfig</name>
-              <value class="SampleSaveConfiguration">
-                <time>true</time>
-                <latency>true</latency>
-                <timestamp>true</timestamp>
-                <success>true</success>
-                <label>true</label>
-                <code>true</code>
-                <message>true</message>
-                <threadName>true</threadName>
-                <dataType>true</dataType>
-                <encoding>false</encoding>
-                <assertions>true</assertions>
-                <subresults>true</subresults>
-                <responseData>false</responseData>
-                <samplerData>false</samplerData>
-                <xml>false</xml>
-                <fieldNames>true</fieldNames>
-                <responseHeaders>false</responseHeaders>
-                <requestHeaders>false</requestHeaders>
-                <responseDataOnError>false</responseDataOnError>
-                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-                <assertionsResultsToSave>0</assertionsResultsToSave>
-                <bytes>true</bytes>
-                <sentBytes>true</sentBytes>
-                <url>true</url>
-                <threadCounts>true</threadCounts>
-                <idleTime>true</idleTime>
-                <connectTime>true</connectTime>
-              </value>
-            </objProp>
-            <stringProp name="filename"></stringProp>
-          </ResultCollector>
           <hashTree/>
         </hashTree>
       </hashTree>
@@ -582,8 +545,8 @@ def instanceTypeName = &quot;${instanceTypeName}&quot;;
 JMeterUtils.setProperty(&quot;instanceTypeId&quot;, instanceTypeId);
 JMeterUtils.setProperty(&quot;instanceTypeName&quot;, instanceTypeName);
 
-log.info(&quot; &gt;&gt;&gt; instanceTypeId: &quot; + instanceTypeId);
-log.info(&quot; &gt;&gt;&gt; instanceTypeName: &quot; + instanceTypeName);</stringProp>
+log.info(&quot;instanceTypeId: &quot; + instanceTypeId);
+log.info(&quot;instanceTypeName: &quot; + instanceTypeName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -673,8 +636,8 @@ def locationName = &quot;${locationName}&quot;;
 JMeterUtils.setProperty(&quot;locationId&quot;, locationId);
 JMeterUtils.setProperty(&quot;locationName&quot;, locationName);
 
-log.info(&quot; &gt;&gt;&gt; locationId: &quot; + locationId);
-log.info(&quot; &gt;&gt;&gt; locationName: &quot; + locationName);</stringProp>
+log.info(&quot;locationId: &quot; + locationId);
+log.info(&quot;locationName: &quot; + locationName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -764,8 +727,8 @@ def mTypeName = &quot;${mTypeName}&quot;;
 JMeterUtils.setProperty(&quot;mTypeId&quot;, mTypeId);
 JMeterUtils.setProperty(&quot;mTypeName&quot;, mTypeName);
 
-log.info(&quot; &gt;&gt;&gt; mTypeId: &quot; + mTypeId);
-log.info(&quot; &gt;&gt;&gt; mTypeName: &quot; + mTypeName);</stringProp>
+log.info(&quot;mTypeId: &quot; + mTypeId);
+log.info(&quot;mTypeName: &quot; + mTypeName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -855,8 +818,8 @@ def loanTypeName = &quot;${loanTypeName}&quot;;
 JMeterUtils.setProperty(&quot;loanTypeId&quot;, loanTypeId);
 JMeterUtils.setProperty(&quot;loanTypeName&quot;, loanTypeName);
 
-log.info(&quot; &gt;&gt;&gt; loanTypeId: &quot; + loanTypeId);
-log.info(&quot; &gt;&gt;&gt; loanTypeName: &quot; + loanTypeName);</stringProp>
+log.info(&quot;loanTypeId: &quot; + loanTypeId);
+log.info(&quot;loanTypeName: &quot; + loanTypeName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -1775,7 +1738,7 @@ log.info(&quot;noticesLimit: &quot; + noticesLimit);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/service-points?query=pickupLocation=true</stringProp>
+          <stringProp name="HTTPSampler.path">/service-points</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1813,11 +1776,12 @@ log.info(&quot;noticesLimit: &quot; + noticesLimit);</stringProp>
 def servicePointId = &quot;${servicePointId}&quot;;
 def servicePointName = &quot;${servicePointName}&quot;;
 
+log.info(&quot;response: &quot; + prev.getResponseDataAsString());
 JMeterUtils.setProperty(&quot;servicePointId&quot;, servicePointId);
 JMeterUtils.setProperty(&quot;servicePointName&quot;, servicePointName);
 
-log.info(&quot; &gt;&gt;&gt; servicePointId: &quot; + servicePointId);
-log.info(&quot; &gt;&gt;&gt; servicePointName: &quot; + servicePointName);</stringProp>
+log.info(&quot;servicePointId: &quot; + servicePointId);
+log.info(&quot;servicePointName: &quot; + servicePointName);</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -1932,8 +1896,8 @@ String templateName = &quot;Test name_&quot; + templateId;
 JMeterUtils.setProperty(&quot;templateId&quot;, templateId);
 JMeterUtils.setProperty(&quot;templateName&quot;, templateName);
 
-log.info(&quot; &gt;&gt;&gt; templateId: &quot; + templateId);
-log.info(&quot; &gt;&gt;&gt; templateName: &quot; + templateName);</stringProp>
+log.info(&quot;templateId: &quot; + templateId);
+log.info(&quot;templateName: &quot; + templateName);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -2066,9 +2030,9 @@ def noticePolicyId = &quot;${noticePolicyId}&quot;;
 def noticePolicyName = &quot;${noticePolicyName}&quot;;
 def noticePolicyDescription = &quot;${noticePolicyDescription}&quot;;
 
-log.info(&quot; &gt;&gt;&gt; noticePolicyId: &quot; + noticePolicyId);
-log.info(&quot; &gt;&gt;&gt; noticePolicyName: &quot; + noticePolicyName);
-log.info(&quot; &gt;&gt;&gt; noticePolicyDescription: &quot; + noticePolicyDescription);
+log.info(&quot;noticePolicyId: &quot; + noticePolicyId);
+log.info(&quot;noticePolicyName: &quot; + noticePolicyName);
+log.info(&quot;noticePolicyDescription: &quot; + noticePolicyDescription);
 
 JMeterUtils.setProperty(&quot;noticePolicyId&quot;, noticePolicyId);
 JMeterUtils.setProperty(&quot;noticePolicyName&quot;, noticePolicyName);
@@ -2540,12 +2504,12 @@ def numberOfCheckout = JMeterUtils.getProperty(&quot;numberOfCheckout&quot;);
 JMeterUtils.setProperty(&quot;emailStatus&quot;, emailStatus);
 JMeterUtils.setProperty(&quot;delayTime&quot;, delayTime);
 
-log.info(&quot; &gt;&gt;&gt; delay time for test in millis: &quot; + delayTime);
-log.info(&quot; &gt;&gt;&gt; notices limit in mod-configuration: &quot; + noticesLimit);
-log.info(&quot; &gt;&gt;&gt; number of templates in the patron notice: &quot; + numberOfTemplates);
-log.info(&quot; &gt;&gt;&gt; number of checkout: &quot; + numberOfCheckout);
-log.info(&quot; &gt;&gt;&gt; email status: &quot; + emailStatus);
-log.info(&quot; &gt;&gt;&gt; expected number of processed emails: &quot; + expectedNumberOfEmails);</stringProp>
+log.info(&quot;delay time for test in millis: &quot; + delayTime);
+log.info(&quot;notices limit in mod-configuration: &quot; + noticesLimit);
+log.info(&quot;number of templates in the patron notice: &quot; + numberOfTemplates);
+log.info(&quot;number of checkout: &quot; + numberOfCheckout);
+log.info(&quot;email status: &quot; + emailStatus);
+log.info(&quot;expected number of processed emails: &quot; + expectedNumberOfEmails);</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
@@ -2584,6 +2548,7 @@ log.info(&quot; &gt;&gt;&gt; expected number of processed emails: &quot; + expec
 def totalRecords = &quot;${totalRecords}&quot;;
 def expectedNumberOfEmails = &quot;${expectedNumberOfEmails}&quot;;
 
+log.info(&quot;response: &quot; + prev.getResponseDataAsString());
 log.info(&quot;totalRecords: &quot; + totalRecords);
 log.info(&quot;expectedNumberOfEmails: &quot; + expectedNumberOfEmails);
 
@@ -3345,43 +3310,6 @@ log.info(&quot;generatedItemIds: &quot; + generatedItemIds.toString());</stringP
         </hashTree>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>false</xml>
-            <fieldNames>true</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-            <sentBytes>true</sentBytes>
-            <url>true</url>
-            <threadCounts>true</threadCounts>
-            <idleTime>true</idleTime>
-            <connectTime>true</connectTime>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
