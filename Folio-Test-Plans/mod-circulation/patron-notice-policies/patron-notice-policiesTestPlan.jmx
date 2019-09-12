@@ -2030,6 +2030,7 @@ def noticePolicyId = &quot;${noticePolicyId}&quot;;
 def noticePolicyName = &quot;${noticePolicyName}&quot;;
 def noticePolicyDescription = &quot;${noticePolicyDescription}&quot;;
 
+log.info(&quot;response: &quot; + prev.getResponseDataAsString());
 log.info(&quot;noticePolicyId: &quot; + noticePolicyId);
 log.info(&quot;noticePolicyName: &quot; + noticePolicyName);
 log.info(&quot;noticePolicyDescription: &quot; + noticePolicyDescription);
@@ -2184,6 +2185,7 @@ loanNoticesBuilder {
 def noticePolicyBuilder = new groovy.json.JsonBuilder();
 noticePolicyBuilder id:noticePolicyId, name:noticePolicyName, description:noticePolicyDescription, active:true, feeFineNotices:[], requestNotices:[], loanNotices:loanNoticesBuilder.content.loanNotices;
 
+log.info(&quot;noticePolicyBuilder: &quot; + noticePolicyBuilder.toString());
 JMeterUtils.setProperty(&quot;noticePolicyBuilder&quot;, noticePolicyBuilder.toString());
 </stringProp>
           </JSR223PreProcessor>
@@ -2197,6 +2199,14 @@ JMeterUtils.setProperty(&quot;noticePolicyBuilder&quot;, noticePolicyBuilder.toS
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">8</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">log.info(&quot;response: &quot; + prev.getResponseDataAsString());</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -2956,6 +2966,14 @@ JMeterUtils.setProperty(&quot;noticePolicyCleanerBuilder&quot;, noticePolicyBuil
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">8</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">log.info(&quot;response: &quot; + prev.getResponseDataAsString());</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
