@@ -2235,10 +2235,13 @@ import groovy.json.JsonSlurper
 // #1 Create `loanDate`
 SimpleDateFormat dateFormatGmt = new SimpleDateFormat(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSZ&quot;);
 dateFormatGmt.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));
-def loanDate = dateFormatGmt.format(new Date()).replace(&quot;+0000&quot;, &quot;Z&quot;);
 
+def currentDateWithShift = new Date(Calendar.getInstance().getTimeInMillis() + (1 * 60000));
+def loanDate = dateFormatGmt.format(currentDateWithShift).replace(&quot;+0000&quot;, &quot;Z&quot;);
 JMeterUtils.setProperty(&quot;loanDate&quot;, loanDate);
-log.info(&quot;loanDate: &quot; + loanDate);
+log.info(&quot;loanDate for check-out: &quot; + loanDate);
+log.info(&quot;userBarcode for check-out: &quot; + JMeterUtils.getProperty(&quot;userBarcode&quot;));
+log.info(&quot;servicePointId for check-out: &quot; + JMeterUtils.getProperty(&quot;servicePointId&quot;));
 
 // #2 Defind `itemBarcodes`
 def itemBarcodesStr = JMeterUtils.getProperty(&quot;itemBarcodesJson&quot;);
@@ -2254,7 +2257,7 @@ if(id == null) {
      assertionResult.setFailure(true); 
 } else {
 	JMeterUtils.setProperty(&quot;itemBarcode&quot;, id);
-	log.info(&quot;itemBarcode: &quot; + id);		
+	log.info(&quot;itemBarcode for check-out: &quot; + id);		
 }
 
 itemBarcodesJson.itemBarcodeIds.remove(id); //remove(itemBarcode);          
@@ -2283,7 +2286,7 @@ if(id != null){
 }
 
 JMeterUtils.setProperty(&quot;checkInItemBarcodes&quot;, checkInItemBarcodes.toString());
-log.info(&quot;checkInItemBarcodes: &quot; + checkInItemBarcodes.toString());
+log.info(&quot;List of items for check-in: &quot; + checkInItemBarcodes.toString());
 </stringProp>
           </JSR223PreProcessor>
           <hashTree/>
@@ -2333,6 +2336,14 @@ log.info(&quot;checkInItemBarcodes: &quot; + checkInItemBarcodes.toString());
             </objProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">log.info(&quot;response: &quot; + prev.getResponseDataAsString());</stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
       </hashTree>
