@@ -1595,9 +1595,9 @@ def findId(def response, def indexOf) {
 	 		&quot;period&quot;:&#xd;
 	 			{&#xd;
 	 				&quot;duration&quot;:1,&#xd;
-	 				&quot;intervalId&quot;:&quot;Hours&quot;&#xd;
+	 				&quot;intervalId&quot;:&quot;Months&quot;&#xd;
 	 			},&#xd;
-	 		&quot;closedLibraryDueDateManagementId&quot;:&quot;CURRENT_DUE_DATE_TIME&quot;&#xd;
+	 		&quot;closedLibraryDueDateManagementId&quot;:&quot;CURRENT_DUE_DATE&quot;&#xd;
 	 	}&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -2072,7 +2072,7 @@ for(int i = 0; i &lt; templateIds.length; i++) {
 log.info(&quot;templateIds: &quot; + templateIds);
 
 def sendByBuilder = new groovy.json.JsonBuilder();
-sendByBuilder duration: 1, intervalId: &quot;Hours&quot;;
+sendByBuilder duration: 2, intervalId: &quot;Months&quot;;
 
 def sendOptionsBuilder = new groovy.json.JsonBuilder();
 sendOptionsBuilder sendWhen:&quot;Due date&quot;, sendHow:&quot;Before&quot;, sendBy: sendByBuilder.content;
