@@ -1841,7 +1841,7 @@ log.info(&quot;noticesLimit: &quot; + noticesLimit);</stringProp>
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;active&quot;:true,&quot;outputFormats&quot;:[&quot;text/html&quot;],&quot;templateResolver&quot;:&quot;mustache&quot;,&quot;category&quot;:&quot;Loan&quot;,&quot;name&quot;:&quot;${__P(templateName)}&quot;,&quot;localizedTemplates&quot;:{&quot;en&quot;:{&quot;header&quot;:&quot;Test Subject&quot;,&quot;body&quot;:&quot;&lt;p&gt;Item: {{item.title}} {{item.barcode}} User: {{user.firstName}} {{user.lastName}} {{user.barcode}}&lt;/p&gt;&quot;}},&quot;id&quot;:&quot;${__P(templateId)}&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;active&quot;:true,&quot;outputFormats&quot;:[&quot;text/html&quot;],&quot;templateResolver&quot;:&quot;mustache&quot;,&quot;category&quot;:&quot;Loan&quot;,&quot;name&quot;:&quot;${__P(templateName)}&quot;,&quot;localizedTemplates&quot;:{&quot;en&quot;:{&quot;header&quot;:&quot;Test Subject&quot;,&quot;body&quot;:&quot;&lt;p&gt;Test template&lt;/p&gt;&quot;}},&quot;id&quot;:&quot;${__P(templateId)}&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
