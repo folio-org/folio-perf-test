@@ -370,6 +370,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modName.startsWith("mod-login-saml") ||
       modName.startsWith("mod-users-bl") ||
       modName.startsWith("mod-kb-ebsco") ||
+      modName.startsWith("mod-tags") ||
       !modName.startsWith("mod-")) {
       moreInstallMods.add(modInstall)
     } else {
