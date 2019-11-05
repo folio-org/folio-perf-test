@@ -359,12 +359,19 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
   def installMods = []
+  def modAuthToken
   for (entry in mods.entrySet()) {
     def modName = entry.getKey()
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
-    // install needs both front and backend MDs
-    installMods.add(installTemplate.replace('${modId}', modId))
+    def modInstall = installTemplate.replace('${modId}', modId)
+    if (modName.startsWith("mod-authtoken")) {
+      // install mod-authtoken later
+      modAuthToken = modInstall
+    } else {
+      // install both front and backend modules
+      installMods.add(modInstall)
+    }
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
       continue
@@ -414,8 +421,13 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     echo "discoveryPayload: $discoveryPayload"
     httpRequest httpMode: 'POST', requestBody: discoveryPayload, url: "http://${okapiIp}:9130/_/discovery/modules"
   }
+  // install all modules but mod-authtoken
   def installPayload = "[" + installMods.join(",") + "]"
-  echo "installPayload: $installPayload"
+  echo "installPayload without mod-authtoken: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
+  // install mod-authtoken
+  installPayload = "[" + modAuthToken + "]"
+  echo "install mod-authtoken: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
 }
 
