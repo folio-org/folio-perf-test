@@ -146,7 +146,7 @@ def bootstrapModules(ctx) {
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.dbIp}:/tmp"
 
   // def mods = getMods(ctx.fixedMods, ctx.stableFolio + "/okapi-install.json")
-  def mods = getMods(ctx.fixedMods, ctx.stableFolio.replaceFirst("\.", "-okapi.") + "/_/proxy/tenants/diku/modules")
+  def mods = getMods(ctx.fixedMods, ctx.stableFolio.replaceFirst("\\.", "-okapi.") + "/_/proxy/tenants/diku/modules")
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
