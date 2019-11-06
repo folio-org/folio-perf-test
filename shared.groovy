@@ -365,16 +365,15 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
     def modInstall = installTemplate.replace('${modId}', modId)
-    // install some modules later
-    if (modName.startsWith("mod-authtoken") ||
-      modName.startsWith("mod-login-saml") ||
-      modName.startsWith("mod-users-bl") ||
-      modName.startsWith("mod-kb-ebsco") ||
-      modName.startsWith("mod-tags") ||
-      !modName.startsWith("mod-")) {
-      moreInstallMods.add(modInstall)
-    } else {
+    // install some modules first
+    if (modName ==~ /^mod-users-\d.*$/ ||
+      modName ==~ /^mod-login-\d.*$/ ||
+      modName ==~ /^mod-permissions-\d.*$/ ||
+      modName.startsWith("mod-inventory-storage-") ||
+      modName.startsWith("mod-circulation-storage-")) {
       installMods.add(modInstall)
+    } else {
+      moreInstallMods.add(modInstall)
     }
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
@@ -425,14 +424,14 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     echo "discoveryPayload: $discoveryPayload"
     httpRequest httpMode: 'POST', requestBody: discoveryPayload, url: "http://${okapiIp}:9130/_/discovery/modules"
   }
-  // // install all modules but mod-authtoken
-  // def installPayload = "[" + installMods.join(",") + "]"
-  // echo "main installPayload: $installPayload"
-  // httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
-  // // install other modules
-  // installPayload = "[" + moreInstallMods.join(",") + "]"
-  // echo "install other modules: $installPayload"
-  // httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
+  // install modules with both reference and sample
+  def installPayload = "[" + installMods.join(",") + "]"
+  echo "installPayload with both reference and sample: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
+  // install other modules without reference and sample
+  installPayload = "[" + moreInstallMods.join(",") + "]"
+  echo "installPayload without reference and sample: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
 }
 
 // test if stack exists
