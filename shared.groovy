@@ -366,11 +366,11 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     def modId = entry.getKey() + "-" + entry.getValue()
     def modInstall = installTemplate.replace('${modId}', modId)
     // install some modules first
-    if (modName ==~ /^mod-users-\d.*$/ ||
-      modName ==~ /^mod-login-\d.*$/ ||
-      modName ==~ /^mod-permissions-\d.*$/ ||
-      modName.startsWith("mod-inventory-storage-") ||
-      modName.startsWith("mod-circulation-storage-")) {
+    if (modName.equals("mod-users") ||
+      modName.equals("mod-login") ||
+      modName.equals("mod-permissions") ||
+      modName.equals("mod-inventory-storage") ||
+      modName.equals("mod-circulation-storage")) {
       installMods.add(modInstall)
     } else {
       moreInstallMods.add(modInstall)
