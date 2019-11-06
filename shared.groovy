@@ -425,14 +425,14 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     echo "discoveryPayload: $discoveryPayload"
     httpRequest httpMode: 'POST', requestBody: discoveryPayload, url: "http://${okapiIp}:9130/_/discovery/modules"
   }
-  // install all modules but mod-authtoken
-  def installPayload = "[" + installMods.join(",") + "]"
-  echo "main installPayload: $installPayload"
-  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
-  // install other modules
-  installPayload = "[" + moreInstallMods.join(",") + "]"
-  echo "install other modules: $installPayload"
-  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
+  // // install all modules but mod-authtoken
+  // def installPayload = "[" + installMods.join(",") + "]"
+  // echo "main installPayload: $installPayload"
+  // httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
+  // // install other modules
+  // installPayload = "[" + moreInstallMods.join(",") + "]"
+  // echo "install other modules: $installPayload"
+  // httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
 }
 
 // test if stack exists
