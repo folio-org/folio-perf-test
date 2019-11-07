@@ -302,9 +302,9 @@ def getMods(fixedMods, mdRepo) {
       continue
     }
     // skip mod-marccat for now due to database issue
-    if (modName.startsWith("mod-marccat")) {
-      continue
-    }
+    // if (modName.startsWith("mod-marccat")) {
+    //   continue
+    // }
     def modVer = group[0][2]
     if (!latestMods.containsKey(modName) || compareVersion(modVer, latestMods.get(modName))) {
       latestMods.put(modName, modVer)
