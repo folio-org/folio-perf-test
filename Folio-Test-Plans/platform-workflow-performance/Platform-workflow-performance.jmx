@@ -2602,7 +2602,7 @@ vars.put(&quot;effectiveLocationId&quot;, curItems.items[r.nextInt(  curItems.it
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/item-storage/items?query=(item.effectiveLocationId==${effectiveLocationId})</stringProp>
+          <stringProp name="HTTPSampler.path">/instance-storage/instances?query=(item.effectiveLocationId==${effectiveLocationId})</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
