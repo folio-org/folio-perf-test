@@ -145,7 +145,8 @@ def bootstrapModules(ctx) {
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.modsIp}:/tmp"
   sh "${ctx.scpCmd} folio-conf ${ctx.sshUser}@${ctx.dbIp}:/tmp"
 
-  def mods = getMods(ctx.fixedMods, ctx.stableFolio + "/okapi-install.json")
+  // def mods = getMods(ctx.fixedMods, ctx.stableFolio + "/okapi-install.json")
+  def mods = getMods(ctx.fixedMods, ctx.stableFolio.replaceFirst("\\.", "-okapi.") + "/_/proxy/tenants/diku/modules")
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
@@ -300,8 +301,11 @@ def getMods(fixedMods, mdRepo) {
     if (!modName.startsWith("mod-") && !modName.startsWith("folio_")) {
       continue
     }
-    // skip mod-marccat for now due to database issue
+    // skip mod-marccat and folio_marccat for now due to database issue
     if (modName.startsWith("mod-marccat")) {
+      continue
+    }
+    if (modName.startsWith("folio_marccat")) {
       continue
     }
     def modVer = group[0][2]
@@ -359,12 +363,22 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
   def installMods = []
+  def moreInstallMods = []
   for (entry in mods.entrySet()) {
     def modName = entry.getKey()
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
-    // install needs both front and backend MDs
-    installMods.add(installTemplate.replace('${modId}', modId))
+    def modInstall = installTemplate.replace('${modId}', modId)
+    // install some modules first
+    if (modName.equals("mod-users") ||
+      modName.equals("mod-login") ||
+      modName.equals("mod-permissions") ||
+      modName.equals("mod-inventory-storage") ||
+      modName.equals("mod-circulation-storage")) {
+      installMods.add(modInstall)
+    } else {
+      moreInstallMods.add(modInstall)
+    }
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
       continue
@@ -414,9 +428,14 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     echo "discoveryPayload: $discoveryPayload"
     httpRequest httpMode: 'POST', requestBody: discoveryPayload, url: "http://${okapiIp}:9130/_/discovery/modules"
   }
+  // install modules with both reference and sample
   def installPayload = "[" + installMods.join(",") + "]"
-  echo "installPayload: $installPayload"
-  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
+  echo "installPayload with both reference and sample: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
+  // install other modules without reference and sample
+  installPayload = "[" + moreInstallMods.join(",") + "]"
+  echo "installPayload without reference and sample: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
 }
 
 // test if stack exists
