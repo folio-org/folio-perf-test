@@ -58,9 +58,9 @@ node {
           sharedLib.bootstrapModules(context)
         }
 
-        // stage("Populate data") {
-        //   sharedLib.populateData(context)
-        // }
+        stage("Populate data") {
+          sharedLib.populateData(context)
+        }
       }
     }
   }
