@@ -249,7 +249,7 @@
                 <hashTree/>
                 <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Package body extractor" enabled="true">
                   <stringProp name="JSONPostProcessor.referenceNames">packageBody</stringProp>
-                  <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.attributes</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.attributes[&apos;name&apos;, &apos;contentType&apos;]</stringProp>
                   <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
                 </JSONPostProcessor>
                 <hashTree/>
@@ -292,8 +292,7 @@ private String getRandomTag(List&lt;String&gt; possibleTags) {
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
                       <stringProp name="Argument.value">{&#xd;
   &quot;data&quot;: {&#xd;
-    &quot;id&quot;: &quot;${packageId}&quot;,&#xd;
-    &quot;type&quot;: &quot;packages&quot;,&#xd;
+    &quot;type&quot;: &quot;tags&quot;,&#xd;
     &quot;attributes&quot;: ${packageBody}&#xd;
   }&#xd;
 }</stringProp>
@@ -305,7 +304,7 @@ private String getRandomTag(List&lt;String&gt; possibleTags) {
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/eholdings/packages/${packageId}</stringProp>
+                <stringProp name="HTTPSampler.path">/eholdings/packages/${packageId}/tags</stringProp>
                 <stringProp name="HTTPSampler.method">PUT</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -985,6 +984,14 @@ SampleResult.setIgnore();</stringProp>
               <stringProp name="JSONPostProcessor.defaultValues">x;</stringProp>
             </JSONPostProcessor>
             <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">log.info(&quot;Created NEW package:  ${protocol}://${host}:${port}/eholdings/packages/${customPackageId}&quot;);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Update custom package" enabled="true"/>
@@ -1194,6 +1201,14 @@ SampleResult.setIgnore();</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">16</intProp>
             </ResponseAssertion>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">log.info(&quot;Deleted package:  ${protocol}://${host}:${port}/eholdings/packages/${customPackageId}&quot;);</stringProp>
+            </JSR223PostProcessor>
             <hashTree/>
           </hashTree>
         </hashTree>

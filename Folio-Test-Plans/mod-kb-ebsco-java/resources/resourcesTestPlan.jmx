@@ -50,7 +50,7 @@
         <stringProp name="HTTPSampler.response_timeout"></stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Set up Thread Group" enabled="true">
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Setup Resources Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -63,48 +63,45 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </SetupThreadGroup>
       <hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Login" enabled="true"/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/vnd.api+json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/vnd.api+json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Setup: Login" enabled="true">
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/login.jmx</stringProp>
+        </IncludeController>
+        <hashTree/>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Setup: Save RM API Config" enabled="true">
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_save_rmapi_config.jmx</stringProp>
+        </IncludeController>
+        <hashTree/>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Setup: Set RM API Config" enabled="true">
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_set_rmapi_config.jmx</stringProp>
+        </IncludeController>
+        <hashTree/>
+        <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Setup: User permission" enabled="true">
+          <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_user_permission.jmx</stringProp>
+        </IncludeController>
+        <hashTree/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Setup: store managed title ids" enabled="true"/>
         <hashTree>
-          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Login Controller" enabled="true">
-            <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/login.jmx</stringProp>
-          </IncludeController>
-          <hashTree/>
-        </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Set up" enabled="true"/>
-        <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-            <collectionProp name="HeaderManager.headers">
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">x-okapi-token</stringProp>
-                <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">x-okapi-tenant</stringProp>
-                <stringProp name="Header.value">${tenant}</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">application/vnd.api+json</stringProp>
-              </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">content-type</stringProp>
-                <stringProp name="Header.value">application/vnd.api+json</stringProp>
-              </elementProp>
-            </collectionProp>
-          </HeaderManager>
-          <hashTree/>
-          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Save Config Controller" enabled="true">
-            <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_save_rmapi_config.jmx</stringProp>
-          </IncludeController>
-          <hashTree/>
-          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Setup User permission Controller" enabled="true">
-            <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_user_permission.jmx</stringProp>
-          </IncludeController>
-          <hashTree/>
-          <IncludeController guiclass="IncludeControllerGui" testclass="IncludeController" testname="Include Set Config Controller" enabled="true">
-            <stringProp name="IncludeController.includepath">Folio-Test-Plans/mod-kb-ebsco-java/common/setup_set_rmapi_config.jmx</stringProp>
-          </IncludeController>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get managed titles for test" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
