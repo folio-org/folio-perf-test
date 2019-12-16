@@ -759,7 +759,13 @@ vars.put(&quot;custom-title-uuid&quot;,randomTitleUuid);</stringProp>
         &quot;type&quot;:&quot;ISSN&quot;,&#xd;
         &quot;subtype&quot;:&quot;Online&quot;&#xd;
         }      &#xd;
-      ]&#xd;
+      ],&#xd;
+      &quot;url&quot;: &quot;https://test&quot;,&#xd;
+      &quot;userDefinedField1&quot; : &quot;test 1&quot;,&#xd;
+	 &quot;userDefinedField2&quot; : &quot;test 2&quot;,&#xd;
+	 &quot;userDefinedField3&quot; : &quot;test 3&quot;,&#xd;
+      &quot;userDefinedField4&quot; : &quot;test 4&quot;,&#xd;
+      &quot;userDefinedField5&quot; : &quot;test 5&quot;&#xd;
     }&#xd;
   }&#xd;
 }</stringProp>
