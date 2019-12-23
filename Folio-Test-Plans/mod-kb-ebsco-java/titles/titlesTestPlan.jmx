@@ -1129,7 +1129,12 @@ vars.put(&quot;package-uuid&quot;,randomPackageUuid);</stringProp>
       &quot;edition&quot;: &quot;performance test edition&quot;,&#xd;
       &quot;publisherName&quot;: &quot;performance test publisher&quot;,&#xd;
       &quot;publicationType&quot;: &quot;Database&quot;,&#xd;
-      &quot;isPeerReviewed&quot;: true&#xd;
+      &quot;isPeerReviewed&quot;: true,&#xd;
+      &quot;userDefinedField1&quot;: &quot;test 1&quot;,&#xd;
+      &quot;userDefinedField2&quot;: &quot;test 2&quot;,&#xd;
+      &quot;userDefinedField3&quot;: &quot;test 3&quot;,&#xd;
+      &quot;userDefinedField4&quot;: &quot;test 4&quot;,&#xd;
+      &quot;userDefinedField5&quot;: &quot;test 5&quot;&#xd;
     }&#xd;
   },&#xd;
   &quot;included&quot;: [&#xd;
