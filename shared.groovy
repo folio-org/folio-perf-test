@@ -369,6 +369,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
     def modInstall = installTemplate.replace('${modId}', modId)
+    // skip mod-pubsub due to Kafka dependency
+    if (modName.equals("mod-pubsub")) {
+      continue
+    }
     // install some modules first
     if (modName.equals("mod-users") ||
       modName.equals("mod-login") ||
