@@ -1,1 +1,1 @@
-docker run -d --rm --name okapi -e 'JAVA_OPTIONS=-Dokapiurl=http://${okapiPvtIp}:9130 -Dstorage=postgres -Dpostgres_host=${dbPvtIp} -Dpostgres_port=5432 -Dpostgres_user=folio -Dpostgres_password=folioadmin -Dpostgres_database=folio' -p9130:9130 folioci/okapi:${okapiVersion} cluster
+docker run -d --rm --name okapi -e 'JAVA_OPTIONS=-Dokapiurl=http://${okapiPvtIp}:9130 -Dstorage=postgres -Dpostgres_host=${dbPvtIp} -Dpostgres_port=5432 -Dpostgres_username=folio -Dpostgres_password=folioadmin -Dpostgres_database=folio' -p9130:9130 folioci/okapi:${okapiVersion} cluster
