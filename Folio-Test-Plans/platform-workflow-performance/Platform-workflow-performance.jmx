@@ -3996,7 +3996,7 @@ log.info(&quot;picked instance keyword: &quot; + vars.get(&quot;instanceKeyword&
           <stringProp name="scriptLanguage">groovy</stringProp>
         </JSR223PreProcessor>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?limit=30&amp;query=(contributors =/@name &quot;{name}&quot;) sortby title" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Perf - GET inventory/instances?query=(keyword all &quot;{instanceKeyword}&quot;) sortby title" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
@@ -4030,13 +4030,13 @@ if (vars.get(&quot;assertion&quot;) != null) {
   def found = false;
   for (i = 0; i &lt; size; i++) {
     if (resp.instances[i].title.contains(target)) {
-      log.info(&quot;Found &quot; + target));
+      log.info(&quot;Found &quot; + target);
       found = true;
       break;
     }
   }
   if (!found) {
-    log.warn(&quot;Cannot find &quot; + target));
+    log.warn(&quot;Cannot find &quot; + target);
     AssertionResult.setFailure(true);
     AssertionResult.setFailureMessage(&quot;Cannot find instance keyword: &quot; + target);
   }
