@@ -138,6 +138,14 @@ def bootstrapOkapi(ctx) {
 def bootstrapModules(ctx) {
   stopFolioDockers(ctx, ctx.modsIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo service ecs stop"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo yum install -y git"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-\$(uname -s)-\$(uname -m) -o /usr/local/bin/docker-compose"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo chmod +x /usr/local/bin/docker-compose"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo rm -fr kafka-docker"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} git clone https://github.com/wurstmeister/kafka-docker.git"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sed -i.bak 's/9092/9092:9092/g' kafka-docker/docker-compose.yml"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sed -i.bak2 's/192.168.99.100/localhost/g' kafka-docker/docker-compose.yml"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} docker-compose -f kafka-docker/docker-compose.yml up -d"
   def pgconf = readFile("config/pg.json").trim()
   pgconf = pgconf.replace('${db_host}', ctx.dbPvtIp)
   echo "pgconf: ${pgconf}"
@@ -364,9 +372,6 @@ def registerMods(mods, mdRepo, okapiIp) {
 def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUser) {
   def port = 9200
   def modJobTemplate = readFile("config/mods.sh").trim()
-  // def modKbEbscoTemplate = readFile("config/mod-kb-ebsco.sh").trim()
-  def modErmTemplate = readFile("config/mod-erm.sh").trim()
-  def modGraphqlTemplate = readFile("config/mod-graphql.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
   def installMods = []
@@ -376,10 +381,6 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     def modVer = entry.getValue()
     def modId = entry.getKey() + "-" + entry.getValue()
     def modInstall = installTemplate.replace('${modId}', modId)
-    // skip mod-pubsub due to Kafka dependency
-    if (modName.equals("mod-pubsub")) {
-      continue
-    }
     // install some modules first
     if (modName.equals("mod-users") ||
       modName.equals("mod-login") ||
@@ -395,24 +396,31 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       continue
     }
     port += 1
-    def modJob = modJobTemplate.replace('${modName}', modName)
-    // // mod-kb-ebsco has a different way to run Docker
+    def modJob = modJobTemplate
+    // mod-kb-ebsco has a different way to run Docker
     // if (modName.equals("mod-kb-ebsco")) {
-    //   modJob = modKbEbscoTemplate.replace('${modName}', modName)
+    //   modJob = readFile("config/mod-kb-ebsco.sh").trim()
     // }
     // erm modules run differently
     if (modName.equals("mod-agreements") || modName.equals("mod-licenses")
       || modName.equals("mod-erm-usage")) {
-      modJob = modErmTemplate.replace('${modName}', modName)
-      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = readFile("config/mod-erm.sh").trim()
+      modJob = modJob .replace('${dbHost}', dbPvtIp)
       if (modName.equals("mod-erm-usage")) {
         modJob = modJob.replace('8080', '8081')
       }
     }
+    // mod-pubsub has different env variables
+    if (modName.equals("mod-pubsub")) {
+      modJob = readFile("config/mod-pubsub.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
-      modJob = modGraphqlTemplate.replace('${modName}', modName)
+      modJob = readFile("config/mod-graphql.sh").trim()
     }
+    modJob = modJob.replace('${modName}', modName)
     modJob = modJob.replace('${port}', '' + port)
     modJob = modJob.replace('${modVer}', "" + modVer)
     // mod-inventory uses port 9403, not 8081
