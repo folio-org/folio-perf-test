@@ -139,7 +139,7 @@ def bootstrapModules(ctx) {
   stopFolioDockers(ctx, ctx.modsIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo service ecs stop"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo yum install -y git"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-\$(uname -s)-\$(uname -m) -o /usr/local/bin/docker-compose"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo chmod +x /usr/local/bin/docker-compose"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} git clone https://github.com/wurstmeister/kafka-docker.git"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sed -i.bak 's/9092/9092:9092/g' kafka-docker/docker-compose.yml"
