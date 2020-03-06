@@ -3870,7 +3870,7 @@ if (vars.get(&quot;assertion&quot;) != null) {
   def size = resp.instances.size();
   def found = false;
   for (i = 0; i &lt; size; i++) {
-    def idSize = resp.instances[i].identifiers.size();
+    def idSize = resp.instances[i].contributors.size();
     for (j = 0; j &lt; idSize; j++) {
       if (resp.instances[i].contributors[j].name.contains(vars.get(&quot;contributorName&quot;))) {
         log.info(&quot;Found &quot; + vars.get(&quot;contributorName&quot;));
@@ -3883,7 +3883,7 @@ if (vars.get(&quot;assertion&quot;) != null) {
     }
   }
   if (!found) {
-    log.warn(&quot;Cannot find &quot; + vars.get(&quot;contributorName&quot;));
+    log.warn(&quot;Cannot find &quot; + vars.get(&quot;contributorName&quot;) + &quot; in &quot; + prev.getResponseDataAsString());
     AssertionResult.setFailure(true);
     AssertionResult.setFailureMessage(&quot;Cannot find contributor: &quot; + vars.get(&quot;contributorName&quot;));
   }
@@ -3947,7 +3947,7 @@ if (vars.get(&quot;assertion&quot;) != null) {
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">5</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -4012,7 +4012,7 @@ log.info(&quot;picked instance keyword: &quot; + vars.get(&quot;instanceKeyword&
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout">600000</stringProp>
+          <stringProp name="HTTPSampler.response_timeout">1800000</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
         <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
