@@ -3870,7 +3870,7 @@ if (vars.get(&quot;assertion&quot;) != null) {
   def size = resp.instances.size();
   def found = false;
   for (i = 0; i &lt; size; i++) {
-    def idSize = resp.instances[i].identifiers.size();
+    def idSize = resp.instances[i].contributors.size();
     for (j = 0; j &lt; idSize; j++) {
       if (resp.instances[i].contributors[j].name.contains(vars.get(&quot;contributorName&quot;))) {
         log.info(&quot;Found &quot; + vars.get(&quot;contributorName&quot;));
