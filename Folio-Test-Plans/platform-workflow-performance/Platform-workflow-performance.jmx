@@ -3947,7 +3947,7 @@ if (vars.get(&quot;assertion&quot;) != null) {
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__P(stressCount)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(stressThreads)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(stressRamp)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
