@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.2.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Simple Marc Record Editor Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="FOLIO Login and Host Config" enabled="true">
+        <stringProp name="filename">Folio-Test-Plans/config.csv</stringProp>
+        <stringProp name="fileEncoding">UTF-8</stringProp>
+        <stringProp name="variableNames">tenant,user,password,protocol,host,port</stringProp>
+        <boolProp name="ignoreFirstLine">false</boolProp>
+        <stringProp name="delimiter">,</stringProp>
+        <boolProp name="quotedData">false</boolProp>
+        <boolProp name="recycle">true</boolProp>
+        <boolProp name="stopThread">false</boolProp>
+        <stringProp name="shareMode">shareMode.all</stringProp>
+      </CSVDataSet>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">${host}</stringProp>
+        <stringProp name="HTTPSampler.port">${port}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="recordId" elementType="Argument">
+            <stringProp name="Argument.name">recordId</stringProp>
+            <stringProp name="Argument.value">${__UUID()}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">ID of MARC record</stringProp>
+          </elementProp>
+          <elementProp name="instanceId" elementType="Argument">
+            <stringProp name="Argument.name">instanceId</stringProp>
+            <stringProp name="Argument.value">${__UUID()}</stringProp>
+            <stringProp name="Argument.desc">Related instance ID</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="jobExecutionId" elementType="Argument">
+            <stringProp name="Argument.name">jobExecutionId</stringProp>
+            <stringProp name="Argument.value">${__UUID()}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="Login" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FOLIO: Login" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;username&quot;: &quot;${user}&quot;, &quot;password&quot;: &quot;${password}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/authn/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion - 201" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49587">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor - Extract token" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+            <stringProp name="RegexExtractor.refname">x-okapi-token</stringProp>
+            <stringProp name="RegexExtractor.regex">x-okapi-token: (.+)</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - Save token" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">log.info(&quot;Successfully logged in...&quot;);
+props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
+log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="SetUp" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create Snapshot" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;jobExecutionId&quot;: &quot;${jobExecutionId}&quot;,&#xd;
+  &quot;status&quot;: &quot;PARSING_IN_PROGRESS&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/source-storage/snapshots</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: CREATED (201)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49587">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create SRS Record" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+   &quot;id&quot;:&quot;${recordId}&quot;,&#xd;
+   &quot;snapshotId&quot;:&quot;${jobExecutionId}&quot;,&#xd;
+   &quot;matchedId&quot;:&quot;${__UUID()}&quot;,&#xd;
+   &quot;recordType&quot;:&quot;MARC&quot;,&#xd;
+   &quot;rawRecord&quot;:{&#xd;
+      &quot;content&quot;:&quot;marc data goes here&quot;&#xd;
+   },&#xd;
+   &quot;externalIdsHolder&quot;:{&#xd;
+      &quot;instanceId&quot;:&quot;${instanceId}&quot;&#xd;
+   },&#xd;
+   &quot;parsedRecord&quot;:{&#xd;
+      &quot;content&quot;:{&#xd;
+         &quot;leader&quot;:&quot;01542ccm a2200361   4500&quot;,&#xd;
+         &quot;fields&quot;:[&#xd;
+            {&#xd;
+               &quot;001&quot;:&quot;393893&quot;&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;005&quot;:&quot;20141107001016.0&quot;&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;008&quot;:&quot;830419m19559999gw mua   hiz   n    lat  &quot;&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;010&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;   55001156/M &quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;035&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;(OCoLC)63611770&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;035&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;393893&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;040&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;c&quot;:&quot;UPB&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;UPB&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;NIC&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;NIC&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;041&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;latitager&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;g&quot;:&quot;ger&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;0&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;045&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;v6v9&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;047&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;cn&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;ct&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;co&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;df&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;dv&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;ft&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;fg&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;ms&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;mi&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;nc&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;op&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;ov&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;rq&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;sn&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;su&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;sy&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;vr&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;zz&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;050&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;M3&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;.M896&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;0&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;100&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Mozart, Wolfgang Amadeus,&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;1756-1791.&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;1&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;240&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Works&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;1&quot;,&#xd;
+                  &quot;ind2&quot;:&quot;0&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;245&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Neue Ausgabe sa\\u0308mtlicher Werke, &quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;in Verbindung mit den Mozartsta\\u0308dten, Augsburg, Salzburg und Wien.&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;c&quot;:&quot;Hrsg. von der Internationalen Stiftung Mozarteum, Salzburg.&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;1&quot;,&#xd;
+                  &quot;ind2&quot;:&quot;0&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;246&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Neue Mozart-Ausgabe&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;3&quot;,&#xd;
+                  &quot;ind2&quot;:&quot;3&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;260&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Kassel,&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;Ba\\u0308renreiter,&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;c&quot;:&quot;c1955-&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;300&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;v.&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;facsims.&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;c&quot;:&quot;33 cm.&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;505&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Ser. I. Geistliche Gesangswerke -- Ser. II. Opern -- Ser. III. Lieder, mehrstimmige Gesa\\u0308nge, Kanons -- Ser. IV. Orchesterwerke -- Ser. V. Konzerte -- Ser. VI. Kirchensonaten -- Ser. VII. Ensemblemusik fu\\u0308r gro\\u0308ssere Solobesetzungen -- Ser. VIII. Kammermusik -- Ser. IX. Klaviermusik -- Ser. X. Supplement.&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;0&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;650&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Vocal music&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot;0&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;650&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Instrumental music&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot;0&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;650&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Instrumental music&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;2&quot;:&quot;fast&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;0&quot;:&quot;(OCoLC)fst00974414&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot;7&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;650&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;Vocal music&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;2&quot;:&quot;fast&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;0&quot;:&quot;(OCoLC)fst01168379&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot;7&quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;902&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;pfnd&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;Austin Music&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;905&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;19980728120000.0&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot; &quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;948&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;20100622&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;s&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;lap11&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;e&quot;:&quot;lts&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;x&quot;:&quot;ToAddCatStat&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;1&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;948&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;20110818&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;r&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;np55&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;e&quot;:&quot;lts&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;0&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;948&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;20130128&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;m&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;bmt1&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;e&quot;:&quot;lts&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;2&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            },&#xd;
+            {&#xd;
+               &quot;948&quot;:{&#xd;
+                  &quot;subfields&quot;:[&#xd;
+                     {&#xd;
+                        &quot;a&quot;:&quot;20141106&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;b&quot;:&quot;m&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;d&quot;:&quot;batch&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;e&quot;:&quot;lts&quot;&#xd;
+                     },&#xd;
+                     {&#xd;
+                        &quot;x&quot;:&quot;addfast&quot;&#xd;
+                     }&#xd;
+                  ],&#xd;
+                  &quot;ind1&quot;:&quot;2&quot;,&#xd;
+                  &quot;ind2&quot;:&quot; &quot;&#xd;
+               }&#xd;
+            }&#xd;
+         ]&#xd;
+      }&#xd;
+   }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+          <stringProp name="HTTPSampler.path">/source-storage/records</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: OK (200)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49587">201</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="QuickMarcEditor" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__CSVRead(${__BeanShell(import org.apache.jmeter.services.FileServer; FileServer.getFileServer().getBaseDir();)}/quick-marc.csv,2)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__CSVRead(${__BeanShell(import org.apache.jmeter.services.FileServer; FileServer.getFileServer().getBaseDir();)}/quick-marc.csv,0)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__CSVRead(${__BeanShell(import org.apache.jmeter.services.FileServer; FileServer.getFileServer().getBaseDir();)}/quick-marc.csv,1)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="quickMARC: GET" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/records-editor/records?instanceId=${instanceId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: OK (200)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor: Extract externalDtoId " enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">externalDtoId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.externalDtoId</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            <stringProp name="Sample.scope">all</stringProp>
+            <stringProp name="Scope.variable">orderId</stringProp>
+            <boolProp name="JSONPostProcessor.compute_concat">true</boolProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor: Extract QucikMarcJson body " enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="script">vars.put(&quot;quickMarcJson&quot;, prev.getResponseDataAsString());</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="quickMARC: PUT" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${quickMarcJson}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/records-editor/records/${externalDtoId}</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: UPDATED (204)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49590">204</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="TearDown" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </PostThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-token</stringProp>
+              <stringProp name="Header.value">${__P(x-okapi-token)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">x-okapi-tenant</stringProp>
+              <stringProp name="Header.value">${tenant}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Accept</stringProp>
+              <stringProp name="Header.value">application/json, text/plain</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">content-type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete Snapshot" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/source-storage/snapshots/${jobExecutionId}</stringProp>
+          <stringProp name="HTTPSampler.method">DELETE</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: DELETED (204)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49590">204</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete Record" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/source-storage/records/${recordId}</stringProp>
+          <stringProp name="HTTPSampler.method">DELETE</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assertion: DELETED (204)" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49590">204</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
