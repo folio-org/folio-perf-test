@@ -141,8 +141,8 @@
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">log.info(&quot;Successfully logged in...&quot;);
-props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));
-log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
+log.info(&quot;These are config values: tenant - ${tenant}, user - ${user}, password - ${password}, protocol - ${protocol}, host - ${host}, port - ${port}&quot;);
+props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));</stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
@@ -808,9 +808,9 @@ log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
             <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor: Extract externalDtoId " enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">externalDtoId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">.externalDtoId</stringProp>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor: Extract parsedRecordId " enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">parsedRecordId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">.parsedRecordId</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
             <stringProp name="Sample.scope">all</stringProp>
             <stringProp name="Scope.variable">orderId</stringProp>
@@ -841,7 +841,7 @@ log.info(&quot;x-okapi-token: ${x-okapi-token}&quot;);</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/records-editor/records/${externalDtoId}</stringProp>
+          <stringProp name="HTTPSampler.path">/records-editor/records/${parsedRecordId}</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
