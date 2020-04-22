@@ -4108,11 +4108,15 @@ def resp = jsonSlurper.parseText(props.get(&quot;instanceids&quot;));
 def size = resp.instances.size();
 def fallback = true;
 if (size &gt; 0) {
+  String.metaClass.encodeURL = {
+    java.net.URLEncoder.encode(delegate, &quot;UTF-8&quot;)
+  }
   // find a good candidate
   Random rand = new Random();
   def pick = rand.nextInt(size);
   def val = resp.instances[pick].title.trim();
   vars.put(&quot;instanceKeyword&quot;, val);
+  vars.put(&quot;instanceKeywordEncoded&quot;, val.encodeURL());
   vars.put(&quot;assertion&quot;, &quot;true&quot;);
   fallback = false;
 }
@@ -4133,7 +4137,7 @@ log.info(&quot;picked instance keyword: &quot; + vars.get(&quot;instanceKeyword&
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=(keyword%20all%20%22${instanceKeyword}%22)%20sortby%20title</stringProp>
+          <stringProp name="HTTPSampler.path">/inventory/instances?limit=30&amp;query=(keyword%20all%20%22${instanceKeywordEncoded}%22)%20sortby%20title</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
