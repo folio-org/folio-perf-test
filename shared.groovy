@@ -385,6 +385,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     if (modName.equals("mod-users") ||
       modName.equals("mod-login") ||
       modName.equals("mod-permissions") ||
+      modName.equals("mod-pubsub") ||
       modName.equals("mod-inventory-storage") ||
       modName.equals("mod-circulation-storage") ||
       modName.equals("mod-feesfines")) {
