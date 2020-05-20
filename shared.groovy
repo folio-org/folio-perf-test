@@ -85,6 +85,14 @@ def bootstrapDb(ctx) {
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo service ecs stop"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo amazon-linux-extras install -y postgresql10"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y jq wget"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y git"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-\$(uname -s)-\$(uname -m) -o /usr/local/bin/docker-compose"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo chmod +x /usr/local/bin/docker-compose"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo rm -fr kafka-docker"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} git clone https://github.com/wurstmeister/kafka-docker.git"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sed -i.bak 's/9092/9092:9092/g' kafka-docker/docker-compose.yml"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sed -i.bak2 's/192.168.99.100/localhost/g' kafka-docker/docker-compose.yml"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} docker-compose -f kafka-docker/docker-compose.yml up -d"
   def dbJob = readFile("config/db.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dbJob}"
   def dockerCmd = 'docker ps | grep foliodb | wc -l'
@@ -138,14 +146,6 @@ def bootstrapOkapi(ctx) {
 def bootstrapModules(ctx) {
   stopFolioDockers(ctx, ctx.modsIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo service ecs stop"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo yum install -y git"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-\$(uname -s)-\$(uname -m) -o /usr/local/bin/docker-compose"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo chmod +x /usr/local/bin/docker-compose"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo rm -fr kafka-docker"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} git clone https://github.com/wurstmeister/kafka-docker.git"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sed -i.bak 's/9092/9092:9092/g' kafka-docker/docker-compose.yml"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sed -i.bak2 's/192.168.99.100/localhost/g' kafka-docker/docker-compose.yml"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} docker-compose -f kafka-docker/docker-compose.yml up -d"
   def pgconf = readFile("config/pg.json").trim()
   pgconf = pgconf.replace('${db_host}', ctx.dbPvtIp)
   echo "pgconf: ${pgconf}"
@@ -385,6 +385,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     if (modName.equals("mod-users") ||
       modName.equals("mod-login") ||
       modName.equals("mod-permissions") ||
+      modName.equals("mod-pubsub") ||
       modName.equals("mod-inventory-storage") ||
       modName.equals("mod-circulation-storage") ||
       modName.equals("mod-feesfines")) {
