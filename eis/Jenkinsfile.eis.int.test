@@ -29,7 +29,7 @@ node {
       checkout scm
       sharedLib = load "shared.groovy"
       context = sharedLib.getContext()
-      context.dns = 'int.aws.folio.org.'
+      context.dns = 'int.folio.ebsco.com.'
     }
 
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${context.awsKeyId}",
