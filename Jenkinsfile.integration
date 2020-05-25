@@ -1,0 +1,80 @@
+#!groovy
+
+properties([
+  parameters([
+    string(name: 'EnvName', defaultValue: 'folio-perf-test', description: 'Unique performance environment name'),
+    string(name: 'JenkinsAwsCredential', defaultValue: 'jenkins-aws', description: 'Jenkins credential to access AWS account'),
+    string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
+    string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
+    string(name: 'AwsSubnet', defaultValue: 'subnet-4406021d', description: 'AWS Subnet to create EC2 instances'),
+    string(name: 'AwsSecurityGroups', defaultValue: 'sg-7ea9ef35', description: 'AWS VPC Security Groups to use'),
+    string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
+    string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
+    string(name: 'StableFolio', defaultValue: 'https://folio-snapshot.aws.indexdata.com', description: 'Use stable version of modules'),
+    string(name: 'FixedOkapi', defaultValue: '', description: 'Use specified version of Okapi'),
+    text(name: 'FixedMods', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
+    string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
+    string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
+  ])
+])
+
+def sharedLib
+def context
+
+
+node('folio-perf-test') {
+  timeout(180) {
+
+    stage("Checkout") {
+      cleanWs()
+      checkout scm
+      sharedLib = load "shared.groovy"
+      context = sharedLib.getContext()
+    }
+
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${context.awsKeyId}",
+      accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+      usernamePassword(credentialsId: 'ebsco-rmapi-up', passwordVariable: 'RMAPI_PASSWORD',
+      usernameVariable: 'RMAPI_CUSTID')]) {
+      sshagent(credentials:["${context.sshKeyId}"]) {
+
+        try {
+          stage("Create Environment") {
+            sharedLib.createEnv(context)
+          }
+
+          stage("Wait for Environment") {
+          sharedLib.waitForEnv(context)
+          }
+
+          stage("Bootstrap DB") {
+            sharedLib.bootstrapDb(context)
+          }
+
+          stage("Bootstrap Okapi") {
+            sharedLib.bootstrapOkapi(context)
+          }
+
+          stage("Bootstrap modules") {
+            sharedLib.bootstrapModules(context)
+          }
+
+          stage("Populate data") {
+            sharedLib.populateData(context)
+          }
+
+          stage("Running JMeter tests") {
+            withEnv(['PATH+JMETER_PATH=/usr/local/apache-jmeter/bin']) {
+              echo "PATH is: $env.PATH"
+              sharedLib.runJmeterTests(context)
+            }
+          }
+        } finally {
+          stage("Tear down environment") {
+            sharedLib.teardownEnv(context)
+          }
+        }
+      }
+    }
+  }
+}
