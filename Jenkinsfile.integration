@@ -68,32 +68,32 @@ node('folio-perf-test') {
             sharedLib.populateData(context)
           }
 */
-          stage("Checkout tests") {
-            echo "Do checkout folio-integration-tests"
-            checkout([
-              $class: 'GitSCM',
-              branches: [[name: '*/master']],
-              extensions: scm.extensions + [[$class: 'SubmoduleOption',
-                                             disableSubmodules: false,
-                                             parentCredentials: false,
-                                             recursiveSubmodules: true,
-                                             reference: '',
-                                             trackingSubmodules: false],
-                                            [$class: 'RelativeTargetDirectory',
-                                             relativeTargetDir: 'folio-integration-tests']],
-              userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-integration-tests.git']]
-            ])
-          }
+          stage("Run integration tests") {
+            node('jenkins-slave-all') {
+              echo "Checkout folio-integration-tests"
+              checkout([
+                $class: 'GitSCM',
+                branches: [[name: '*/master']],
+                extensions: scm.extensions + [[$class: 'SubmoduleOption',
+                                               disableSubmodules: false,
+                                               parentCredentials: false,
+                                               recursiveSubmodules: true,
+                                               reference: '',
+                                               trackingSubmodules: false],
+                                              [$class: 'RelativeTargetDirectory',
+                                               relativeTargetDir: 'folio-integration-tests']],
+                userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-integration-tests.git']]
+              ])
 
-          stage("Run tests") {
-            echo "Run all folio-integration-tests"
-            dir("${env.WORKSPACE}/folio-integration-tests") {
-              withMaven(
-                jdk: 'Amazon OpenJDK 8',
-                maven: 'Amazon Apache Maven 3.3.9',
-                mavenSettingsConfig: 'folioci-maven-settings'
-              ) {
-                sh "mvn --version"
+              echo "Run all folio-integration-tests"
+              dir("${env.WORKSPACE}/folio-integration-tests") {
+                withMaven(
+                  jdk: 'openjdk-8-jenkins-slave-all',
+                  maven: 'maven3-jenkins-slave-all',
+                  mavenSettingsConfig: 'folioci-maven-settings'
+                ) {
+                  sh "mvn --version"
+                }
               }
             }
           }
