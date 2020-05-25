@@ -85,18 +85,6 @@ node('folio-perf-test') {
             ])
           }
 
-          stage("Verify Maven") {
-            echo "Verify maven setup"
-            sh """
-              echo PATH=$PATH
-              echo JAVA_HOME=$JAVA_HOME
-              echo MAVEN_HOME=$MAVEN_HOME
-              echo M3_HOME=$M3_HOME
-              java -version
-              mvn --version
-            """
-          }
-
           stage("Run tests") {
             echo "Run all folio-integration-tests"
             dir("${env.WORKSPACE}/folio-integration-tests") {
@@ -105,15 +93,7 @@ node('folio-perf-test') {
                 maven: 'maven3-jenkins-slave-all',
                 mavenSettingsConfig: 'folioci-maven-settings'
               ) {
-                sh """
-                  echo PATH=$PATH
-                  echo JAVA_HOME=$JAVA_HOME
-                  echo MAVEN_HOME=$MAVEN_HOME
-                  echo M3_HOME=$M3_HOME
-                  java -version
-                  mvn --version
-                  mvn test
-                """
+                sh "mvn --version"
               }
             }
           }
