@@ -1,8 +1,12 @@
 #!groovy
 
+// This Jenkinsfile.integration is used by the Jenkins job "folio-integration"
+// and using the FOLIO system built by the cloudformation configuration in this repository "folio-perf-test"
+// to then run the integration tests in the repository "folio-integration-tests".
+
 properties([
   parameters([
-    string(name: 'EnvName', defaultValue: 'folio-perf-test', description: 'Unique performance environment name'),
+    string(name: 'EnvName', defaultValue: 'folio-integration', description: 'Unique environment name'),
     string(name: 'JenkinsAwsCredential', defaultValue: 'jenkins-aws', description: 'Jenkins credential to access AWS account'),
     string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
@@ -59,16 +63,11 @@ node('folio-perf-test') {
             sharedLib.bootstrapModules(context)
           }
 
+/*
           stage("Populate data") {
             sharedLib.populateData(context)
           }
-
-          stage("Running JMeter tests") {
-            withEnv(['PATH+JMETER_PATH=/usr/local/apache-jmeter/bin']) {
-              echo "PATH is: $env.PATH"
-              sharedLib.runJmeterTests(context)
-            }
-          }
+*/
         } finally {
           stage("Tear down environment") {
             sharedLib.teardownEnv(context)
