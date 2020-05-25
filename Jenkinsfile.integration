@@ -88,11 +88,23 @@ node('folio-perf-test') {
           stage("Run tests") {
             echo "Run all folio-integration-tests"
             dir("${env.WORKSPACE}/folio-integration-tests") {
+              sh "echo $PATH"
+              sh "echo $JAVA_HOME"
+              sh "java -version"
+              sh "echo $MAVEN_HOME"
+              sh "echo $M3_HOME"
+              sh "mvn --version"
               withMaven(
                 jdk: 'openjdk-8-jenkins-slave-all',
                 maven: 'maven3-jenkins-slave-all',
                 mavenSettingsConfig: 'folioci-maven-settings'
               ) {
+                sh "echo $PATH"
+                sh "echo $JAVA_HOME"
+                sh "java -version"
+                sh "echo $MAVEN_HOME"
+                sh "echo $M3_HOME"
+                sh "mvn --version"
                 sh 'mvn test'
               }
             }
