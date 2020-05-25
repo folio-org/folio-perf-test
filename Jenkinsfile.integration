@@ -89,8 +89,8 @@ node('folio-perf-test') {
             echo "Run all folio-integration-tests"
             dir("${env.WORKSPACE}/folio-integration-tests") {
               withMaven(
-                jdk: 'openjdk-8-jenkins-slave-all',
-                maven: 'maven3-jenkins-slave-all',
+                jdk: 'Amazon OpenJDK 8',
+                maven: 'Amazon Apache Maven 3.3.9',
                 mavenSettingsConfig: 'folioci-maven-settings'
               ) {
                 sh "mvn --version"
