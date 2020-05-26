@@ -63,11 +63,10 @@ node('folio-perf-test') {
             sharedLib.bootstrapModules(context)
           }
 
-/*
           stage("Populate data") {
             sharedLib.populateData(context)
           }
-*/
+
           stage("Run integration tests") {
             node('jenkins-slave-all') {
               echo "Checkout folio-integration-tests"
@@ -99,6 +98,7 @@ node('folio-perf-test') {
           }
         } finally {
           stage("Tear down environment") {
+            sleep 60
             sharedLib.teardownEnv(context)
           }
         }
