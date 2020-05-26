@@ -93,6 +93,7 @@ node('folio-perf-test') {
                   mavenSettingsConfig: 'folioci-maven-settings'
                 ) {
                   sh "mvn --version"
+                  echo "okapiIp=${context.okapiIp}"
                 }
               }
             }
