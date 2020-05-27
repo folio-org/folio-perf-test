@@ -91,7 +91,7 @@ node('folio-perf-test') {
                   maven: 'maven3-jenkins-slave-all',
                   mavenSettingsConfig: 'folioci-maven-settings'
                 ) {
-                  sh "mvn test -DargLine='-Dkarate.env=${context.okapiIp}'"
+                  sh "mvn test -DargLine='-Dkarate.env=ec2-${context.okapiIp}.compute-1.amazonaws.com'"
                 }
               }
             }
