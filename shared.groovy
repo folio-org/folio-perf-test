@@ -4,6 +4,8 @@
 // staging methods
 // ------------------------------
 
+import groovy.json.JsonOutput
+
 def getContext() {
   def ctx = [
     envName : "${params.EnvName}",
@@ -118,7 +120,9 @@ def bootstrapOkapi(ctx) {
   } else {
     def okapiUrl = ctx.stableFolio.replaceAll(".aws", "-okapi.aws")
     def okapiVersionResp = httpRequest url: "${okapiUrl}/_/version",
-      customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
+    customHeaders: [
+      [name: 'x-okapi-tenant', value: 'supertenant']
+    ]
     okapiVersion = okapiVersionResp.content
   }
   def okapiJob = readFile("config/okapi.sh").trim()
@@ -133,7 +137,9 @@ def bootstrapOkapi(ctx) {
     waitUntil {
       try {
         httpRequest url: "http://${ctx.okapiIp}:9130/_/version",
-          customHeaders: [[name: 'x-okapi-tenant', value: 'supertenant']]
+        customHeaders: [
+          [name: 'x-okapi-tenant', value: 'supertenant']
+        ]
         true
       } catch (e) {
         sleep 10
@@ -196,16 +202,16 @@ def runJmeterTests(ctx, platformOnly=false) {
   def files = findFiles(glob: pattern)
   for (file in files) {
     // skip broken tests
-	  if (file.path.indexOf("loan-rules") > 0) {
+    if (file.path.indexOf("loan-rules") > 0) {
       echo "skip ${file}"
       continue;
     }
     // skip benchmark files
-	  if (file.path.indexOf("benchmark") > 0) {
+    if (file.path.indexOf("benchmark") > 0) {
       echo "skip ${file}"
       continue;
     }
-	  // skip edge modules till env is ready
+    // skip edge modules till env is ready
     if (file.path.indexOf("edge-") > 0) {
       echo "skip ${file}"
       continue;
@@ -362,8 +368,23 @@ def registerMods(mods, mdRepo, okapiIp) {
       echo "skip ${modId}"
       continue;
     }
+    def mdBody = md.content
+    // remove authtoken dependency to simplify logic
+    def mdJson = readJSON text: md.content
+    if (mdJson.requires) {
+      def found = -1
+      mdJson.requires.eachWithIndex { a, b ->
+        if (a.id == 'authtoken') {
+          found = b
+        }
+      }
+      if (found >= 0) {
+        mdJson.requires.remove(found)
+      }
+      mdBody = JsonOutput.toJson(mdJson)
+    }
     validMods.put(entry.getKey(), entry.getValue())
-    httpRequest httpMode: 'POST', requestBody: md.content, url: "http://${okapiIp}:9130/_/proxy/modules?check=false"
+    httpRequest httpMode: 'POST', requestBody: mdBody, url: "http://${okapiIp}:9130/_/proxy/modules?check=false"
   }
   return validMods
 }
@@ -374,8 +395,9 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
   def modJobTemplate = readFile("config/mods.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
   def discoveryTemplate = readFile("config/discovery.json").trim()
-  def installMods = []
-  def moreInstallMods = []
+  def installModsBatchOne = []
+  def installModsBatchTwo = []
+  def installModsBatchThree = []
   for (entry in mods.entrySet()) {
     def modName = entry.getKey()
     def modVer = entry.getValue()
@@ -383,15 +405,17 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     def modInstall = installTemplate.replace('${modId}', modId)
     // install some modules first
     if (modName.equals("mod-users") ||
-      modName.equals("mod-login") ||
-      modName.equals("mod-permissions") ||
-      modName.equals("mod-pubsub") ||
-      modName.equals("mod-inventory-storage") ||
-      modName.equals("mod-circulation-storage") ||
-      modName.equals("mod-feesfines")) {
-      installMods.add(modInstall)
+    modName.equals("mod-login") ||
+    modName.equals("mod-permissions") ||
+    modName.equals("mod-pubsub") ||
+    modName.equals("mod-inventory-storage") ||
+    modName.equals("mod-circulation-storage") ||
+    modName.equals("mod-feesfines")) {
+      installModsBatchOne.add(modInstall)
+    } else if (modName.equals("mod-authtoken")) {
+      installModsBatchThree.add(modInstall)
     } else {
-      moreInstallMods.add(modInstall)
+      installModsBatchTwo.add(modInstall)
     }
     // discovery needs only backend MDs
     if (!modName.startsWith("mod-")) {
@@ -405,7 +429,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // }
     // erm modules run differently
     if (modName.equals("mod-agreements") || modName.equals("mod-licenses")
-      || modName.equals("mod-erm-usage")) {
+    || modName.equals("mod-erm-usage")) {
       modJob = readFile("config/mod-erm.sh").trim()
       modJob = modJob .replace('${dbHost}', dbPvtIp)
       if (modName.equals("mod-erm-usage")) {
@@ -439,7 +463,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     }
     // replace folioci to folioorg for non-snapshot version
     if (!modVer.toUpperCase().contains("SNAPSHOT") &&
-      modVer.substring(modVer.lastIndexOf(".") + 1).toInteger() < 100000) {
+    modVer.substring(modVer.lastIndexOf(".") + 1).toInteger() < 100000) {
       echo "change Docker Hub from folioci to folioorg for $modName-$modVer"
       modJob = modJob.replace('folioci', 'folioorg')
     }
@@ -449,14 +473,18 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     echo "discoveryPayload: $discoveryPayload"
     httpRequest httpMode: 'POST', requestBody: discoveryPayload, url: "http://${okapiIp}:9130/_/discovery/modules"
   }
-  // install modules with both reference and sample
-  def installPayload = "[" + installMods.join(",") + "]"
+  // install modules with both reference data and sample data
+  def installPayload = "[" + installModsBatchOne.join(",") + "]"
   echo "installPayload with both reference and sample: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue"
-  // install other modules without reference and sample
-  installPayload = "[" + moreInstallMods.join(",") + "]"
+  // install other modules without reference data and sample data
+  installPayload = "[" + installModsBatchTwo.join(",") + "]"
   echo "installPayload without reference and sample: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install?tenantParameters=loadReference%3Dfalse%2CloadSample%3Dfalse"
+  // install mod-authtoken, mod-login-saml, edge, and ui modules
+  installPayload = "[" + installModsBatchThree.join(",") + "]"
+  echo "installPayload of mod-authtoken: $installPayload"
+  httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
 }
 
 // test if stack exists
