@@ -91,7 +91,7 @@ def bootstrapDb(ctx) {
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo rm -fr kafka-docker"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} git clone https://github.com/wurstmeister/kafka-docker.git"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sed -i.bak 's/9092/9092:9092/g' kafka-docker/docker-compose.yml"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sed -i.bak2 's/192.168.99.100/localhost/g' kafka-docker/docker-compose.yml"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sed -i.bak2 's/192.168.99.100/${ctx.dbPvtIp}/g' kafka-docker/docker-compose.yml"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} docker-compose -f kafka-docker/docker-compose.yml up -d"
   def dbJob = readFile("config/db.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${dbJob}"
