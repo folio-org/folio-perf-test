@@ -2,7 +2,8 @@
 
 // This Jenkinsfile.integration is used by the Jenkins job "folio-integration"
 // and using the FOLIO system built by the cloudformation configuration in this repository "folio-perf-test"
-// to then run the integration tests in the repository "folio-integration-tests".
+// to then run the integration tests in the repository "folio-integration-tests"
+// against the recent set of modules from "folio-snapshot"i reference environment.
 
 properties([
   parameters([
@@ -14,7 +15,7 @@ properties([
     string(name: 'AwsSecurityGroups', defaultValue: 'sg-7ea9ef35', description: 'AWS VPC Security Groups to use'),
     string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
     string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
-    string(name: 'StableFolio', defaultValue: 'https://folio-snapshot-core.aws.indexdata.com', description: 'Use stable version of modules'),
+    string(name: 'StableFolio', defaultValue: 'https://folio-snapshot.aws.indexdata.com', description: 'Use stable version of modules'),
     string(name: 'FixedOkapi', defaultValue: '', description: 'Use specified version of Okapi'),
     text(name: 'FixedMods', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
     string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
