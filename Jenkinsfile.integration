@@ -3,7 +3,7 @@
 // This Jenkinsfile.integration is used by the Jenkins job "folio-integration"
 // and using the FOLIO system built by the cloudformation configuration in this repository "folio-perf-test"
 // to then run the integration tests in the repository "folio-integration-tests"
-// against the recent set of modules from "folio-snapshot"i reference environment.
+// against the recent set of modules from "folio-snapshot" reference environment.
 
 properties([
   parameters([
@@ -100,7 +100,7 @@ node('folio-perf-test') {
           }
         } finally {
           stage("Tear down environment") {
-            sleep 300
+            sleep 60
             sharedLib.teardownEnv(context)
           }
         }
