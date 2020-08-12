@@ -118,7 +118,7 @@ def bootstrapOkapi(ctx) {
   if (ctx.fixedOkapi) {
     okapiVersion = ctx.fixedOkapi
   } else {
-    def okapiUrl = ctx.stableFolio.replaceAll(".aws", "-okapi.aws")
+    def okapiUrl = ctx.stableFolio.replaceFirst('\\.', '-okapi.')
     def okapiVersionResp = httpRequest url: "${okapiUrl}/_/version",
     customHeaders: [
       [name: 'x-okapi-tenant', value: 'supertenant']
