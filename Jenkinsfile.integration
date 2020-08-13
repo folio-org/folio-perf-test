@@ -78,7 +78,7 @@ node('folio-perf-test') {
         } finally {
           stage("Tear down environment") {
             sleep 60
-            sharedLib.teardownEnv(context)
+            // sharedLib.teardownEnv(context)
             testRail(testrailProject: 19, testrailSuite: 49, junitResultsGlob: '*.xml', createNewTestcases: true)
           }
         }
