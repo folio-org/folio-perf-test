@@ -20,6 +20,8 @@ properties([
     text(name: 'FixedMods', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
     string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
     string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
+    string(name: 'TestRailUrl', defaultValue: 'https://foliotest.testrail.io/', description: 'TestRail reporitng server URL'),
+    string(name: 'TestRailProjectId', defaultValue: '19', description: 'TestRail Project ID for Intgegration tests'),
   ])
 ])
 
@@ -93,7 +95,9 @@ node('folio-perf-test') {
                   mavenSettingsConfig: 'folioci-maven-settings'
                 ) {
                   def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
-                  sh "mvn test -DargLine='-Dkarate.env=${okapiDns}'"
+                  withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
+                    sh "mvn test -DargLine='-Dkarate.env=${okapiDns} -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}'"
+                  }
                 }
               }
             }
