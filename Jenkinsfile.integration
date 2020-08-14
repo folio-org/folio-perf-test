@@ -33,7 +33,7 @@ node('folio-perf-test') {
   timeout(180) {
 
     stage("Checkout") {
-      cleanWs()
+      //cleanWs()
       checkout scm
       sharedLib = load "shared.groovy"
       context = sharedLib.getContext()
@@ -74,7 +74,7 @@ node('folio-perf-test') {
                   //def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                   def okapiDns = "https://folio-testing.dev.folio.org"
                   withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-                    sh "mvn test -DargLine='-Dkarate.env=${okapiDns}' -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
+                    sh "mvn test -DargLine='-Dkarate.env=${okapiDns} -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}'"
                   }
                 }
               }
