@@ -75,7 +75,7 @@ node('folio-perf-test') {
               echo "Checkout folio-integration-tests"
               checkout([
                 $class: 'GitSCM',
-                branches: [[name: '*/master']],
+                branches: [[name: '*/testrail_integration']],
                 extensions: scm.extensions + [[$class: 'SubmoduleOption',
                                                disableSubmodules: false,
                                                parentCredentials: false,
@@ -96,7 +96,7 @@ node('folio-perf-test') {
                 ) {
                   def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                   withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-                    sh "mvn test -DargLine='-Dkarate.env=${okapiDns} -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}'"
+                    sh "mvn test -Dkarate.env=${okapiDns} -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
                   }
                 }
               }
