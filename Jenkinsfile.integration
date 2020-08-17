@@ -46,29 +46,6 @@ node('folio-perf-test') {
       sshagent(credentials:["${context.sshKeyId}"]) {
 
         try {
-          stage("Create Environment") {
-            sharedLib.createEnv(context)
-          }
-
-          stage("Wait for Environment") {
-          sharedLib.waitForEnv(context)
-          }
-
-          stage("Bootstrap DB") {
-            sharedLib.bootstrapDb(context)
-          }
-
-          stage("Bootstrap Okapi") {
-            sharedLib.bootstrapOkapi(context)
-          }
-
-          stage("Bootstrap modules") {
-            sharedLib.bootstrapModules(context)
-          }
-
-          stage("Populate data") {
-            sharedLib.populateData(context)
-          }
 
           stage("Run integration tests") {
             node('jenkins-slave-all') {
@@ -94,7 +71,8 @@ node('folio-perf-test') {
                   maven: 'maven3-jenkins-slave-all',
                   mavenSettingsConfig: 'folioci-maven-settings'
                 ) {
-                  def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+                  //def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+                  def okapiDns = "testing"
                   withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
                     sh "mvn test -Dkarate.env=${okapiDns} -Dtest=ModOaiPmhTests#oaiPmhbasicTests -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
                   }
