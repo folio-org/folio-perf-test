@@ -76,7 +76,7 @@ node('folio-perf-test') {
               echo "Checkout folio-integration-tests"
               checkout([
                 $class: 'GitSCM',
-                branches: [[name: '*/testrail_integration']],
+                branches: [[name: '*/master']],
                 extensions: scm.extensions + [[$class: 'SubmoduleOption',
                                                disableSubmodules: false,
                                                parentCredentials: false,
