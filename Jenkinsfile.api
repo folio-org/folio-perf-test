@@ -90,20 +90,19 @@ node('folio-perf-test') {
 
               echo "Run all folio-api-tests"
               dir("${env.WORKSPACE}/folio-api-tests") {
-                withMaven(
-                  jdk: 'openjdk-8-jenkins-slave-all',
-                  maven: 'maven3-jenkins-slave-all',
-                  mavenSettingsConfig: 'folioci-maven-settings'
-                ) {
+//                withMaven(
+//                  jdk: 'openjdk-8-jenkins-slave-all',
+//                  maven: 'maven3-jenkins-slave-all',
+//                  mavenSettingsConfig: 'folioci-maven-settings'
+//                ) {
+                withDockerContainer(image: 'postman/newman') {
+
                   def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                   //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
                   script {  
                     sh "newman run mod-notes/mod-notes.postman_collection.json -e environment/folio-vagrant.postman_environment --reporter-json-export results.json --reporters cli,json"
                   }
-                  cucumber buildStatus: 'UNSTABLE',
-                      reportTitle: 'API tests report',
-                      fileIncludePattern: '**/*.json',
-                      trendsLimit: 10
+                  cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/*.json', trendsLimit: 10
                 }
               }
             }
