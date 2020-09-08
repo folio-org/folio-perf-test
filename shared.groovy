@@ -499,7 +499,7 @@ def stackExists(ctx) {
 
 // stop existing FOLIO dockers
 def stopFolioDockers(ctx, ip) {
-  def dockerCmd = "docker stop `docker ps -q`"
+  def dockerCmd = "docker ps -q | xargs --no-run-if-empty docker stop"
   try {
     sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ip} '${dockerCmd}'"
     sleep 3
