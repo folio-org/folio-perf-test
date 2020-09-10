@@ -317,7 +317,7 @@ def getMods(fixedMods, mdRepo) {
   def latestMods = [:]
   for (mod in mods) {
     // skip mod-sip2 for now due to regex issue
-    if (modName.startsWith("mod-sip2")) {
+    if (mod.id.startsWith("mod-sip2")) {
       continue
     }
 
