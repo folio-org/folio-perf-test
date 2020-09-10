@@ -312,7 +312,7 @@ def getMods(fixedMods, mdRepo) {
   } else {
     def resp = httpRequest "${mdRepo}"
     echo "new install.json: ${resp.content}"
-    mods = readJSON text: '${resp.content}'
+    mods = readJSON text: '''${resp.content}'''
   }
   def latestMods = [:]
   for (mod in mods) {
