@@ -318,6 +318,7 @@ def getMods(fixedMods, mdRepo) {
   def latestMods = [:]
   for (mod in mods) {
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
+    echo "${group}"
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
     if (!modName.startsWith("mod-") && !modName.startsWith("folio_")) {
