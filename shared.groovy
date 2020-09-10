@@ -316,6 +316,11 @@ def getMods(fixedMods, mdRepo) {
   }
   def latestMods = [:]
   for (mod in mods) {
+    // skip edge-sip2 for now due to regex issue
+    if (mod.id.startsWith("edge-sip2")) {
+      continue
+    }
+    
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
