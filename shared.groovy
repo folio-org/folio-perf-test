@@ -313,12 +313,15 @@ def getMods(fixedMods, mdRepo) {
     def resp = httpRequest "${mdRepo}"
     echo "new install.json: ${resp.content}"
     mods = readJSON text: resp.content
-    echo "JSON done"
   }
   def latestMods = [:]
   for (mod in mods) {
+    // skip mod-sip2 for now due to regex issue
+    if (modName.startsWith("mod-sip2")) {
+      continue
+    }
+
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
-    echo "${group}"
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
     if (!modName.startsWith("mod-") && !modName.startsWith("folio_")) {
