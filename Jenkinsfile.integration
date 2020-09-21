@@ -105,7 +105,7 @@ node('folio-perf-test') {
           }
         } finally {
           stage("Tear down environment") {
-            sleep 60
+            sleep 600
             sharedLib.teardownEnv(context)
           }
         }
