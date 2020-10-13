@@ -48,6 +48,7 @@ node('folio-perf-test') {
         try {
 
           stage("Create Environment") {
+            notifySlack()
             sharedLib.createEnv(context)
           }
 
