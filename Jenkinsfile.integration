@@ -103,8 +103,12 @@ node('folio-perf-test') {
               }
             }
           }
+        } catch (e) {
+          currentBuild.result = 'FAILURE'
+          throw e
         } finally {
           stage("Tear down environment") {
+            notifySlack(currentBuild.result)
             sleep 600
             sharedLib.teardownEnv(context)
           }
