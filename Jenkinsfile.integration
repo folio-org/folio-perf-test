@@ -29,7 +29,7 @@ def sharedLib
 def context
 
 
-node('folio-perf-test') {
+node {
   timeout(180) {
 
     stage("Checkout") {
