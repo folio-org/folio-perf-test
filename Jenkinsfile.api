@@ -95,7 +95,7 @@ node('jenkins-agent-java11') {
 //                  maven: 'maven3-jenkins-slave-all',
 //                  mavenSettingsConfig: 'folioci-maven-settings'
 //                ) {
-                withDockerContainer(image: 'postman/newman') {
+                withDockerContainer(image: 'postman/newman', args: '--entrypoint "/bin/sh"') {
 
                   def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                   //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
