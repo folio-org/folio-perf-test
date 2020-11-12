@@ -29,7 +29,7 @@ def sharedLib
 def context
 
 
-node('folio-perf-test') {
+node('jenkins-agent-java11') {
   timeout(180) {
 
     stage("Checkout") {
