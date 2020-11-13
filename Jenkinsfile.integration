@@ -103,6 +103,13 @@ node('jenkins-agent-java11') {
               }
             }
           }
+
+          stage ("Cucumber Reports") {
+            node('jenkins-slave-all') {
+                    cucumber buildStatus: "UNSTABLE",
+                             fileIncludePattern: "**/cucumber.json"
+            }
+          }
         } catch (e) {
           currentBuild.result = 'FAILURE'
           throw e
