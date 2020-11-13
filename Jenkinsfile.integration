@@ -29,7 +29,7 @@ def sharedLib
 def context
 
 
-node('folio-perf-test') {
+node('jenkins-agent-java11') {
   timeout(180) {
 
     stage("Checkout") {
@@ -110,7 +110,7 @@ node('folio-perf-test') {
         } finally {
           stage("Tear down environment") {
             sharedLib.notifySlack(currentBuild.result)
-            sleep 600
+            sleep 60
             sharedLib.teardownEnv(context)
           }
         }
