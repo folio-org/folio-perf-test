@@ -90,7 +90,7 @@ node('jenkins-agent-java11') {
               userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
             ])
 
-            echo "Run all folio-api-tests"
+            echo "Run ${params.PostmanCollection} folio-api-tests"
             dir("${env.WORKSPACE}/folio-api-tests") {
               withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
 
