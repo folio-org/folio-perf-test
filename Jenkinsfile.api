@@ -75,38 +75,31 @@ node('jenkins-agent-java11') {
           }
 
           stage("Run API tests") {
-            node('jenkins-slave-all') {
-              echo "Checkout folio-api-tests"
-              checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/master']],
-                extensions: scm.extensions + [[$class: 'SubmoduleOption',
-                                               disableSubmodules: false,
-                                               parentCredentials: false,
-                                               recursiveSubmodules: true,
-                                               reference: '',
-                                               trackingSubmodules: false],
-                                              [$class: 'RelativeTargetDirectory',
-                                               relativeTargetDir: 'folio-api-tests']],
-                userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
-              ])
+            echo "Checkout folio-api-tests"
+            checkout([
+              $class: 'GitSCM',
+              branches: [[name: '*/master']],
+              extensions: scm.extensions + [[$class: 'SubmoduleOption',
+                                              disableSubmodules: false,
+                                              parentCredentials: false,
+                                              recursiveSubmodules: true,
+                                              reference: '',
+                                              trackingSubmodules: false],
+                                            [$class: 'RelativeTargetDirectory',
+                                              relativeTargetDir: 'folio-api-tests']],
+              userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
+            ])
 
-              echo "Run all folio-api-tests"
-              dir("${env.WORKSPACE}/folio-api-tests") {
-//                withMaven(
-//                  jdk: 'openjdk-8-jenkins-slave-all',
-//                  maven: 'maven3-jenkins-slave-all',
-//                  mavenSettingsConfig: 'folioci-maven-settings'
-//                ) {
-                withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+            echo "Run all folio-api-tests"
+            dir("${env.WORKSPACE}/folio-api-tests") {
+              withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
 
-                  def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
-                  //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-                  script {  
-                    sh "newman run ${params.PostmanCollection} -e ${params.PostmanEnvironment} --suppress-exit-code 1 --env-var url=${okapiDns} --reporter-json-export results.json --reporters cli,json"
-                  }
-                  cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/*.json', trendsLimit: 10
+                def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+                //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
+                script {
+                  sh "newman run ${params.PostmanCollection} -e ${params.PostmanEnvironment} --suppress-exit-code 1 --env-var url=${okapiDns} --reporter-json-export results.json --reporters cli,json"
                 }
+                cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/*.json', trendsLimit: 10
               }
             }
           }
