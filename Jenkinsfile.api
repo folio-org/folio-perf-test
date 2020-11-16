@@ -22,6 +22,8 @@ properties([
     string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
     string(name: 'TestRailUrl', defaultValue: 'https://foliotest.testrail.io', description: 'TestRail reporitng server URL'),
     string(name: 'TestRailProjectId', defaultValue: '19', description: 'TestRail Project ID for Intgegration tests'),
+    string(name: 'PostmanCollection', defaultValue: 'mod-notes/mod-notes.postman_collection.json', description: 'Filename (including directory name) to the postman collection in the folio-api-tests repository'),
+    string(name: 'PostmanEnvironment', defaultValue: 'environment/folio-vagrant.postman_environment', description: 'Filename (including directory name) to the postman environment in the folio-api-tests repository'),
   ])
 ])
 
@@ -101,7 +103,7 @@ node('jenkins-agent-java11') {
                   def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                   //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
                   script {  
-                    sh "newman run mod-notes/mod-notes.postman_collection.json -e environment/folio-vagrant.postman_environment --env-var url=${okapiDns} --reporter-json-export results.json --reporters cli,json"
+                    sh "newman run ${params.PostmanCollection} -e ${params.PostmanEnvironment} --env-var url=${okapiDns} --reporter-json-export results.json --reporters cli,json"
                   }
                   cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/*.json', trendsLimit: 10
                 }
