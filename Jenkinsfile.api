@@ -70,9 +70,9 @@ node('jenkins-agent-java11') {
             sharedLib.bootstrapModules(context)
           }
 
-          stage("Populate data") {
-            sharedLib.populateData(context)
-          }
+          // stage("Populate data") {
+          //   sharedLib.populateData(context)
+          // }
 
           stage("Run API tests") {
             echo "Checkout folio-api-tests"
