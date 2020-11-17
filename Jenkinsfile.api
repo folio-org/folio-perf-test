@@ -98,9 +98,9 @@ node('jenkins-agent-java11') {
                 def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
                 //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
                 script {
-                  sh "newman run ${params.PostmanCollection} -e ${params.PostmanEnvironment} --suppress-exit-code 1 --env-var xokapitenant=${context.tenant} --env-var url=${okapiDns} --reporter-json-export results.json --reporters cli,json"
+                  sh "newman run ${params.PostmanCollection} -e ${params.PostmanEnvironment} --suppress-exit-code 1 --env-var xokapitenant=${context.tenant} --env-var url=${okapiDns} --reporter-junit-export junit_reports --reporters cli,junit"
                 }
-                cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/*.json', trendsLimit: 10
+                cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
               }
             }
           }
