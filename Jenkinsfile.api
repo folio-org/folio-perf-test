@@ -70,9 +70,10 @@ node('jenkins-agent-java11') {
             sharedLib.bootstrapModules(context)
           }
 
-          // stage("Populate data") {
+          stage("Populate data") {
+            echo "[INFO] Populate data stage is temporary disabled"
           //   sharedLib.populateData(context)
-          // }
+          }
 
           stage("Run API tests") {
             echo "Checkout folio-api-tests"
