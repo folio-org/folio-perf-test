@@ -269,12 +269,12 @@ def runNewman(ctx, postmanEnvironment) {
             --suppress-exit-code 1 \
             --env-var xokapitenant=${ctx.tenant} \
             --env-var url=${okapiDns} \
-            --reporter-junit-export junit_reports/${file.path.split('/')[0]} \
+            --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
             --reporters cli,junit
         """
         //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
-      junit(testResults: 'junit_reports/**/*.xml')
+      junit(testResults: 'junit_reports/*.xml')
     }
   }
 }
