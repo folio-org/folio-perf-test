@@ -237,6 +237,48 @@ def runJmeterTests(ctx, platformOnly=false) {
   perfReport errorFailedThreshold: 1, percentiles: '0,50,90,100', sourceDataFiles: "${jMeterOutput}"
 }
 
+def runNewman(ctx, postmanEnvironment) {
+  def excludeFolders = ['environment', 'outdated', 'smoke-test']
+  echo "Checkout folio-api-tests"
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: '*/master']],
+    extensions: scm.extensions + [[$class: 'SubmoduleOption',
+                                    disableSubmodules: false,
+                                    parentCredentials: false,
+                                    recursiveSubmodules: true,
+                                    reference: '',
+                                    trackingSubmodules: false],
+                                  [$class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: 'folio-api-tests']],
+    userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
+  ])
+  def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+  dir("${env.WORKSPACE}/folio-api-tests") {
+    withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+      jsonFiles = findFiles(glob: '**/*.json')
+      for (file in jsonFiles) {
+        if(file.path.split('/')[0] in excludeFolders) {
+          echo "[DEBUG] ${file} is skipped"
+          continue
+        }
+        echo "Run ${file.path} collection"
+        //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
+        sh """
+          newman run ${file.path} -e ${postmanEnvironment} \
+            --suppress-exit-code 1 \
+            --env-var xokapitenant=${ctx.tenant} \
+            --env-var url=${okapiDns} \
+            --reporter-junit-export junit_reports/${file.path.split('/')[0]} \
+            --reporters cli,junit
+        """
+        //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
+      }
+      junit(testResults: 'junit_reports/**/*.xml')
+    }
+  }
+}
+
 def teardownEnv(ctx) {
   if (!stackExists(ctx)) {
     echo "Skip tearing down ${ctx.envName}"
