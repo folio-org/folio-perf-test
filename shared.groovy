@@ -539,7 +539,6 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
   installPayload = "[" + installModsBatchThree.join(",") + "]"
   echo "installPayload of mod-authtoken: $installPayload"
   httpRequest httpMode: 'POST', requestBody: installPayload.toString(), url: "http://${okapiIp}:9130/_/proxy/tenants/${tenant}/install"
-  sleep 600
 }
 
 // test if stack exists
