@@ -7,7 +7,7 @@
 
 properties([
   parameters([
-    string(name: 'EnvName', defaultValue: 'folio-integration', description: 'Unique environment name'),
+    string(name: 'EnvName', defaultValue: 'folio-api', description: 'Unique environment name'),
     string(name: 'JenkinsAwsCredential', defaultValue: 'jenkins-aws', description: 'Jenkins credential to access AWS account'),
     string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
@@ -22,6 +22,7 @@ properties([
     string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
     string(name: 'TestRailUrl', defaultValue: 'https://foliotest.testrail.io', description: 'TestRail reporitng server URL'),
     string(name: 'TestRailProjectId', defaultValue: '19', description: 'TestRail Project ID for Intgegration tests'),
+    string(name: 'PostmanEnvironment', defaultValue: 'environment/folio-vagrant.postman_environment', description: 'Filename (including directory name) to the postman environment in the folio-api-tests repository'),
   ])
 ])
 
@@ -53,7 +54,7 @@ node('jenkins-agent-java11') {
           }
 
           stage("Wait for Environment") {
-          sharedLib.waitForEnv(context)
+            sharedLib.waitForEnv(context)
           }
 
           stage("Bootstrap DB") {
@@ -69,40 +70,12 @@ node('jenkins-agent-java11') {
           }
 
           stage("Populate data") {
-            sharedLib.populateData(context)
+            echo "[INFO] Populate data stage is temporary disabled"
+          //   sharedLib.populateData(context)
           }
 
-          stage("Run integration tests") {
-            node('jenkins-slave-all') {
-              echo "Checkout folio-integration-tests"
-              checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/master']],
-                extensions: scm.extensions + [[$class: 'SubmoduleOption',
-                                               disableSubmodules: false,
-                                               parentCredentials: false,
-                                               recursiveSubmodules: true,
-                                               reference: '',
-                                               trackingSubmodules: false],
-                                              [$class: 'RelativeTargetDirectory',
-                                               relativeTargetDir: 'folio-integration-tests']],
-                userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-integration-tests.git']]
-              ])
-
-              echo "Run all folio-integration-tests"
-              dir("${env.WORKSPACE}/folio-integration-tests") {
-                withMaven(
-                  jdk: 'openjdk-8-jenkins-slave-all',
-                  maven: 'maven3-jenkins-slave-all',
-                  mavenSettingsConfig: 'folioci-maven-settings'
-                ) {
-                  def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
-                  withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-                    sh "mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
-                  }
-                }
-              }
-            }
+          stage("Run API tests") {
+            sharedLib.runNewman(context, PostmanEnvironment)
           }
         } catch (e) {
           currentBuild.result = 'FAILURE'
