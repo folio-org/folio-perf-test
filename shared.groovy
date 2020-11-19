@@ -256,22 +256,31 @@ def runNewman(ctx, postmanEnvironment) {
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+      sh "npm install -g newman-reporter-testrail"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
-        if(file.path.split('/')[0] in excludeFolders) {
+        def folderName = file.path.split('/')[0]
+        def collectionName = file.name.split('.')[0]
+        if(folderName in excludeFolders) {
           echo "[DEBUG] ${file} is skipped"
           continue
         }
         echo "Run ${file.path} collection"
-        //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-        sh """
-          newman run ${file.path} -e ${postmanEnvironment} \
-            --suppress-exit-code 1 \
-            --env-var xokapitenant=${ctx.tenant} \
-            --env-var url=${okapiDns} \
-            --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
-            --reporters cli,junit
-        """
+        withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'TESTRAIL_USERNAME'),
+                         string(credentialsId: 'testrail_ut56_token', variable: 'TESTRAIL_APIKEY')]) {
+          sh """
+            TESTRAIL_DOMAIN=${params.TestRailUrl}
+            TESTRAIL_PROJECTID=${params.TestRailProjectId}
+            TESTRAIL_SUITEID=${folderName}
+            TESTRAIL_TITLE=${collectionName}
+            newman run ${file.path} -e ${postmanEnvironment} \
+              --suppress-exit-code 1 \
+              --env-var xokapitenant=${ctx.tenant} \
+              --env-var url=${okapiDns} \
+              --reporter-junit-export junit_reports/${collectionName}.xml \
+              --reporters cli,junit,testrail
+          """
+        }
         //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
       junit(testResults: 'junit_reports/*.xml')
