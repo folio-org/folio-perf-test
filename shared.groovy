@@ -255,7 +255,7 @@ def runNewman(ctx, postmanEnvironment) {
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
   dir("${env.WORKSPACE}/folio-api-tests") {
-    withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+    withDockerContainer(image: 'postman/newman', args: '--user 0 --entrypoint=\'\'') {
       sh "npm install -g newman-reporter-testrail"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
