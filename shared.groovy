@@ -279,6 +279,42 @@ def runNewman(ctx, postmanEnvironment) {
   }
 }
 
+def runIntegrationTests(ctx) {
+  echo "Checkout folio-integration-tests"
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: '*/master']],
+    extensions: scm.extensions + [[$class: 'SubmoduleOption',
+                                   disableSubmodules: false,
+                                   parentCredentials: false,
+                                   recursiveSubmodules: true,
+                                   reference: '',
+                                   trackingSubmodules: false],
+                                  [$class: 'RelativeTargetDirectory',
+                                   relativeTargetDir: 'folio-integration-tests']],
+    userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-integration-tests.git']]
+  ])
+
+  echo "Run all folio-integration-tests"
+  dir("${env.WORKSPACE}/folio-integration-tests") {
+    withMaven(
+      jdk: 'openjdk-8-jenkins-slave-all',
+      maven: 'maven3-jenkins-slave-all',
+      mavenSettingsConfig: 'folioci-maven-settings'
+    ) {
+      def okapiDns = "ec2-" + context.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+      withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
+        sh "mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
+      }
+    }
+    sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    sh "find . | grep json | grep '/target/surefire-reports/' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    cucumber buildStatus: "UNSTABLE",
+      fileIncludePattern: "*.json",
+      jsonReportDirectory: "cucumber-reports"
+  }
+}
+
 def teardownEnv(ctx) {
   if (!stackExists(ctx)) {
     echo "Skip tearing down ${ctx.envName}"
@@ -369,7 +405,7 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("mod-data-export")) {
       continue
     }
-    
+
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
@@ -562,7 +598,7 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-    
+
     // Build status of null means success.
     buildStatus = buildStatus ?: 'SUCCESS'
     def color
