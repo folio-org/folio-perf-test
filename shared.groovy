@@ -260,7 +260,7 @@ def runNewman(ctx, postmanEnvironment) {
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
         def folderName = file.path.split('/')[0]
-        def collectionName = file.name.split('.')[0]
+        def collectionName = file.name.tokenize('.')[0]
         if(folderName in excludeFolders) {
           echo "[DEBUG] ${file} is skipped"
           continue
