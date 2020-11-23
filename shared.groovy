@@ -266,20 +266,22 @@ def runNewman(ctx, postmanEnvironment) {
           continue
         }
         echo "Run ${file.path} collection"
-        withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'TESTRAIL_USERNAME'),
-                         string(credentialsId: 'testrail_ut56_token', variable: 'TESTRAIL_APIKEY')]) {
-          sh """
-            TESTRAIL_DOMAIN=${params.TestRailUrl}
-            TESTRAIL_PROJECTID=${params.TestRailProjectId}
-            TESTRAIL_SUITEID=${folderName}
-            TESTRAIL_TITLE=${collectionName}
-            newman run ${file.path} -e ${postmanEnvironment} \
-              --suppress-exit-code 1 \
-              --env-var xokapitenant=${ctx.tenant} \
-              --env-var url=${okapiDns} \
-              --reporter-junit-export junit_reports/${collectionName}.xml \
-              --reporters cli,junit,testrail
-          """
+        withEnv(["TESTRAIL_DOMAIN=${params.TestRailUrl}", "TESTRAIL_PROJECTID=${params.TestRailProjectId}", "TESTRAIL_SUITEID=${folderName}", "TESTRAIL_TITLE=${collectionName}"]) {
+          withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'TESTRAIL_USERNAME'),
+                          string(credentialsId: 'testrail_ut56_token', variable: 'TESTRAIL_APIKEY')]) {
+            sh """
+              TESTRAIL_DOMAIN=${params.TestRailUrl}
+              TESTRAIL_PROJECTID=${params.TestRailProjectId}
+              TESTRAIL_SUITEID=${folderName}
+              TESTRAIL_TITLE=${collectionName}
+              newman run ${file.path} -e ${postmanEnvironment} \
+                --suppress-exit-code 1 \
+                --env-var xokapitenant=${ctx.tenant} \
+                --env-var url=${okapiDns} \
+                --reporter-junit-export junit_reports/${collectionName}.xml \
+                --reporters cli,junit,testrail
+            """
+          }
         }
         //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
