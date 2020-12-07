@@ -12,7 +12,7 @@ println list
 // modules: mod-email-1.10.0-SNAPSHOT.49 mod-test-1.10.0-SNAPSHOT.49
 
 node('jenkins-agent-java11') {
-  stage(Checkout) {
+  stage("Checkout") {
     checkout([
       $class           : 'GitSCM',
       branches         : [[name: '*/FOLIO-2785']],
