@@ -1,0 +1,38 @@
+#!groovy
+
+import groovy.json.JsonSlurperClassic
+
+def test_json = params.modules_list
+
+def modules_json = new JsonSlurperClassic().parseText(test_json)
+def modules = modules_json.id
+def list = modules.join(" ")
+println list
+// output example:
+// modules: mod-email-1.10.0-SNAPSHOT.49 mod-test-1.10.0-SNAPSHOT.49
+
+writeFile file: 'rancher_script.sh', text: params.render_script
+
+node('jenkins-agent-java11') {
+  checkout([
+    $class: 'GitSCM', 
+    branches: [[name: '*/FOLIO-2785']], 
+    userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-perf-test']]])
+  
+    stage("Rancher login") {
+        withDockerContainer(image: 'rancher/cli2:latest', args: '--entrypoint=\'\' -u 0:0') {
+            withCredentials([string(credentialsId: 'rancher_token', variable: 'token')]) {
+              sh "echo $list >> modules"
+              sh "df -h"
+              sh "ls -la"
+              sh "pwd"
+              sh "ls -la /home/jenkins"
+              sh "cat modules"
+              sh "cat rancher_script.sh"
+              //  sh "${params.render_script}"
+              //  sh "chmod +x rancher_script.sh | cat rancher_script.sh"
+              sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
+            }
+        }
+    }
+}
