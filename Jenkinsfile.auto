@@ -12,11 +12,12 @@ println list
 // modules: mod-email-1.10.0-SNAPSHOT.49 mod-test-1.10.0-SNAPSHOT.49
 
 node('jenkins-agent-java11') {
-  checkout([
-    $class: 'GitSCM', 
-    branches: [[name: '*/FOLIO-2785']], 
-    userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-perf-test']]])
-  
+  stage(Checkout) {
+    checkout([
+      $class           : 'GitSCM',
+      branches         : [[name: '*/FOLIO-2785']],
+      userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-perf-test']]])
+  }
     stage("Rancher login") {
         withDockerContainer(image: 'rancher/cli2:latest', args: '--entrypoint=\'\' -u 0:0') {
             withCredentials([string(credentialsId: 'rancher_token', variable: 'token')]) {
