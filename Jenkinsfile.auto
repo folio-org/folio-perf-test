@@ -11,8 +11,6 @@ println list
 // output example:
 // modules: mod-email-1.10.0-SNAPSHOT.49 mod-test-1.10.0-SNAPSHOT.49
 
-writeFile file: 'rancher_script.sh', text: params.render_script
-
 node('jenkins-agent-java11') {
   checkout([
     $class: 'GitSCM', 
