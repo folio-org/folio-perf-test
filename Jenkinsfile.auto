@@ -29,7 +29,7 @@ node('jenkins-agent-java11') {
               sh "cat rancher_script.sh"
               sh "chmod +x rancher_script.sh"
               sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
-              sh "./rancher_script.sh"
+              sh "/bin/sh ./rancher_script.sh"
             }
         }
     }
