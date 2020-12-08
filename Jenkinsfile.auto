@@ -10,23 +10,23 @@ def list = modules.join(" ")
 println list
 
 node('jenkins-agent-java11') {
-  stage("Checkout") {
-    checkout([
-      $class           : 'GitSCM',
-      branches         : [[name: '*/FOLIO-2785']],
-      userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-perf-test']]])
-  }
+    stage("Checkout") {
+        checkout([
+                $class           : 'GitSCM',
+                branches         : [[name: '*/FOLIO-2785']],
+                userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-perf-test']]])
+    }
     stage("Rancher login") {
         withDockerContainer(image: 'ubuntu:20.04', args: '-u 0:0') {
             withCredentials([string(credentialsId: 'rancher_token', variable: 'token')]) {
-              sh "echo $list | tr ' ' '\n' >> modules"
-              sh "sed -E -i \"s/(.*)(-)([0-9].*\$)/\\1 \\3/\" modules"
-              sh "cat modules"
-             // sh "cat rancher_script.sh"
-              sh "chmod +x rancher_script.sh"
-              sh "apt update && apt install -y wget  && wget https://github.com/rancher/cli/releases/download/v2.4.9/rancher-linux-amd64-v2.4.9.tar.gz && tar -xvf rancher-linux-amd64-v2.4.9.tar.gz  && cp ./rancher-v2.4.9/rancher /bin/rancher"
-              sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
-              sh "./rancher_script.sh"
+                sh "echo $list >> modules"
+                //   sh "sed -E -i \"s/(.*)(-)([0-9].*\$)/\\1 \\3/\" modules"
+                sh "cat modules"
+                sh "cat rancher_script.sh"
+                sh "chmod +x rancher_script.sh"
+                sh "apt update && apt install -y wget  && wget https://github.com/rancher/cli/releases/download/v2.4.9/rancher-linux-amd64-v2.4.9.tar.gz && tar -xvf rancher-linux-amd64-v2.4.9.tar.gz  && cp ./rancher-v2.4.9/rancher /bin/rancher"
+                sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
+                sh "./rancher_script.sh"
             }
         }
     }

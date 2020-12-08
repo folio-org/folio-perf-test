@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Function to get current template version
 	get_template_version() {
 		rancher app ls | grep $1 | tr -s " " | cut -d " " -f 6
