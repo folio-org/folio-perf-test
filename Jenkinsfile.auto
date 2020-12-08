@@ -8,8 +8,6 @@ def modules_json = new JsonSlurperClassic().parseText(test_json)
 def modules = modules_json.id
 def list = modules.join(" ")
 println list
-// output example:
-// modules: mod-email-1.10.0-SNAPSHOT.49 mod-test-1.10.0-SNAPSHOT.49
 
 node('jenkins-agent-java11') {
   stage("Checkout") {
@@ -30,7 +28,7 @@ node('jenkins-agent-java11') {
               sh "cat rancher_script.sh"
               sh "chmod +x rancher_script.sh"
               sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
-              sh "/bin/sh ./rancher_script.sh"
+              sh "/bin/sh -c  ./rancher_script.sh"
             }
         }
     }
