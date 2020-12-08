@@ -6,8 +6,12 @@
 
 #Create arry
 ## Put in arry pair: mod version
+mas=()
+while IFS= read -r line; do
+  mas+=("$line")
+done < modules
 
-mapfile -t mas < <(cat modules | tr ' ' '\n' | sed -E  "s/(.*)(-)([0-9].*$)/\1 \3/")
+#mapfile -t mas < <(cat modules | tr ' ' '\n' | sed -E  "s/(.*)(-)([0-9].*$)/\1 \3/")
 #loop
 
 for mod in "${mas[@]}"

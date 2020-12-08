@@ -6,7 +6,7 @@ def test_json = params.modules_list
 
 def modules_json = new JsonSlurperClassic().parseText(test_json)
 def modules = modules_json.id
-def list = modules.join(" ")
+def list = modules.join("\n")
 println list
 
 node('jenkins-agent-java11') {
@@ -20,12 +20,9 @@ node('jenkins-agent-java11') {
         withDockerContainer(image: 'rancher/cli2:latest', args: '--entrypoint=\'\' -u 0:0') {
             withCredentials([string(credentialsId: 'rancher_token', variable: 'token')]) {
               sh "echo $list >> modules"
-//              sh "df -h"
-//              sh "ls -la"
-//              sh "pwd"
-//              sh "ls -la /home/jenkins"
+              sh "sed -E -i \"s/(.*)(-)([0-9].*\$)/\\1 \\3/\" modules"
               sh "cat modules"
-              sh "cat rancher_script.sh"
+             // sh "cat rancher_script.sh"
               sh "chmod +x rancher_script.sh"
               sh "rancher login $rancher_server -t $token --context c-479xv:p-pv97q"
               sh "/bin/sh -c  ./rancher_script.sh"
