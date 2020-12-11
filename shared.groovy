@@ -279,7 +279,7 @@ def runNewman(ctx, postmanEnvironment) {
         //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
       junit(testResults: 'test_reports/*.xml')
-      archive('test_reports/**')
+      archive('test_reports/*.htlm')
     }
   }
 }
