@@ -258,7 +258,7 @@ def runNewman(ctx, postmanEnvironment) {
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--user 0:0 --entrypoint=\'\'') {
-      sh "npm install -g newman-reporter-htmlextra"
+      sh "npm install -g newman-reporter-htmlextra newman-reporter-testrail"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
         def folderName = file.path.split('/')[0]
@@ -268,17 +268,26 @@ def runNewman(ctx, postmanEnvironment) {
           continue
         }
         echo "Run ${file.path} collection"
-        sh """
-          newman run ${file.path} -e ${postmanEnvironment} \
-            --suppress-exit-code 1 \
-            --env-var xokapitenant=${ctx.tenant} \
-            --env-var url=${okapiDns} \
-            --env-var username=${okapiUser} \
-            --env-var password=${okapiPwd} \
-            --reporter-junit-export test_reports/${collectionName}.xml \
-            --reporter-htmlextra-export test_reports/${collectionName}.html \
-            --reporters cli,junit,htmlextra
-        """
+        withEnv(["TESTRAIL_DOMAIN=${params.TestRailUrl}", "TESTRAIL_PROJECTID=${params.TestRailProjectId}", "TESTRAIL_SUITEID=${folderName}", "TESTRAIL_TITLE=${collectionName}"]) {
+          withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'TESTRAIL_USERNAME'),
+                          string(credentialsId: 'testrail_ut56_token', variable: 'TESTRAIL_APIKEY')]) {
+            sh """
+              TESTRAIL_DOMAIN=${params.TestRailUrl}
+              TESTRAIL_PROJECTID=${params.TestRailProjectId}
+              TESTRAIL_SUITEID=${folderName}
+              TESTRAIL_TITLE=${collectionName}
+              newman run ${file.path} -e ${postmanEnvironment} \
+                --suppress-exit-code 1 \
+                --env-var xokapitenant=${ctx.tenant} \
+                --env-var url=${okapiDns} \
+                --env-var username=${okapiUser} \
+                --env-var password=${okapiPwd} \
+                --reporter-junit-export test_reports/${collectionName}.xml \
+                --reporter-htmlextra-export test_reports/${collectionName}.html \
+                --reporters cli,junit,htmlextra,testrail
+            """
+          }
+        }
       }
       junit(testResults: 'test_reports/*.xml')
       publishHTML (target: [
@@ -289,7 +298,6 @@ def runNewman(ctx, postmanEnvironment) {
         reportFiles: '*.html',
         reportName: "Postman Report"
       ])
-      //archive('test_reports/*.html')      
     }
   }
 }
