@@ -257,7 +257,7 @@ def runNewman(ctx, postmanEnvironment) {
   def xokapitenant="diku_admin"
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
-    withDockerContainer(image: 'postman/newman', args: '--user 0 --entrypoint=\'\'') {
+    withDockerContainer(image: 'postman/newman', args: '--user 0:0 --entrypoint=\'\'') {
       sh "npm install -g newman-reporter-htmlextra"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
