@@ -406,7 +406,7 @@ def getMods(fixedMods, mdRepo) {
       continue
     }
 
-    def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
+    def group = (mod.id =~ /(^(.*)-((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*).*)$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
     if (!modName.startsWith("mod-") && !modName.startsWith("folio_")) {
