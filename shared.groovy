@@ -256,10 +256,13 @@ def runNewman(ctx, postmanEnvironment) {
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
-    withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+    withDockerContainer(image: 'postman/newman', args: '--user 0 --entrypoint=\'\'') {
+      sh "npm install -g newman-reporter-html"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
-        if(file.path.split('/')[0] in excludeFolders) {
+        def folderName = file.path.split('/')[0]
+        def collectionName = file.name.tokenize('.')[0]
+        if(folderName in excludeFolders) {
           echo "[DEBUG] ${file} is skipped"
           continue
         }
@@ -270,13 +273,22 @@ def runNewman(ctx, postmanEnvironment) {
             --suppress-exit-code 1 \
             --env-var xokapitenant=${ctx.tenant} \
             --env-var url=${okapiDns} \
-            --env-var password=${okapiPwd} \
-            --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
-            --reporters cli,junit
+            --reporter-junit-export test_reports/${collectionName}.xml \
+            --reporter-html-export test_reports/${collectionName}.html \
+            --reporters cli,junit,html
         """
         //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
-      junit(testResults: 'junit_reports/*.xml')
+      junit(testResults: 'test_reports/*.xml')
+      archive('test_reports/*.htlm')      
+      publishHTML (target: [
+        allowMissing: false,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'junit_reports',
+        reportFiles: '*.html',
+        reportName: "Postman Report"
+      ])
     }
   }
 }
