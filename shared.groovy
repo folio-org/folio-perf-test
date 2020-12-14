@@ -254,27 +254,50 @@ def runNewman(ctx, postmanEnvironment) {
     userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+  def okapiUser="super_admin"
+  def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
-    withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
+    withDockerContainer(image: 'postman/newman', args: '--user 0:0 --entrypoint=\'\'') {
+      sh "npm install -g newman-reporter-htmlextra newman-reporter-testrail"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
-        if(file.path.split('/')[0] in excludeFolders) {
+        def folderName = file.path.split('/')[0]
+        def collectionName = file.name.tokenize('.')[0]
+        if(folderName in excludeFolders) {
           echo "[DEBUG] ${file} is skipped"
           continue
         }
         echo "Run ${file.path} collection"
-        //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-        sh """
-          newman run ${file.path} -e ${postmanEnvironment} \
-            --suppress-exit-code 1 \
-            --env-var xokapitenant=${ctx.tenant} \
-            --env-var url=${okapiDns} \
-            --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
-            --reporters cli,junit
-        """
-        //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
+        withEnv(["TESTRAIL_DOMAIN=${params.TestRailUrl}", "TESTRAIL_PROJECTID=${params.TestRailProjectId}", "TESTRAIL_SUITEID=${folderName}", "TESTRAIL_TITLE=${collectionName}"]) {
+          withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'TESTRAIL_USERNAME'),
+                          string(credentialsId: 'testrail_ut56_token', variable: 'TESTRAIL_APIKEY')]) {
+            sh """
+              TESTRAIL_DOMAIN=${params.TestRailUrl}
+              TESTRAIL_PROJECTID=${params.TestRailProjectId}
+              TESTRAIL_SUITEID=${folderName}
+              TESTRAIL_TITLE=${collectionName}
+              newman run ${file.path} -e ${postmanEnvironment} \
+                --suppress-exit-code 1 \
+                --env-var xokapitenant=${ctx.tenant} \
+                --env-var url=${okapiDns} \
+                --env-var username=${okapiUser} \
+                --env-var password=${okapiPwd} \
+                --reporter-junit-export test_reports/${collectionName}.xml \
+                --reporter-htmlextra-export test_reports/${collectionName}.html \
+                --reporters cli,junit,htmlextra,testrail
+            """
+          }
+        }
       }
-      junit(testResults: 'junit_reports/*.xml')
+      junit(testResults: 'test_reports/*.xml')
+      publishHTML (target: [
+        allowMissing: false,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'test_reports',
+        reportFiles: '*.html',
+        reportName: "Postman Report"
+      ])
     }
   }
 }
@@ -394,7 +417,7 @@ def getMods(fixedMods, mdRepo) {
   }
   def latestMods = [:]
   for (mod in mods) {
-    // skip edge-sip2 for now due to regex issue
+// skip edge-sip2 for now due to regex issue
     // should be fixed later
     if (mod.id.startsWith("edge-sip2")) {
       continue
