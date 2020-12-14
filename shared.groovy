@@ -269,6 +269,7 @@ def runNewman(ctx, postmanEnvironment) {
             --suppress-exit-code 1 \
             --env-var xokapitenant=${ctx.tenant} \
             --env-var url=${okapiDns} \
+            --env-var password='admin' \            
             --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
             --reporters cli,junit
         """
