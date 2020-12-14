@@ -254,6 +254,7 @@ def runNewman(ctx, postmanEnvironment) {
     userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+  def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--entrypoint=\'\'') {
       jsonFiles = findFiles(glob: '**/*.json')
@@ -269,7 +270,7 @@ def runNewman(ctx, postmanEnvironment) {
             --suppress-exit-code 1 \
             --env-var xokapitenant=${ctx.tenant} \
             --env-var url=${okapiDns} \
-            --env-var password='admin' \            
+            --env-var password=${okapiPwd} \
             --reporter-junit-export junit_reports/${file.path.split('/')[0]}.xml \
             --reporters cli,junit
         """
