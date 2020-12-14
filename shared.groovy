@@ -254,10 +254,11 @@ def runNewman(ctx, postmanEnvironment) {
     userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
+  def xokapitenant="diku_admin"
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--user 0 --entrypoint=\'\'') {
-      sh "npm install -g newman-reporter-html"
+      sh "npm install -g newman-reporter-htmlextra"
       jsonFiles = findFiles(glob: '**/*.json')
       for (file in jsonFiles) {
         def folderName = file.path.split('/')[0]
@@ -267,28 +268,27 @@ def runNewman(ctx, postmanEnvironment) {
           continue
         }
         echo "Run ${file.path} collection"
-        //withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
         sh """
           newman run ${file.path} -e ${postmanEnvironment} \
             --suppress-exit-code 1 \
-            --env-var xokapitenant=${ctx.tenant} \
+            --env-var xokapitenant=${xokapitenant} \
             --env-var url=${okapiDns} \
+            --env-var password=${okapiPwd} \
             --reporter-junit-export test_reports/${collectionName}.xml \
-            --reporter-html-export test_reports/${collectionName}.html \
-            --reporters cli,junit,html
+            --reporter-htmlextra-export test_reports/${collectionName}.html \
+            --reporters cli,junit,htmlextra
         """
-        //cucumber buildStatus: 'UNSTABLE',  reportTitle: 'API tests report',  fileIncludePattern: '**/junit_reports/*.xml', trendsLimit: 10
       }
       junit(testResults: 'test_reports/*.xml')
-      archive('test_reports/*.htlm')      
       publishHTML (target: [
         allowMissing: false,
         alwaysLinkToLastBuild: false,
         keepAll: true,
         reportDir: 'junit_reports',
-        reportFiles: '*.html',
+        reportFiles: 'test_reports/*.html',
         reportName: "Postman Report"
       ])
+      archive('test_reports/*.htlm')      
     }
   }
 }
