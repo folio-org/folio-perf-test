@@ -164,7 +164,11 @@ def bootstrapModules(ctx) {
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
+  echo "Sleeping before deployMods"
+  sleep 600
   deployMods(mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.dbPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
+  echo "Speeping after deployMods"
+  sleep 600
 }
 
 def populateData(ctx) {
