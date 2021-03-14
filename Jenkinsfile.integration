@@ -77,12 +77,9 @@ node('jenkins-agent-java11') {
               sharedLib.runIntegrationTests(context)
             }
           }
-
-          stage("Sleep for checking access to server and reading logs") {
-            sleep(600)
-          }
         } catch (e) {
           currentBuild.result = 'FAILURE'
+          sleep (600)
           throw e
         } finally {
           stage("Tear down environment") {
