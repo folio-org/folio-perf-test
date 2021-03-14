@@ -79,7 +79,7 @@ node('jenkins-agent-java11') {
           }
         } catch (e) {
           currentBuild.result = 'FAILURE'
-          sleep (600)
+          sleep 600
           throw e
         } finally {
           stage("Tear down environment") {
