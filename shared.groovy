@@ -549,9 +549,15 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
         modJob = modJob.replace('8080', '8081')
       }
     }
-    // mod-inventory-storage and mod-source-record-storage have different env variables
-    if (modName.equals("mod-inventory-storage") || modName.equals("mod-source-record-storage")) {
+    // mod-inventory-storage, mod-source-record-storage and mod-ebsconet have different env variables
+    if (modName.equals("mod-inventory-storage") || modName.equals("mod-source-record-storage") || modName.equals("mod-ebsconet")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
+    // mod-bursar-export has different env variables
+    if (modName.equals("mod-bursar-export")) {
+      modJob = readFile("config/mod-bursar-export.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
