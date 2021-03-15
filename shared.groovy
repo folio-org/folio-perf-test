@@ -558,8 +558,9 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
-    // mod-bursar-export has different env variables
-    if (modName.equals("mod-bursar-export")) {
+    // mod-bursar-export and mod-password-validator have different env variables
+    if (modName.equals("mod-bursar-export") || 
+    modName.equals("mod-password-validator")) {
       modJob = readFile("config/mod-bursar-export.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
