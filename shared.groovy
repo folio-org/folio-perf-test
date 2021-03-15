@@ -550,6 +550,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       }
     }
     // mod-pubsub has different env variables
+    if (modName.equals("mod-inventory-storage")) {
+      modJob = readFile("config/mod-inventory-storage.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
+    // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub")) {
       modJob = readFile("config/mod-pubsub.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
