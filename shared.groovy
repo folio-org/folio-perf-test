@@ -109,7 +109,7 @@ def bootstrapDb(ctx) {
       }
     }
   }
-  
+
   def elasticJob = readFile("config/elasticsearch.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${elasticJob}"
   def elasticCmd = 'docker ps | grep elasticsearch | wc -l'
@@ -589,8 +589,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     }
     // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub") || 
-    modName.equals("mod-ebsconet") || 
-    modName.equals("mod-search") || 
+    modName.equals("mod-ebsconet") ||
     modName.equals("mod-quick-marc")) {
       modJob = readFile("config/mod-pubsub.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
