@@ -108,7 +108,8 @@ def bootstrapDb(ctx) {
         false
       }
     }
-
+  }
+  
   def elasticJob = readFile("config/elasticsearch.sh").trim()
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${elasticJob}"
   def elasticCmd = 'docker ps | grep elasticsearch | wc -l'
