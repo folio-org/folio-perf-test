@@ -108,6 +108,20 @@ def bootstrapDb(ctx) {
         false
       }
     }
+
+  def elasticJob = readFile("config/elasticsearch.sh").trim()
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} ${elasticJob}"
+  def elasticCmd = 'docker ps | grep elasticsearch | wc -l'
+  timeout(10) {
+    waitUntil {
+      try {
+        def rs = sh(script: "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} '${elasticCmd}'", returnStdout: true)
+        rs.toInteger() >= 1
+      } catch (e) {
+        sleep 10
+        false
+      }
+    }
   }
 }
 
@@ -563,6 +577,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     modName.equals("mod-password-validator") || 
     modName.equals("mod-login")) {
       modJob = readFile("config/mod-bursar-export.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
+    // mod-search has different env variables
+    if (modName.equals("mod-search")) {
+      modJob = readFile("config/mod-search.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
