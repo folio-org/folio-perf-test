@@ -79,12 +79,11 @@ node('jenkins-agent-java11') {
           }
         } catch (e) {
           currentBuild.result = 'FAILURE'
-          sleep 600
           throw e
         } finally {
           stage("Tear down environment") {
             sharedLib.notifySlack(currentBuild.result)
-            sleep 60
+            sleep 1800
             sharedLib.teardownEnv(context)
           }
         }
