@@ -590,6 +590,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub") || 
     modName.equals("mod-ebsconet") ||
+    modName.equals("mod-remote-storage") ||
     modName.equals("mod-quick-marc")) {
       modJob = readFile("config/mod-pubsub.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
