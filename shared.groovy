@@ -549,8 +549,8 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
         modJob = modJob.replace('8080', '8081')
       }
     }
-    // mod-pubsub has different env variables
-    if (modName.equals("mod-inventory-storage")) {
+    // mod-inventory-storage and mod-source-record-storage have different env variables
+    if (modName.equals("mod-inventory-storage") || modName.equals("mod-source-record-storage")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
