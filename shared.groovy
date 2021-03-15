@@ -550,7 +550,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       }
     }
     // mod-inventory-storage, mod-source-record-storage and mod-ebsconet have different env variables
-    if (modName.equals("mod-inventory-storage") || modName.equals("mod-source-record-storage") || modName.equals("mod-ebsconet")) {
+    if (modName.equals("mod-inventory-storage") || 
+    modName.equals("mod-source-record-storage") || 
+    modName.equals("mod-ebsconet") || 
+    modName.equals("mod-source-record-manager") {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
@@ -562,7 +565,10 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     // mod-pubsub has different env variables
-    if (modName.equals("mod-pubsub")) {
+    if (modName.equals("mod-pubsub") || 
+    modName.equals("mod-ebsconet") || 
+    modName.equals("mod-search") || 
+    modName.equals("mod-quick-marc")) {
       modJob = readFile("config/mod-pubsub.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
