@@ -553,7 +553,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     if (modName.equals("mod-inventory-storage") || 
     modName.equals("mod-source-record-storage") || 
     modName.equals("mod-ebsconet") || 
-    modName.equals("mod-source-record-manager") {
+    modName.equals("mod-source-record-manager")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
