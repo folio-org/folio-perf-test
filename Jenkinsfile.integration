@@ -83,7 +83,7 @@ node('jenkins-agent-java11') {
         } finally {
           stage("Tear down environment") {
             sharedLib.notifySlack(currentBuild.result)
-            sleep 900
+            sleep 60
             sharedLib.teardownEnv(context)
           }
         }
