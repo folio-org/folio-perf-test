@@ -593,7 +593,6 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       // modJob = modJob.replace('${dbHost}', dbPvtIp)
       // modJob = modJob.replace('${okapiIp}', okapiIp)
     }
-    }
     // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub") || 
     modName.equals("mod-ebsconet") ||
