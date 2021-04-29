@@ -342,8 +342,7 @@ def runIntegrationTests(ctx) {
     ) {
       def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
       withCredentials([usernamePassword(credentialsId: 'testrail-ut56', passwordVariable: 'testrail_password', usernameVariable: 'testrail_user')]) {
-        sh "mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"
-      }
+      sh "mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}"      }
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/surefire-reports/' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
