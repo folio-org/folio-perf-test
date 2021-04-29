@@ -588,8 +588,11 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     // temporary solution to escape mod-service-interaction failure
-    if (modName.equals("mod-service-interaction")) {
-      modJob = modJob.replace('db_connection=/folio-conf/pg.json','')
+   if (modName.equals("mod-service-interaction")) {
+       modJob = readFile("config/mod-service-interaction.sh").trim()
+      // modJob = modJob.replace('${dbHost}', dbPvtIp)
+      // modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
     }
     // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub") || 
