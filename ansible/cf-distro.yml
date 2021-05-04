@@ -1,0 +1,29 @@
+---
+# This playbook requires the following variables to be set:
+# -e "cf_origin=snaphsot-core.s3.amazonaws.com"
+# -e "cf_hostname=snapshot-core-continuous"
+# -e "cf_domain=dev.folio.org"
+# -e "cf_certificate=certarn"
+
+- hosts: localhost
+  connection: local 
+  gather_facts: no
+
+  pre_tasks:
+    - name: include aws vars
+      include_vars:
+        dir: group_vars/ec2
+    - name: include ci vars
+      include_vars:
+        dir: group_vars/ci
+
+  roles:
+    - role: cloudfront-distribution
+      origin: "{{ cf_origin }}"
+      cloudfront_alias: "{{ cf_hostname }}.{{ cf_domain }}"
+      use_tls: true
+      cert: "{{ cf_certificate }}"
+    - role: route53-alias
+      cloudfront: true
+      cloudfront_alias: "{{ cf_hostname }}.{{ cf_domain }}"
+      public_domain: "{{ cf_domain }}"

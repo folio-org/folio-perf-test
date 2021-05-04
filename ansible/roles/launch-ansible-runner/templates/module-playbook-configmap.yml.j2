@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "deploy-{{ module_id_safe }}"
+  namespace: "{{ namespace }}"
+  module: "{{ target_module_clean[0].name }}"
+data:
+  module-playbook.yml: |
+    ---
+    - hosts: kubernetes
+      vars:
+        folio_install_type: kubernetes
+      connection: local
+      gather_facts: yes
+      roles:
+        - role: kubectl
+          kubernetes_server: "{{ kubernetes_server }}"
+          kubernetes_cluster: "{{ kubernetes_cluster }}"
+        - role: okapi-authenticate
+          okapi_login_url: "{{ okapi_url }}"
+          superuser_username: "{{ okapi_supertenant_user }}"
+          superuser_password: "{{ okapi_supertenant_password }}"
+        - role: module-kubernetes
+          namespace: "{{ namespace }}"
+          db_host: "{{ pg_host }}"
+          db_user: "{{ lookup('env', 'PG_ADMIN_USER') }}"
+          db_password: "{{ lookup('env', 'PG_ADMIN_PASS') }}"
+          create_db: no
+          create_secret: no
+          okapi_pull: true
+          okapi_url: "{{ okapi_url }}"
+          folio_modules: "{{ target_module_clean }}"
+

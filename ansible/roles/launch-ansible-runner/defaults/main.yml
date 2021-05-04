@@ -1,0 +1,15 @@
+# module to deploy
+target_module:
+- name: mod-users
+  deploy: true
+  version: 15.5.0
+
+# kubernetes settings
+kubernetes_server: https://rancher.dev.folio.org/k8s/clusters/c-nfjdd
+kubernetes_cluster: folio-eks-oregon-1
+namespace: folio-default
+svc_account: controller-service-account
+
+# folio settings
+pg_host: folio-eks-oregon-1.cdxr1geeeqbb.us-west-2.rds.amazonaws.com
+okapi_url: http://okapi:9130

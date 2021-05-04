@@ -1,0 +1,9 @@
+hazelcast_aws_conf: true
+hazelcast_aws_access_key: "{{ vault_hazelcast_aws_access_key }}"
+hazelcast_aws_secret_key: "{{ vault_hazelcast_aws_secret_key }}"
+hazelcast_aws_region: "{{ aws_region }}"
+hazelcast_security_group: okapi
+#hazelcast_address: "{{ ec2_private_ip_address }}"
+hazelcast_address: "{{ ansible_default_ipv4.address }}"
+hazelcast_ec2_tag_key: Group
+hazelcast_ec2_tag_value: "{{ ec2_group }}"

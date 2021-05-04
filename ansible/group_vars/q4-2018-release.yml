@@ -1,0 +1,10 @@
+---
+
+module_pg_host: "{{ ansible_default_ipv4.address }}"
+num_users: 200
+module_database: okapi_modules
+
+stripes_okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+okapi_pull_timeout: 1000
+okapi_storage: postgres
+pg_max_conn: 1000

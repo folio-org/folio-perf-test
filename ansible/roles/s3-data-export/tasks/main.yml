@@ -1,0 +1,36 @@
+---
+
+#
+# create S3 bucket. 
+#
+# Remove an s3 bucket and any keys it contains
+- name: delete bucket and keys
+  become: no
+  local_action:
+    module: s3_bucket
+    region: "{{ aws_region }}"
+    name: "{{ bucket_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    state: absent
+    force: yes
+  register: s3_delete
+  retries: 3
+  delay: 10
+  until: s3_delete is not failed
+
+# Create a bucket
+- name: Create s3 bucket
+  become: no
+  local_action:
+    module: s3_bucket
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    name: "{{ bucket_name }}"
+    region: "{{ aws_region }}"
+    policy: "{{ lookup('template', 'policy.json.j2') }}"
+    state: present
+    tags:
+      Name: "{{ bucket_name }}"
+      module: "mod-data-export"
+

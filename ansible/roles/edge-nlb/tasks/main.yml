@@ -1,0 +1,149 @@
+---
+
+- name: gather ec2 instance info about our host group
+  become: no
+  local_action:
+    module: ec2_instance_info
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Group": "{{ ec2_group }}"
+      "instance-state-name": running
+  register: ec2_instance_facts
+
+- name: reset instance_ids variable
+  set_fact:
+    instance_ids: []
+  when: instance_ids|default(false)
+
+- name: get list of instance ids
+  set_fact:
+    instance_ids: "{{ instance_ids|default([]) + [ item.instance_id ] }}"
+  loop: "{{ ec2_instance_facts.instances }}"
+
+- name: get list of sg names
+  set_fact:
+    sg_names: "{{ ec2_instance_facts|json_query('instances[*].security_groups[*].group_name')|flatten }}"
+
+- name: Set up security group for open ports
+  become: no
+  local_action:
+    module: ec2_group
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    vpc_id: "{{ vpc_id }}"
+    name: "{{ folio_hostname }}-edge-nlb"
+    description: "sg for edge module NLB for {{ folio_hostname }}"
+    rules:
+      - proto: tcp
+        ports:
+          - "{{ item.port }}"
+        cidr_ip: 0.0.0.0/0
+  loop: "{{ nlb_targets }}"
+
+- name: Add new sg to sg_names list
+  set_fact:
+    sg_names: "{{ sg_names|default([]) + [ folio_hostname + '-edge-nlb' ] }}"
+  when: folio_hostname+'-edge-nlb' not in sg_names
+
+
+- name: Add security group to instance group
+  become: no
+  local_action:
+    module: ec2
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    instance_ids: "{{ instance_ids }}"
+    group: "{{ sg_names }}"
+    state: running
+  register: add_security
+
+- name: Remove existing NLB
+  become: no
+  local_action:
+    module: elb_network_lb
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ folio_hostname }}-edge-nlb"
+    state: absent
+    wait: yes
+
+- name: Remove existing target groups
+  become: no
+  local_action:
+    module: elb_target_group
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ folio_hostname }}-{{ item.port }}"
+    vpc_id: "{{ vpc_id }}"
+    protocol: "{{ item.protocol }}"
+    port: "{{ item.port }}"
+    state: absent
+  loop: "{{ nlb_targets }}"
+
+- name: create NLB target groups
+  become: no
+  local_action:
+    module: elb_target_group
+    name: "{{ folio_hostname }}-{{ item.port }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    state: present
+    protocol: "{{ item.protocol }}"
+    port: "{{ item.port }}"
+    stickiness_enabled: no
+    stickiness_type: source_ip
+  loop: "{{ nlb_targets }}"
+  register: nlb_targets_info
+
+- name: Add targets to NLB target groups
+  become: no
+  local_action:
+    module: elb_target
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    target_group_name: "{{ item[0].target_group_name }}"
+    target_id: "{{ item[1] }}"
+    state: present
+  loop: "{{ nlb_targets_info.results|product(instance_ids)|list }}"
+
+- name: Create nlb_listeners list
+  set_fact:
+    nlb_listeners: "{{ nlb_listeners|default([]) + [ { 'DefaultActions': [ { 'TargetGroupArn': item.target_group_arn, 'Type': 'forward' } ], 'Port': item.port, 'Protocol': item.protocol } ] }}"
+  loop: "{{ nlb_targets_info.results }}"
+
+- name: Configure NLB
+  become: no
+  local_action:
+    module: elb_network_lb
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ folio_hostname }}-edge-nlb"
+    listeners: "{{ nlb_listeners }}"
+    subnets: "{{ nlb_subnets }}"
+    state: present
+  register: nlb_info
+
+- name: create public FOLIO DNS aliases to the elb
+  become: no
+  local_action:
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    module: route53
+    command: create
+    overwrite: yes
+    record: "{{ folio_hostname }}-edge.{{ route53_zone_name }}"
+    value: "{{ nlb_info.dns_name }}"
+    type: A
+    zone: "{{ route53_zone_name }}"
+    alias: True
+    alias_hosted_zone_id: "{{ nlb_info.canonical_hosted_zone_id }}"

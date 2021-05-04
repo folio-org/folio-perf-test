@@ -1,0 +1,19 @@
+---
+# Bootstrap python on Ubuntu so that we can run Ansible.
+# Require global vars:
+#   - ec2_group
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 3.x
+      raw: test -e /usr/bin/python3 || (apt -qqy update && apt install -qy python3-minimal)
+      register: output
+      changed_when: output.stdout != ""
+    - name: Use Python 3 for Ansible
+      set_fact:
+        ansible_python_interpreter: /usr/bin/python3

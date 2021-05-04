@@ -1,0 +1,19 @@
+---
+#
+# -e s3_bucket
+# -e stripes_path
+#
+
+- hosts: localhost
+  become: no
+  gather_facts: no
+  
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+  roles: 
+    - role: s3-stripes
+      bucket_name: "{{ s3_bucket }}"
+      file_root_path: "{{ stripes_path }}"

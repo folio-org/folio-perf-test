@@ -1,0 +1,65 @@
+lb_name: folio-releases
+default_tg: folio-goldenrod-stripes
+dns_hostnames: 
+  - "{{ folio_hostname }}.dev.folio.org"
+  - "{{ folio_hostname }}-okapi.dev.folio.org"
+
+lb_sslcert_arn: [ 'arn:aws:acm:us-east-1:732722833398:certificate/7e6bdbbd-7e42-4b39-9a12-8ac4b06dee88' ]
+route53_zone_name: 'dev.folio.org'
+
+lb_rules:
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-goldenrod.dev.folio.org
+    Priority: '1'
+    Actions:
+     - TargetGroupName: folio-goldenrod-stripes
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-goldenrod-okapi.dev.folio.org
+    Priority: '2'
+    Actions:
+      - TargetGroupName: folio-goldenrod-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-honeysuckle.dev.folio.org
+    Priority: '3'
+    Actions:
+     - TargetGroupName: folio-honeysuckle-stripes
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-honeysuckle-okapi.dev.folio.org
+    Priority: '4'
+    Actions:
+      - TargetGroupName: folio-honeysuckle-okapi
+        Type: forward
+
+
+lb_rules_edge:
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-goldenrod.dev.folio.org
+    Priority: '1'
+    Actions:
+     - TargetGroupName: folio-goldenrod-edge
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-honeysuckle.dev.folio.org
+    Priority: '2'
+    Actions:
+     - TargetGroupName: folio-honeysuckle-edge
+       Type: forward

@@ -1,0 +1,151 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: find correct ec2 AMI
+      ec2_ami_find:
+        owner: 099720109477
+        name: "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+        region: "{{ aws_region }}"
+        sort: name
+        sort_order: descending
+        sort_end: 1
+        no_result_action: fail
+      register: ami_find
+
+  roles:
+    - { role: launch_ec2_instance,
+          ec2_security_groupids:  ["{{ okapi_ec2_security_groupid }}", "{{ postgres_ec2_security_groupid }}", "{{ edge_modules_ec2_security_groupid }}"],
+          ec2_group: "{{ ec2_group }}",
+          ec2_hostgroups: "tag_Env_ci,tag_Group_{{ ec2_group }},tag_Okapi_true,tag_Postgres_true",
+          ec2_instance_type: 't2.2xlarge',
+          ec2_ami: "{{ ami_find.results[0].ami_id }}",
+          ec2_instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true" }'
+      }
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 2.x
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include vars for testing-backend
+      include_vars:
+        file: group_vars/testing-backend.yml
+
+    - name: include backend module config
+      include_vars:
+        file: folio-ansible/group_vars/testing
+
+    - name: Gather ec2_instance_facts
+      become: no
+      local_action:
+        module: ec2_instance_facts
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+        region: "{{ aws_region }}"
+        filters:
+          "private-ip-address": "{{ ansible_default_ipv4.address }}"
+      register: ec2_instance_facts
+
+  roles:
+     - folio-ansible/roles/common
+     - { role: filebeat,
+               filebeat_tags: "[ '{{ folio_hostname }}.aws.indexdata.com' ]" }
+     - folio-ansible/roles/postgresql
+     - folio-ansible/roles/docker-engine
+     - { role: folio-ansible/roles/okapi,
+              okapi_storage: postgres,
+              okapi_role: dev }
+     - folio-ansible/roles/okapi-authenticate
+     - folio-ansible/roles/okapi-register-modules
+     - folio-ansible/roles/tenant-data
+     - folio-ansible/roles/okapi-tenant-deploy
+     - folio-ansible/roles/create-tenant-admin
+     - role: folio-ansible/roles/tenant-admin-permissions
+       okapi_url: "http://{{ ec2_instance_facts.instances.0.private_dns_name }}:9130"
+     - folio-ansible/roles/mod-inventory-mods
+     - folio-ansible/roles/ebsco-rmapi-config
+     - role: folio-ansible/roles/module-sample-data
+       okapi_url: "http://{{ ec2_instance_facts.instances.0.private_dns_name }}:9130"
+       module_name: mod-vendors
+       repository: "https://github.com/folio-org/mod-vendors"
+       files:
+         - { load_endpoint: /vendor-storage/vendors, fileglob: sample-data/vendors/*.json }
+     - role: folio-ansible/roles/module-sample-data
+       okapi_url: "http://{{ ec2_instance_facts.instances.0.private_dns_name }}:9130"
+       module_name: mod-finance-storage
+       repository: "https://github.com/folio-org/mod-finance-storage"
+       files:
+         - { load_endpoint: /fiscal_year, fileglob: sample-data/fiscal-years/*.json }
+         - { load_endpoint: /ledger, fileglob: sample-data/ledgers/*.json }
+         - { load_endpoint: /fund, fileglob: sample-data/funds/*.json }
+         - { load_endpoint: /budget, fileglob: sample-data/budgets/*.json }
+     - role: folio-ansible/roles/okapi-secure
+
+  tasks:
+    - name: Enable and deploy additional modules
+      include_tasks: testing-add-modules.yml
+    - name: Enable edge modules
+      include_tasks: edge-modules.yml
+    - name: Assign additional permissions to superuser
+      import_role: name=folio-ansible/roles/tenant-admin-permissions
+
+  post_tasks:
+    - name: create FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.aws.indexdata.com"
+        value: "{{ ec2_instance_facts.instances.0.public_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'aws.indexdata.com'
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+
+    - name: create internal FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.indexdata.internal"
+        value: "{{ ec2_instance_facts.instances.0.private_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'indexdata.internal'
+        private_zone: true
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"

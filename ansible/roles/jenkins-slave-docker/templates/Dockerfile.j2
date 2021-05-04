@@ -1,0 +1,147 @@
+# This Dockerfile is used to build an image containing basic stuff to be used 
+# as a FOLIO build node.
+
+FROM ubuntu:xenial
+
+#  Add utility packages to image
+RUN apt-get -q update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get -q upgrade -y \
+    -o Dpkg::Options::="--force-confnew" --no-install-recommends && \
+    DEBIAN_FRONTEND="noninteractive" apt-get -q install -y \
+    -o Dpkg::Options::="--force-confnew"  --no-install-recommends \
+    locales openssh-server vim-tiny curl wget unzip supervisor lsb-release gosu sudo && \
+    apt-get -q autoremove && \
+    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && \
+    rm -f /var/cache/apt/*.bin && \
+    sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd && \
+    mkdir -p /var/run/sshd /var/log/supervisor && \
+    locale-gen en_US.UTF-8 && \
+    echo "dash dash/sh boolean false" | debconf-set-selections && \
+    dpkg-reconfigure -f noninteractive dash
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+# Install Nodejs
+ENV NODEJS_VERSION 6
+RUN wget -q --no-check-certificate --no-cookies https://deb.nodesource.com/setup_${NODEJS_VERSION}.x -O /tmp/node.sh  && \
+    chmod +x /tmp/node.sh && \
+    sh -c "/tmp/node.sh" && \
+    rm -f /tmp/node.sh
+
+# Install Mongodb repo
+ENV MONGODB_VERSION 3.2
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
+    echo "deb http://repo.mongodb.org/apt/ubuntu $(lsb_release -sc)/mongodb-org/${MONGODB_VERSION} multiverse" | \
+    tee /etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list 
+
+# Install Postgres repo
+ENV POSTGRES_VERSION 9.6
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list && \
+    wget -q --no-check-certificate --no-cookies https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+
+
+# Install Ubuntu packages for our build environment
+RUN apt-get -q update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get -q install -y \
+    -o Dpkg::Options::="--force-confnew"  --no-install-recommends \
+    openjdk-8-jdk git maven build-essential debhelper lintian fakeroot devscripts jq \
+    nodejs python3-pip python3-setuptools mongodb-org postgresql-9.6 postgresql-contrib-9.6 && \
+    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && \
+    rm -f /var/cache/apt/*.bin && \
+    mkdir -p /data/db 
+
+# Install Docker cli
+ENV DOCKER_VERSION 17.09.0-ce
+RUN wget -q --no-check-certificate --no-cookies https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz -O /tmp/docker.tgz && \
+    cd /tmp && tar zxvf docker.tgz && \
+    mv /tmp/docker/* /usr/local/bin/ && \
+    rm -rf /tmp/docker*
+
+# Install Gradle
+ENV GRADLE_VERSION 3.1
+RUN wget -q --no-check-certificate --no-cookies https://downloads.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle-${GRADLE_VERSION}-bin.zip -d /usr/local && \
+    ln -s /usr/local/gradle-${GRADLE_VERSION} /usr/local/gradle && \
+    ln -s /usr/local/gradle/bin/gradle /usr/local/bin/gradle && \
+    rm -f /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
+    echo "/usr/local/gradle/lib" > /etc/ld.so.conf.d/gradle.conf && \
+    ldconfig
+
+# Install AWS cli tools
+RUN wget -q --no-check-certificate --no-cookies https://s3.amazonaws.com/aws-cli/awscli-bundle.zip -O /tmp/awscli-bundle.zip && \
+    unzip /tmp/awscli-bundle.zip && \
+    ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws && \
+    rm -rf /tmp/awscli-bundle*
+
+# Install dependencies for doc generation tools
+RUN pip3 install wheel && \
+    pip3 install pyyaml && \
+    pip3 install requests && \
+    pip3 install sh && \
+    npm install -g raml2html@3.0.1 && \
+    npm install -g npm-snapshot && \
+    npm install -g yarn
+
+
+# Create a build user.  Same gids and uids as host system. 
+#RUN groupadd -g 495 jenkins && \
+#    groupadd -g 496 docker && \
+#    useradd -m  -u 497 -g 495 -d /home/${USER} -s /bin/sh ${USER} && \
+#    usermod -a -G docker ${USER} && \
+#    echo "${USER}:${USER}" | chpasswd
+
+ENV USER {{ user }}
+RUN useradd -m -d /home/${USER} -s /bin/sh ${USER} && \
+    echo "${USER}:${USER}" | chpasswd && \
+    groupadd docker && \
+    usermod -a -G docker ${USER}
+
+# Local config files and scripts
+COPY nexus-mvn-settings.xml  /home/${USER}/.m2/settings.xml
+COPY init.gradle /home/${USER}/.gradle/init.gradle
+COPY gradle.properties /home/${USER}/.gradle/gradle.properties
+COPY npmrc /home/${USER}/.npmrc
+COPY aws-credentials /home/${USER}/.aws/credentials
+COPY aws-config /home/${USER}/.aws/config
+COPY gitconfig /home/${USER}/.gitconfig
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY folioci_npmver.sh /usr/local/bin/folioci_npmver.sh
+COPY generate-api-docs /usr/local/generate-api-docs
+COPY sudoers /etc/sudoers.d/${USER}
+
+# install generate_api_docs
+RUN cd /usr/local/generate-api-docs && \
+    yarn install && \
+    ln -s /usr/local/generate-api-docs/generate_api_docs.py /usr/local/bin/generate_api_docs.py && \
+    chmod +x /usr/local/generate-api-docs/generate_api_docs.py
+
+# fix some permissions
+RUN chmod 600 /home/${USER}/.npmrc && \
+    chmod 600 /home/${USER}/.aws/config && \
+    chmod 600 /home/${USER}/.aws/credentials && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/folioci_npmver.sh
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# do some postgres initialization stuff. Change default port to 5433
+# to avoid conflicts with embedded postgres builds. 
+COPY set-psql-password.sh /tmp/set-psql-password.sh
+RUN mkdir -p /var/run/postgresql/9.6-main.pg_stat_tmp && \
+    chown postgres:postgres /var/run/postgresql/9.6-main.pg_stat_tmp -R && \
+    sed -i 's/^port = 5432/port = 5433/' /etc/postgresql/9.6/main/postgresql.conf && \
+    sh /tmp/set-psql-password.sh && \
+    rm -f /tmp/set-psql-password.sh
+    
+# Standard SSH port
+EXPOSE 22
+
+VOLUME ["/var/run/docker.sock"]
+
+# Default command.  Note: if using with the Docker Jenkin's plugin,
+# be sure to specify this command in the Jenkins config, otherwise,
+# the plugin ignore CMD and run 'sshd -D' by default.
+#CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

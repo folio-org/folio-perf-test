@@ -1,0 +1,59 @@
+---
+
+- name: Install prerequisites from apt
+  become: yes
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - python3-apt
+
+- name: Set up ES apt repo GPG key
+  become: yes
+  apt_key:
+    id: "{{ es_apt_key_id }}"
+    url: "{{ es_apt_key_url }}"
+    state: present
+
+- name: Configure ES apt repository
+  become: yes
+  apt_repository:
+    repo: deb "{{ es_apt_url }}" stable main
+    filename: "{{ es_apt_file }}"
+    state: present
+
+- name: Update apt-cache if not updated in last sixty minutes
+  become: yes
+  apt:
+    update-cache: yes
+    cache_valid_time: 3600
+
+- name: Install filebeat deb package
+  become: yes
+  apt:
+    name: filebeat
+    state: present
+
+- name: Enable filebeat at boot
+  become: yes
+  service:
+    name: filebeat
+    enabled: yes
+
+- name: Install FOLIO filebeat config
+  become: yes
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+    owner: root
+    group: root
+    mode: 0644
+  notify: filebeat restart
+
+- name: Make sure filebeat is running
+  become: yes
+  service:
+    name: filebeat
+    state: started
+
+- meta: flush_handlers

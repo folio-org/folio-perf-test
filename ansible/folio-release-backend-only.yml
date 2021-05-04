@@ -1,0 +1,125 @@
+---
+# This playbook is used to build folio-release and folio-release-core based
+# on the master branches of platform-complete and platform-core respectively.
+#
+# This playbook requires three variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "platform=platform-complete OR platform-core"
+#
+# Update group_vars/folio-lb02-elb frst in order to build a system
+# with any non-default hostnames (defaults: folio-release and folio-release-core)
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 'm5.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Hostname":"{{ folio_hostname }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    okapi_url: "http://{{ ansible_default_ipv4.address }}:9130"
+#    stripes_okapi_url: "https://{{ folio_hostname }}-okapi.aws.indexdata.com"
+#    stripes_github_project: "https://github.com/folio-org/{{ platform }}"
+#    stripes_github_version: master
+    folio_npm_repo: npm-folio
+    okapi_register_modules: no
+    okapi_enable_modules: no
+    platform_remove_lock: no
+    with_sourcemap: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include folio-ansible group_vars for release build
+      include_vars:
+        file: folio-ansible/group_vars/next-release-core
+      when: platform == "platform-core"
+
+    - name: include folio-ansible group_vars for release build
+      include_vars:
+        file: folio-ansible/group_vars/next-release-complete
+      when: platform == "platform-complete"
+
+  roles:
+    - role: common
+    - role: postgresql
+      pg_max_conn: 1000
+    - role: docker-engine
+    - role: okapi
+      okapi_storage: postgres
+      okapi_role: dev
+      hazelcast_aws_conf: true
+    - role: okapi-authenticate
+#    - role: stripes-docker
+#      stripes_host_address: '0.0.0.0'
+    - role: okapi-pull
+    - role: tenant-data
+    - role: build-module-list
+      deploy_url: "https://raw.githubusercontent.com/folio-org/{{ platform }}/master/okapi-install.json"
+      enable_url: "https://raw.githubusercontent.com/folio-org/{{ platform }}/master/stripes-install.json"
+    - role: okapi-deployment
+    - role: okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions
+    - role: set-patron-group
+    - role: mod-inventory-mods
+    - role: ebsco-rmapi-config
+      when: platform == "platform-complete"
+
+  tasks:
+    - name: configure edge modules
+      include_tasks: edge-modules.yml
+      vars:
+        edge_docker_repo: folioorg
+      when: platform == "platform-complete"
+
+    - name: Add users for permissions testing
+      include_role:
+        name: add-users
+      when: platform == "platform-complete"
+
+    - name: create stripes dir
+      become: yes
+      file:
+        path: /etc/folio/stripes
+        state: directory
+        mode: 0777
+
+    - name: secure Okapi
+      include_role:
+        name: okapi-secure
+
+    - name: configure elb
+      include_role:
+        name: folio-elb
+      vars:
+        elb_vars: group_vars/folio-lb02-elb
+
+    # edge modules set up in edge-modules.yml
+    # list ports that need to be exposed in nlb_targets variable
+    - name: configure NLB for non-HTTP edge modules
+      include_role:
+        name: edge-nlb
+      vars:
+        nlb_targets:
+          - protocol: tcp
+            port: 9000
+        nlb_subnets:
+          - subnet-c8df3dbe
+          - subnet-4406021d
+        route53_zone_name: dev.folio.org
+      when: platform == "platform-complete"

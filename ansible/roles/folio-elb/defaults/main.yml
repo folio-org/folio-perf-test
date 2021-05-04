@@ -1,0 +1,40 @@
+---
+
+# The following two vars need to be set somewhere. Default to 'None'
+folio_hostname: 'None'
+lb_name: 'None'
+include_edge_elb: false
+
+# define this path/to/file to include additional elb vars
+#elb_vars:
+
+dns_hostnames: 
+  - "{{ folio_hostname }}.aws.indexdata.com"
+  - "{{ folio_hostname }}-okapi.aws.indexdata.com"
+
+# typically set as group var
+lb_rules: 'None'
+lb_rules_edge: 'None'
+
+# default lb target group
+default_tg: 'folio-snapshot-core-stripes-tg'
+
+# defaults
+lb_security_groups:
+  - sg-cd5a7987
+lb_subnets:
+  - subnet-c8df3dbe
+  - subnet-4406021d
+lb_sslcert_arn: [ 'arn:aws:acm:us-east-1:732722833398:certificate/ff25745c-aab1-4752-b630-520a1a241d5c' ]
+lb_ssl_policy: 'ELBSecurityPolicy-2016-08'
+
+stripes_healthy_status: '200'
+okapi_healthy_status:  '200'
+edge_healthy_status: '200'
+
+# These can be overwritten by group_vars/ec2 or somewhere else
+jenkins_aws_access_key: 'KEY'
+jenkins_aws_secret_key: 'SECRET'
+aws_region: 'us-east-1'
+vpc_id: 'vpc-f9c16d9d'
+route53_zone_name: 'aws.indexdata.com'

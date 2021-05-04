@@ -1,0 +1,20 @@
+---
+#
+# vars for the folio-eks-oregon-1-folio-preview K8 cluster/namespace
+#
+
+k8_namespace: folio-preview
+folio_install_type: kubernetes
+
+okapi_url: https://okapi-preview.ci.folio.org
+okapi_supertenant_user: okapi_preview_admin
+okapi_supertenant_password: "{{ vault_okapi_supertenant_password }}"
+
+pg_admin_user: folio_admin
+pg_admin_password: "{{ vault_pg_admin_password }}"
+pg_host: okapi-preview.cdxr1geeeqbb.us-west-2.rds.amazonaws.com
+
+module_db: folio_modules_default
+module_db_username: folio_modules_default
+module_db_password: folio_modules_default25
+

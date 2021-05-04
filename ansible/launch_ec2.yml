@@ -1,0 +1,37 @@
+---
+#
+# launch ec2 instances
+#
+# required global vars:
+#    - instance_type (AWS EC2 instance type)
+#
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: find correct ec2 AMI
+      ec2_ami_facts:
+        owner: 099720109477
+        region: "{{ aws_region }}"
+        filters:
+          name: "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+      register: ami_facts
+
+    - name: Get the latest AMI
+      set_fact:
+        latest_ami: "{{ ami_facts.images | sort(attribute='creation_date') | last }}"
+
+  roles:
+    - role: launch_ec2_instance
+      ec2_security_groupids:  ["{{ okapi_ec2_security_groupid }}", "{{ postgres_ec2_security_groupid }}", "{{ stripes_ec2_security_groupid }}"]
+      ec2_group: "{{ ec2_group }}"
+      ec2_hostgroups: "tag_Env_ci,tag_Group_{{ ec2_group }},tag_Okapi_true,tag_Postgres_true"
+      ec2_instance_type: "{{ instance_type }}"
+      ec2_ami: "{{ latest_ami.image_id }}"
+      ec2_instance_tags: "{{ instance_tags }}"

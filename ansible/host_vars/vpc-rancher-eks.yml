@@ -1,0 +1,30 @@
+---
+
+# IP CIDR block for the VPC
+vpc_name: rancher-eks
+vpc_cidr_block: 192.168.0.0/16
+aws_region: us-east-2
+region: "{{ aws_region }}"
+
+# subnet map
+vpc_subnets: 
+  public-a:
+    cidr: 192.168.104.0/24
+    az: "{{ aws_region }}a"
+  private-a: 
+    cidr: 192.168.105.0/24
+    az: "{{ aws_region }}a"
+  public-b:
+    cidr: 192.168.106.0/24
+    az: "{{ aws_region }}b"
+  private-b:
+    cidr: 192.168.107.0/24
+    az: "{{ aws_region }}b"
+
+#a list defining the security groups for our VPC
+vpc_security_groups:
+  - name: "{{ vpc_name }}-sg"
+    description: "Allow internal traffic in the VPC"
+    rules: 
+      - proto: all
+        group_name: "{{ vpc_name }}-sg"

@@ -1,0 +1,71 @@
+# Use this elb for testing and/or temporary installations
+# Notes:  
+#   - target group names need to be [a-z0-9] and 32 chars or less
+#        
+
+lb_name: folio-lb04
+default_tg: folio-snapshot-test-stripes
+dns_hostnames: 
+  - "{{ folio_hostname }}.dev.folio.org"
+  - "{{ folio_hostname }}-okapi.dev.folio.org"
+
+lb_sslcert_arn: [ 'arn:aws:acm:us-east-1:732722833398:certificate/7e6bdbbd-7e42-4b39-9a12-8ac4b06dee88' ]
+
+route53_zone_name: 'dev.folio.org'
+
+lb_rules:
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-test.dev.folio.org
+    Priority: '1'
+    Actions:
+      - TargetGroupName: folio-snapshot-test-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-test-okapi.dev.folio.org
+    Priority: '2'
+    Actions:
+     - TargetGroupName: folio-snapshot-test-okapi
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-test.dev.folio.org
+    Priority: '3'
+    Actions:
+     - TargetGroupName: folio-testing-test-stripes
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-test-okapi.dev.folio.org
+    Priority: '4'
+    Actions:
+      - TargetGroupName: folio-testing-test-okapi
+        Type: forward
+
+lb_rules_edge: 
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-test.dev.folio.org
+    Priority: '1'
+    Actions:
+     - TargetGroupName: folio-snapshot-test-edge
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-test.dev.folio.org
+    Priority: '2'
+    Actions:
+     - TargetGroupName: folio-testing-test-edge
+       Type: forward
+

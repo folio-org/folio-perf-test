@@ -1,0 +1,140 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: find correct ec2 AMI
+      ec2_ami_find:
+        owner: 099720109477
+        name: "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+        region: "{{ aws_region }}"
+        sort: name
+        sort_order: descending
+        sort_end: 1
+        no_result_action: fail
+      register: ami_find
+
+  roles:
+    - { role: launch_ec2_instance,
+          ec2_security_groupids:  ["{{ okapi_ec2_security_groupid }}", "{{ postgres_ec2_security_groupid }}", "{{ stripes_ec2_security_groupid }}"],
+          ec2_group: "{{ ec2_group }}",
+          ec2_hostgroups: "tag_Env_ci,tag_Group_{{ ec2_group }},tag_Okapi_true,tag_Postgres_true",
+          ec2_instance_type: 't2.xlarge',
+          ec2_ami: "{{ ami_find.results[0].ami_id }}",
+          ec2_instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true" }'
+      }
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 2.x
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    hazelcast_aws_conf: true
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include vars for snapshot build
+      include_vars:
+        file: group_vars/snapshot.yml
+
+    - name: include snapshot module config
+      include_vars:
+        file: folio-ansible/group_vars/snapshot-core
+
+    - name: Gather ec2_instance_facts
+      become: no
+      local_action:
+        module: ec2_instance_facts
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+        region: "{{ aws_region }}"
+        filters:
+          "private-ip-address": "{{ ansible_default_ipv4.address }}"
+      register: ec2_instance_facts
+
+    - name: create FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.aws.indexdata.com"
+        value: "{{ ec2_instance_facts.instances.0.public_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'aws.indexdata.com'
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+
+    - name: create internal FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.indexdata.internal"
+        value: "{{ ec2_instance_facts.instances.0.private_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'indexdata.internal'
+        private_zone: true
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+
+  roles:
+    - folio-ansible/roles/common
+    - { role: filebeat,
+          filebeat_tags: "[ '{{ folio_hostname }}.aws.indexdata.com' ]" }
+    - { role: folio-ansible/roles/postgresql,
+          pg_max_conn: 1000 }
+    - folio-ansible/roles/docker-engine
+    - role: folio-ansible/roles/okapi
+      okapi_storage: postgres
+      okapi_role: dev
+    - role: folio-ansible/roles/okapi-authenticate
+    - role: folio-ansible/roles/stripes-build
+      okapi_register_modules: false
+      okapi_enable_modules: false
+    - folio-ansible/roles/okapi-pull
+    - folio-ansible/roles/tenant-data
+    - role: folio-ansible/roles/build-module-list
+      stripes_platform: /etc/folio/stripes
+    - folio-ansible/roles/okapi-deployment
+    - role: folio-ansible/roles/okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - folio-ansible/roles/create-tenant-admin
+    - { role: folio-ansible/roles/tenant-admin-permissions,
+          okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130" }
+    - folio-ansible/roles/mod-inventory-mods
+    - { role: folio-ansible/roles/stripes-docker,
+          stripes_host_address: '0.0.0.0' }
+    - role: folio-ansible/roles/okapi-secure
+

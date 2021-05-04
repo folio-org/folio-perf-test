@@ -1,0 +1,10 @@
+---
+
+folio_conf: /etc/folio
+stripes_conf_dir: /etc/folio/stripes
+# host address to map container to. '127.0.0.1' by default  
+stripes_host_address: '0.0.0.0'
+# Port to serve stripes container, default 80
+stripes_port: 80
+stripes_rebuild: false
+nginx_servername: localhost

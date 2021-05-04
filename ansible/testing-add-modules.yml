@@ -1,0 +1,90 @@
+---
+# Tasks to enable and deploy additional modules for testing build
+
+- name: Register the additional modules with Okapi
+  include_role: name=okapi-register-modules
+  vars:
+    folio_modules:
+      - name: mod-erm-usage
+      - name: mod-erm-usage-harvester
+      - name: mod-gobi
+      - name: mod-oai-pmh
+      - name: mod-bursar-export
+      - name: mod-patron
+      - name: mod-agreements
+      - name: mod-licenses
+      - name: mod-invoice-storage
+      - name: mod-invoice
+      - name: mod-ncip
+      - name: mod-organizations-storage
+      - name: mod-organizations
+      - name: mod-remote-storage
+      - name: mod-rtac
+      - name: mod-data-export
+      - name: mod-ldp
+      - name: edge-ncip
+      - name: edge-oai-pmh
+      - name: edge-orders
+      - name: edge-patron
+      - name: edge-rtac
+      - name: edge-dematic
+      - name: edge-connexion
+
+- name: Deploy and enable the data import modules
+  include_role: name=okapi-tenant-deploy
+  vars:
+    folio_modules:
+      - name: mod-data-import
+        deploy: yes
+      - name: mod-erm-usage
+        deploy: yes
+      - name: mod-erm-usage-harvester
+        deploy: yes
+      - name: mod-gobi
+        deploy: yes
+      - name: mod-oai-pmh
+        deploy: yes
+      - name: mod-bursar-export
+        deploy: yes
+      - name: mod-patron
+        deploy: yes
+      - name: mod-agreements
+        tenant_parameters:
+          - { name: loadReference, value: "true" }
+          - { name: loadSample, value: "true" }
+        deploy: yes
+      - name: mod-licenses
+        tenant_parameters:
+          - { name: loadReference, value: "true" }
+          - { name: loadSample, value: "true" }
+        deploy: yes
+      - name: mod-invoice-storage
+        deploy: yes
+      - name: mod-invoice
+        deploy: yes
+      - name: mod-ncip
+        deploy: yes
+      - name: mod-organizations-storage
+        deploy: yes
+      - name: mod-organizations
+        deploy: yes
+      - name: mod-remote-storage
+        deploy: yes
+      - name: mod-rtac
+        deploy: yes
+      - name: mod-data-export
+        deploy: yes
+      - name: mod-ldp
+        deploy: yes
+        docker_env:
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: "{{ ldp_password }}"
+          - name: SPRING_DATASOURCE_URL
+            value: "jdbc:postgresql://{{ pg_host }}/ldp"
+      - name: edge-ncip
+      - name: edge-oai-pmh
+      - name: edge-orders
+      - name: edge-patron
+      - name: edge-rtac
+      - name: edge-dematic
+      - name: edge-connexion

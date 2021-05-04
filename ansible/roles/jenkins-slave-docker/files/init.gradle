@@ -1,0 +1,13 @@
+allprojects {
+    repositories {
+      maven {
+        credentials {
+          username "$nexusUsername"
+          password "$nexusPassword"
+        }
+        url = uri('https://repository.folio.org/repository/maven-public') 
+      }
+    }
+}
+ 
+

@@ -1,0 +1,10 @@
+---
+
+- name: build docker image for FOLIO builds
+  hosts: localhost
+  vars:
+     docker_build_dir: /tmp/dockerbuild
+     build_image_name: jenkins-slave-folio
+     build_image_tag: new
+  roles: 
+    - jenkins-slave-docker

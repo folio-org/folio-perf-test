@@ -1,0 +1,135 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "folio_config=snapshot or snapshot-core"
+#
+# To specify a different instance_type, "instance_type=t2.xlarge"
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 'm5.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Hostname":"{{ folio_hostname }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+  when: folio_config == "snapshot"
+
+- import_playbook: data-export-storage.yml
+  vars:
+    bucket_name: "{{ folio_hostname }}-export"
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    okapi_url: "http://{{ ansible_default_ipv4.address }}:9130"
+    stripes_okapi_url: "https://{{ folio_hostname }}-okapi.dev.folio.org"
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include snapshot config
+      include_vars:
+        file: folio-ansible/group_vars/snapshot
+      when: folio_config == "snapshot"
+
+    - name: include snapshot-core config
+      include_vars:
+        file: folio-ansible/group_vars/snapshot-core
+      when: folio_config == "snapshot-core"
+
+    - name: set path to platform-core snapshot install.json files
+      set_fact:
+        install_json_path: 'https://raw.githubusercontent.com/folio-org/platform-core/snapshot'
+      when: folio_config == "snapshot-core"
+
+    - name: set path to platform-complete snapshot install.json files
+      set_fact:
+        install_json_path: 'https://raw.githubusercontent.com/folio-org/platform-complete/snapshot'
+      when: folio_config == "snapshot"
+
+  roles:
+    - role: common
+    - role: postgresql
+      pg_max_conn: 1000
+    - role: docker-engine
+    - role: okapi
+      okapi_storage: postgres
+      okapi_role: dev
+    - role: kafka-zk
+    - role: elasticsearch
+    - role: okapi-authenticate
+    - role: stripes-docker
+      stripes_host_address: '0.0.0.0'
+    - role: okapi-pull
+    - role: tenant-data
+    - role: build-module-list
+      deploy_url: "{{ install_json_path }}/okapi-install.json"
+      enable_url: "{{ install_json_path }}/stripes-install.json"
+    - role: okapi-deployment
+    - role: okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions
+    - role: cron-jobs
+    - role: mod-inventory-mods
+    - role: set-patron-group
+    - role: ebsco-rmapi-config
+      when: folio_config == "snapshot"
+    - role: ldp
+    - role: okapi-secure
+
+  tasks:
+    - name: Add additional supertenant user
+      include_role:
+        name: okapi-secure
+      vars:
+        superuser_username: testing_admin
+        superuser_password: admin
+        user_only: true
+
+    - name: Enable edge modules
+      include_tasks: edge-modules.yml
+      when: folio_config == "snapshot"
+
+    - name: Add users for permissions testing
+      include_role:
+        name: add-users
+      when: folio_config == "snapshot"
+
+    - name: Add configuration entries
+      include_role:
+        name: post-config-entries
+      vars:
+        stripes_url: "https://{{ folio_hostname }}.dev.folio.org"
+
+    - name: configure elb
+      include_role:
+        name: folio-elb
+      vars:
+        elb_vars: group_vars/folio-lb04-elb
+
+    # edge modules set up in edge-modules.yml
+    # list ports that need to be exposed in nlb_targets variable
+    - name: configure NLB for non-HTTP edge modules
+      include_role:
+        name: edge-nlb
+      vars:
+        nlb_targets:
+          - protocol: tcp
+            port: 9000
+        nlb_subnets:
+          - subnet-c8df3dbe
+          - subnet-4406021d
+        route53_zone_name: dev.folio.org
+      when: folio_config == "snapshot"

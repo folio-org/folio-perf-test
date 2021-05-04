@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local 
+  gather_facts: yes
+  roles:
+    - role: kubectl
+      kubernetes_server: https://rancher.dev.folio.org/k8s/clusters/c-nfjdd
+      kubernetes_cluster: folio-eks-oregon-1
+    - role: launch-ansible-runner

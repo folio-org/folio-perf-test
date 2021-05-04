@@ -1,0 +1,19 @@
+---
+
+- name: install unattend-upgrades package
+  become: yes
+  apt: 
+    name: unattended-upgrades
+    state: present
+  when: ansible_distribution == "Ubuntu" 
+
+- name: install 10periodic config
+  become: yes
+  copy:
+    src: 10periodic
+    dest: /etc/apt/apt.conf.d/10periodic
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Ubuntu" 
+    

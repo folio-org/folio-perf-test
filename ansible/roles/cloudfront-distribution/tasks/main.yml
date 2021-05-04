@@ -1,0 +1,41 @@
+---
+
+- name: create CloudFront distribution 
+  become: no
+  local_action:
+    module: cloudfront_distribution
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    state: present
+    origins:
+      - id: "{{ distribution_name }}"
+        domain_name: "{{ origin }}"
+        s3_origin_access_identity_enabled: yes
+    default_root_object: "{{ root_object }}"
+    alias: "{{ cloudfront_alias }}"
+    region: "{{ aws_region }}"
+    default_cache_behavior:
+      viewer_protocol_policy: redirect-to-https
+    viewer_certificate:
+      acm_certificate_arn: "{{ cert }}"
+      ssl_support_method: sni-only
+      minimum_protocol_version: "{{ tls_version }}"
+      certificate: "{{ cert }}"
+      certificate_source: acm
+  when: use_tls
+
+- name: create CloudFront distribution (no certificate)
+  become: no
+  local_action:
+    module: cloudfront_distribution
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    state: present
+    origins:
+      - id: "{{ distribution_name }}"
+        domain_name: "{{ origin }}"
+        s3_origin_access_identity_enabled: yes
+    default_root_object: "{{ root_object }}"
+    alias: "{{ cloudfront_alias }}"
+    region: "{{ aws_region }}"
+  when: not use_tls

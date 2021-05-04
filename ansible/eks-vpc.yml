@@ -1,0 +1,17 @@
+---
+
+# Playbook to create a VPC suitable for EKS.
+# One required variable at runtime:
+#   -e "vpc_name=VPC_NAME"
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include vpc vars
+      include_vars:
+        file: vpc/{{ vpc_name }}.yml
+
+  roles:
+    - folio-ansible/roles/create-eks-vpc

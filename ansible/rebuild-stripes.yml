@@ -1,0 +1,77 @@
+---
+
+# Run after folio-snapshot becomes folio-snapshot-stable in order to update
+# okapi URL. 
+
+# This playbook is used to reconfigure the stripes bundle for folio-snapshot/core-STABLE.  
+# It requires two variables to be set at runtime:
+# -e "build_group=EC2_GROUP_TAG"
+# -e "folio_hostname=FOLIO HOSTNAME
+#
+
+- hosts: "tag_Build_{{ build_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    stripes_conf_dir: /etc/folio/stripes
+    stripes_okapi_url: "https://{{ folio_hostname }}-okapi.dev.folio.org"
+    stripes_tenant: diku
+    node_environment:
+      NODE_ENV: production
+    stripes_host_address: 0.0.0.0
+    stripes_listen_port: 80
+        
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+  tasks:
+    - name: remove existing bundle
+      become: yes
+      file:
+        path: "{{ stripes_conf_dir }}/output"
+        state: absent
+
+    - name: rebuild stripes bundle
+      become: yes
+      shell: "yarn build output --okapi {{ stripes_okapi_url }} --tenant {{ stripes_tenant }}"
+      args:
+        chdir: "{{ stripes_conf_dir }}" 
+      environment: "{{ node_environment }}"
+
+    - name: Tear down old container
+      become: yes
+      docker_container: name=stripes_stripes_1 state=absent
+
+    - name: Remove old Docker image
+      become: yes
+      docker_image: name=stripes state=absent
+
+    - name: build and start stripes docker container
+      become: yes
+      docker_service:
+        project_name: stripes
+        definition: 
+          version: '2'
+          services: 
+            stripes:
+              build: "{{ stripes_conf_dir }}"
+              image: stripes
+              ports: 
+                - "{{ stripes_host_address }}:{{ stripes_listen_port }}:80"
+              networks:  
+                stripes-net:
+                  aliases:
+                    - stripes-serv
+              restart: always
+          networks: 
+            stripes-net: 
+              external: true
+        state: present
+      register: stripes_container_status
+
+    - debug:
+        var: stripes_container_status

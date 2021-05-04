@@ -1,0 +1,37 @@
+---
+
+- hosts: tag_Env_ci
+  connection: local
+  vars: 
+    instance_state: stopped 
+
+  pre_tasks: 
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: gather ec2 facts
+      ec2_remote_facts:
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+        region: "{{ aws_region }}"
+      register: ec2_remote_facts
+
+    - debug: 
+        msg: "Instance ID: {{ item }}"
+      with_items:  "{{ hostvars[inventory_hostname]['ec2_id'] }}"
+
+  tasks:
+    - name: Stop or terminate instances
+      local_action: 
+        module: ec2
+        region: "{{ aws_region }}"
+        state: "{{ instance_state }}"
+        instance_ids: "{{ item }}" 
+        wait: true
+      with_items:  "{{ hostvars[inventory_hostname]['ec2_id'] }}"
+
+    - debug:
+        msg: "Instance ID: {{ item }}"
+      with_items: "{{ hostvars[inventory_hostname]['ec2_id'] }}"
+

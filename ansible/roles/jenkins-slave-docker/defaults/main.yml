@@ -1,0 +1,14 @@
+---
+
+#docker_build_dir: /tmp/dockerbuild
+build_image_name: jenkins-slave
+build_image_tag: test
+
+user: jenkins
+nexus_user: "{{ nexus_user_vault }}"
+nexus_password: "{{ nexus_password_vault }}"
+aws_access_key: "{{ aws_access_key_vault }}"
+aws_secret_key: "{{ aws_secret_key_vault }}"
+git_name: FOLIO Jenkins
+git_email: folio-jenkins@indexdata.com
+npm_auth_token: "{{ npm_auth_token_vault }}"

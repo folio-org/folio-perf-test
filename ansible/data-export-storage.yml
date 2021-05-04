@@ -1,0 +1,16 @@
+---
+#
+# create s3 bucket for data-export
+#    
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+  roles:
+    - role: s3-data-export

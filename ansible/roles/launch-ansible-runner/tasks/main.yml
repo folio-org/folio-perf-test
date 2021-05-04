@@ -1,0 +1,41 @@
+---
+- name: Remove existing ansible jobs
+  k8s:
+    state: absent
+    api_version: v1
+    kind: Job
+    namespace: "{{ namespace }}"
+    name: ansible-runner
+
+- name: set target_module_clean when data is already valid
+  set_fact:
+    target_module_clean: "{{ target_module }}"
+  when: "target_module | type_debug == 'list'"
+ 
+- name: Cast target_module from string to var 
+  set_fact:
+    target_module_clean: "{{ target_module | from_json }}"
+  when: "target_module | type_debug != 'list'"
+
+- name: set module id
+  set_fact:
+    module_id: "{{ target_module_clean[0].name }}-{{ target_module_clean[0].version }}"
+
+- name: set safe module id
+  set_fact:
+    module_id_safe: "{{ module_id | regex_replace('\\.', '-') | lower }}"
+
+- name: Deploy module deployment playbook configmap
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'module-playbook-configmap.yml.j2') }}"
+
+- name: Deploy folio-ansible-runner job
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'ansible-runner-job.yml.j2') }}"
+
+- name: Clean up module deployment playbook configmap
+  k8s:
+    state: absent
+    definition: "{{ lookup('template', 'module-playbook-configmap.yml.j2') }}"

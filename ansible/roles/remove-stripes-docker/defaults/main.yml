@@ -1,0 +1,7 @@
+---
+
+stripes_docker_image: stripes
+stripes_nginx_docker_image: stripes_nginx
+stripes_container_name: stripes_stripes_1
+stripes_nginx_container_name: stripesnginx_stripes_nginx_1
+stripes_conf_dir: /etc/folio/stripes

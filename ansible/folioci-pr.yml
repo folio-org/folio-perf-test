@@ -1,0 +1,36 @@
+---
+
+# 
+# Configure tenant admin user and tenant admin user permissions
+# PR-1948
+#
+# Required parameters:
+# -e okapi_url 
+# -e tenant
+#
+
+- hosts: localhost
+  connection: local 
+  gather_facts: yes
+  vars:
+    admin_user: 
+      username: "{{ tenant }}_admin"
+      password: admin
+      first_name: "{{ tenant }}"
+      last_name: ADMINISTRATOR
+      email: "admin@{{ tenant }}.example.org"
+    
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ci
+
+  roles:
+    - role: okapi-authenticate
+      okapi_login_url: "{{ okapi_url }}"
+      superuser_username: super_admin
+      superuser_password: admin
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions 
+    - role: set-patron-group
+

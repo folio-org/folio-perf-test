@@ -1,0 +1,14 @@
+---
+
+# ec2 instance variables
+ec2_group: 'demo'
+ami_tag_name: 'folio_backend_demo'
+ami_tag_val: 'v0.19.4'
+ec2_instance_type: 't2.medium'
+ec2_instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true" }'
+ec2_exact_count: 1
+ec2_security_groupids: ["{{ okapi_ec2_security_groupid }}", "{{ postgres_ec2_security_groupid }}"]
+
+# FOLIO DNS alias
+folio_hostname: 'folio-demo.aws.indexdata.com'
+

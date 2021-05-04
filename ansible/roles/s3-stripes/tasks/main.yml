@@ -1,0 +1,45 @@
+---
+
+#
+# create S3 bucket.  Upload files.  
+#
+# Using a variety of modules here in order to do
+# what we need. 
+#
+
+- name: Create stripes bucket
+  become: no
+  local_action:
+    module: aws_s3 
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    bucket: "{{ bucket_name }}"
+    mode: create
+    permission: public-read
+
+- name: tag bucket
+  become: no
+  local_action: 
+    module: s3_bucket
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    name: "{{ bucket_name }}"
+    state: present
+    tags: "{{ s3_tags }}"
+  when: s3_tags 
+
+- name: upload stripes bundle dir
+  become: no
+  local_action: 
+    module: s3_sync
+    bucket: "{{ bucket_name }}"
+    file_root: "{{ file_root_path }}"
+    permission: public-read
+    delete: yes
+    file_change_strategy: force
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+

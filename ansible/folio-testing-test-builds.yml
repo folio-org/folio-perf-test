@@ -1,0 +1,99 @@
+---
+
+## This playbook requires three variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "folio_config=testing OR testing-core"
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 'm5.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Hostname":"{{ folio_hostname }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    okapi_url: "http://{{ ansible_default_ipv4.address }}:9130"
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include backend module config
+      include_vars:
+        file: folio-ansible/group_vars/testing
+      when: folio_config == "testing"
+
+    - name: include backend module config
+      include_vars:
+        file: folio-ansible/group_vars/testing-core
+      when: folio_config == "testing-core"
+
+  roles:
+    - role: common
+    - role: postgresql
+    - role: docker-engine
+    - role: okapi
+      okapi_storage: postgres
+      okapi_role: dev
+    - role: kafka-zk
+    - role: elasticsearch
+    - role: okapi-authenticate
+    - role: okapi-register-modules
+    - role: tenant-data
+    - role: okapi-tenant-deploy
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions
+    - role: cron-jobs
+    - role: set-patron-group
+    - role: mod-inventory-mods
+    - role: ebsco-rmapi-config
+      when: folio_config == "testing"
+    - role: ldp
+      when: folio_config == "testing"
+
+  tasks:
+    - name: Enable and deploy additional modules
+      include_tasks: testing-add-modules.yml
+      when: folio_config == "testing"
+
+    - name: Enable edge modules
+      include_tasks: edge-modules.yml
+      when: folio_config == "testing"
+
+    - name: Assign additional permissions to superuser
+      import_role:
+        name: tenant-admin-permissions
+      when: folio_config == "testing"
+
+    - name: Add users for permissions testing
+      include_role:
+        name: add-users
+      when: folio_config == "testing"
+
+    - name: Add configuration entries
+      include_role:
+        name: post-config-entries
+      vars:
+        stripes_url: "https://{{ folio_hostname }}.dev.folio.org"
+
+    - name: secure Okapi
+      include_role:
+        name: okapi-secure
+
+    - name: configure elb
+      include_role:
+        name: folio-elb
+      vars:
+        elb_vars: group_vars/folio-lb04-elb

@@ -1,0 +1,197 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: find correct ec2 AMI
+      ec2_ami_find: 
+        owner: 099720109477
+        name: "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+        region: "{{ aws_region }}"
+        sort: name
+        sort_order: descending
+        sort_end: 1
+        no_result_action: fail
+      register: ami_find  
+
+  roles:
+    - { role: launch_ec2_instance,
+          ec2_security_groupids:  ["{{ okapi_ec2_security_groupid }}", "{{ postgres_ec2_security_groupid }}", "{{ stripes_ec2_security_groupid }}"],
+          ec2_group: "{{ ec2_group }}",
+          ec2_hostgroups: "tag_Env_ci,tag_Group_{{ ec2_group }},tag_Okapi_true,tag_Postgres_true",
+          ec2_instance_type: 't2.xlarge',
+          ec2_ami: "{{ ami_find.results[0].ami_id }}",
+          ec2_instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true" }'
+      }
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 2.x
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars: 
+    hazelcast_aws_conf: true
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: include local vars for q3 release build
+      include_vars: 
+        file: group_vars/q3-2018-release.yml
+
+    - name: include folio-ansible group_vars for release build
+      include_vars: 
+        file: folio-ansible/group_vars/release
+
+    - name: Gather ec2_instance_facts
+      become: no
+      local_action:
+        module: ec2_instance_facts
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+        region: "{{ aws_region }}"
+        filters:
+          "private-ip-address": "{{ ansible_default_ipv4.address }}"
+      register: ec2_instance_facts
+
+    - name: create FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53 
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.aws.indexdata.com"
+        value: "{{ ec2_instance_facts.instances.0.public_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'aws.indexdata.com'
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+
+    - name: create internal FOLIO DNS alias to the instance
+      become: no
+      local_action:
+        module: route53 
+        command: create
+        overwrite: yes
+        record: "{{ folio_hostname }}.indexdata.internal"
+        value: "{{ ec2_instance_facts.instances.0.private_dns_name }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'indexdata.internal'
+        private_zone: true
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"
+
+  roles:
+    - folio-ansible/roles/common
+    - { role: folio-ansible/roles/postgresql,
+          pg_max_conn: 1000 }
+    - folio-ansible/roles/docker-engine
+    - { role: filebeat,
+          filebeat_tags: "[ '{{ folio_hostname }}.aws.indexdata.com' ]" }
+    - { role: folio-ansible/roles/okapi,
+          okapi_storage: postgres, 
+          okapi_role: dev }
+    - folio-ansible/roles/build-module-list
+    - folio-ansible/roles/okapi-register-modules
+    - folio-ansible/roles/tenant-data
+    - folio-ansible/roles/okapi-tenant-deploy
+    - folio-ansible/roles/create-tenant-admin
+    - { role: folio-ansible/roles/tenant-admin-permissions,
+          okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130" }
+    - role: folio-ansible/roles/module-sample-data
+      module_name: mod-inventory-storage
+      module_version: v12.8.2
+      okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+      repository: "https://github.com/folio-org/mod-inventory-storage"
+      duplicate_key_error: 400
+      files:
+        - { load_endpoint: /classification-types, fileglob: reference-data/classification-types/*.json }
+        - { load_endpoint: /contributor-name-types, fileglob: reference-data/contributor-name-types/*.json }
+        - { load_endpoint: /contributor-types, fileglob: reference-data/contributor-types/*.json }
+        - { load_endpoint: /identifier-types, fileglob: reference-data/identifier-types/*.json }
+        - { load_endpoint: /instance-formats, fileglob: reference-data/instance-formats/*.json }
+        - { load_endpoint: /instance-relationship-types, fileglob: reference-data/instance-relationship-types/*.json }
+        - { load_endpoint: /instance-statuses, fileglob: reference-data/instance-statuses/*.json }
+        - { load_endpoint: /instance-types, fileglob: reference-data/instance-types/*.json }
+        - { load_endpoint: /loan-types, fileglob: reference-data/loan-types/*.json }
+        - { load_endpoint: /location-units/institutions, fileglob: reference-data/location-units/institutions/*.json, dup_override: 422 }
+        - { load_endpoint: /location-units/campuses, fileglob: reference-data/location-units/campuses/*.json, dup_override: 422 }
+        - { load_endpoint: /location-units/libraries, fileglob: reference-data/location-units/libraries/*.json,  dup_override: 422 }
+        - { load_endpoint: /locations, fileglob: reference-data/locations/*.json, dup_override: 422 }
+        - { load_endpoint: /material-types, fileglob: reference-data/material-types/*.json, dup_override: 422 }
+        - { load_endpoint: /modes-of-issuance, fileglob: reference-data/modes-of-issuance/*.json }
+        - { load_endpoint: /platforms, fileglob: reference-data/platforms/*.json }
+        - { load_endpoint: /service-points, fileglob: reference-data/service-points/*.json, dup_override: 422 }
+        - { load_endpoint: /statistical-code-types, fileglob: reference-data/statistical-code-types/*.json }
+        - { load_endpoint: /instance-storage/instances, fileglob: sample-data/instances/*.json }
+        - { load_endpoint: /instance-storage/instances/$filename/source-record/marc-json, fileglob: sample-data/instance-source-records/*.json, http_method: PUT, dup_override: 204, updated_code: 204 }
+        - { load_endpoint: /holdings-storage/holdings, fileglob: sample-data/holdingsrecords/*.json }
+        - { load_endpoint: /item-storage/items, fileglob: sample-data/items/*.json }
+        - { load_endpoint: /instance-storage/instance-relationships, fileglob: sample-data/instance-relationships/*.json }
+    - folio-ansible/roles/mod-inventory-mods
+    - role: folio-ansible/roles/module-sample-data
+      module_name: mod-circulation-storage
+      module_version: v6.1.0
+      okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+      repository: "https://github.com/folio-org/mod-circulation-storage"
+      duplicate_key_error: 400
+      files:
+        - { load_endpoint: /loan-policy-storage/loan-policies, fileglob: reference-data/loan-policy-storage/loan-policies/*.json, dup_override: 500 }
+        - { load_endpoint: /loan-rules-storage, fileglob: reference-data/loan-rules-storage/*.json, http_method: PUT, updated_code: 204 }
+        - { load_endpoint: /cancellation-reason-storage/cancellation-reasons, fileglob: reference-data/cancellation-reason-storage/cancellation-reasons/*.json }
+    - folio-ansible/roles/mod-circulation-sample-data
+    - folio-ansible/roles/ebsco-rmapi-config
+    - folio-ansible/roles/mod-kb-ebsco-config
+    - role: folio-ansible/roles/module-sample-data
+      okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+      module_name: mod-tags
+      module_version: v0.1.2
+      repository: "https://github.com/folio-org/mod-tags"
+      files:
+        - { load_endpoint: /tags, fileglob: sample-data/*.json }
+    - role: folio-ansible/roles/module-sample-data
+      module_name: mod-finance-storage
+      module_version: v1.0.0
+      repository: "https://github.com/folio-org/mod-finance-storage"
+      files:
+        - { load_endpoint: /fiscal_year, fileglob: sample-data/fiscal-years/*.json }
+        - { load_endpoint: /ledger, fileglob: sample-data/ledgers/*.json }
+        - { load_endpoint: /fund, fileglob: sample-data/funds/*.json }
+        - { load_endpoint: /budget, fileglob: sample-data/budgets/*.json }
+    - role: folio-ansible/roles/module-sample-data
+      okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+      module_name: mod-vendors
+      module_version: v1.0.1
+      repository: "https://github.com/folio-org/mod-vendors"
+      files:
+        - { load_endpoint: /vendor, fileglob: sample-data/vendors/*.json }
+    - folio-ansible/roles/mod-auth-demo-users
+    - { role: folio-ansible/roles/stripes-docker, 
+          stripes_host_address: '0.0.0.0' }

@@ -1,0 +1,89 @@
+---
+# Ansible playbook to deploy Okapi and FOLIO modules for CI
+#
+
+
+# Bootstrap Ansible by install python on all nodes
+- hosts: tag_Env_ci:&tag_Group_ci01
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 2.x
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+  
+
+# Configure the Postgres ec2 instance
+- hosts: tag_Env_ci:&tag_Group_ci01:&tag_Postgres_true
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  pre_tasks:
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - name: set postgres hostname in var pg_hostname
+      add_host:  
+        hostname: postgres_host
+        pg_hostname: "{{ ec2_facts.ansible_facts.ansible_ec2_local_hostname }}"
+
+    - debug:
+        msg: "Postgres host: {{ hostvars['postgres_host']['pg_hostname'] }}"
+
+  roles:
+     - folio-ansible/roles/postgresql
+  
+
+# Configure Okapi/module ec2 instances.  
+- hosts: tag_Env_ci:&tag_Group_ci01:&tag_Okapi_true
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  serial: 1  
+  pre_tasks:
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - name: add okapi hosts to group
+      add_host:
+        hostname: "{{ ec2_facts.ansible_facts.ansible_ec2_local_ipv4 }}"
+        groupname: okapi_hosts
+
+  roles:
+    -  folio-ansible/roles/common  
+    - { role: folio-ansible/roles/okapi, 
+               okapi_storage: postgres,
+               pg_host: "{{ hostvars['postgres_host']['pg_hostname'] }}" }
+    - folio-ansible/roles/docker-engine
+
+# Deploy modules and module data
+- hosts: localhost
+  connection: local
+
+  vars_files:
+    - 'group_vars/ci/vars'
+    - 'group_vars/ci/vault'
+
+  vars: 
+    pg_host: "{{ hostvars['postgres_host']['pg_hostname'] }}"
+    okapi_hosts: "{{ groups['okapi_hosts'] }}" 
+    okapi_url: 'http://okapi-ci01-elb.aws.indexdata.com:9130'
+
+#   - debug:
+#        msg: "Okapi host: {{ item }}"
+#     with_items: "{{ groups['okapi_hosts'] }}" 
+  
+  roles:
+    - { role: module-docker, module: mod_users }
+#     - folio-ansible/roles/mod-users-data
+#     - folio-ansible/roles/mod-metadata
+#     - folio-ansible/roles/mod-metadata-data
+#     - folio-ansible/roles/mod-auth
+#     - folio-ansible/roles/mod-auth-data
+#     - folio-ansible/roles/mod-auth-demo-users

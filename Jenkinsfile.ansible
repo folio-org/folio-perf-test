@@ -1,0 +1,142 @@
+#!/usr/bin/env groovy
+
+@Library('folio_jenkins_shared_libs') _
+
+pipeline {
+   properties([
+     parameters([
+    string(name: 'EnvName', defaultValue: 'folio-api', description: 'Unique environment name'),
+    string(name: 'JenkinsAwsCredential', defaultValue: 'jenkins-aws', description: 'Jenkins credential to access AWS account'),
+    string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
+    string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
+    string(name: 'AwsSubnet', defaultValue: 'subnet-4406021d', description: 'AWS Subnet to create EC2 instances'),
+    string(name: 'AwsSecurityGroups', defaultValue: 'sg-7ea9ef35', description: 'AWS VPC Security Groups to use'),
+    string(name: 'AwsUsePublicIp', defaultValue: 'Yes', description: 'AWS EC2 has public IP or not'),
+    string(name: 'MdRepo', defaultValue: 'http://folio-registry.aws.indexdata.com', description: 'Module descriptor repository'),
+    string(name: 'StableFolio', defaultValue: 'https://folio-snapshot.dev.folio.org', description: 'Use stable version of modules'),
+    string(name: 'FixedOkapi', defaultValue: '4.5.0', description: 'Use specified version of Okapi'),
+    text(name: 'FixedMods', defaultValue: '', description: 'Paste install.json content here to use predefined module versions rather than pulling from stable FOLIO site'),
+    string(name: 'SampleDataRepo', defaultValue: 'https://s3.amazonaws.com/folio-public-sample-data', description: 'Sample data repository'),
+    string(name: 'SampleDataName', defaultValue: 'perf', description: 'Sample dataset name'),
+    string(name: 'TestRailUrl', defaultValue: 'https://foliotest.testrail.io', description: 'TestRail reporitng server URL'),
+    string(name: 'TestRailProjectId', defaultValue: '19', description: 'TestRail Project ID for Intgegration tests'),
+    string(name: 'PostmanEnvironment', defaultValue: 'environment/folio-vagrant.postman_environment', description: 'Filename (including directory name) to the postman environment in the folio-api-tests repository'),
+  ])
+])
+
+/*
+*  parameters {
+*    string(name: 'ec2Group', defaultValue: 'folio_testing', description: 'ec2 group prefix')
+*    string(name: 'folioHostname', defaultValue: 'folio-testing', description: 'FOLIO name prefix')
+*    string(name: 'folioConfig', defaultValue: 'testing', description: 'FOLIO platform')
+*    string(name: 'instanceType', defaultValue: 't2.2xlarge', description: 'EC2 instance type')
+*  }
+*/
+ 
+  options {
+    timeout(60)
+    buildDiscarder(logRotator(numToKeepStr: '30'))
+  }
+
+  environment {
+    ANSIBLE_CONFIG = "${env.WORKSPACE}/ansible/ansible.cfg"
+    DOCKERHUB_CI_PULL = credentials('dockerhub-ci-pull-account')
+    DOCKER_REGISTRIES = credentials('okapi-docker-registries-pull-json')
+  }
+  def sharedLib
+  def context
+  agent {
+    label 'jenkins-agent-java11'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        script {
+          currentBuild.displayName = "#${env.BUILD_NUMBER}-${env.JOB_BASE_NAME}"
+        }
+        sendNotifications 'STARTED'
+        echo "Building FOLIO Host: ${params.folioHostname} EC2 Group: ${params.ec2Group}"
+
+        checkout(
+                [$class: 'GitSCM',
+                  branches: [[name: '*/master']],
+                  doGenerateSubmoduleConfigurations: false,
+                  extensions: [[$class: 'SubmoduleOption',
+                  disableSubmodules: false,
+                  parentCredentials: false,
+                  recursiveSubmodules: true,
+                  reference: '',
+                  trackingSubmodules: true],
+                  [$class: 'RelativeTargetDirectory', relativeTargetDir: 'folio-infrastructure']],
+                  submoduleCfg: [],
+                  userRemoteConfigs: [[credentialsId: 'cd96210b-c06f-4f09-a836-f992a685a97a',
+                                      url: 'https://github.com/folio-org/folio-perf-test']]
+                ]
+                 sharedLib = load "shared.groovy"
+                 context = sharedLib.getContext()
+                )
+      }
+    }
+    stage('Build FOLIO Platform') {
+      steps {
+        dir("${env.WORKSPACE}/folio-perf-test") {
+
+          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                           accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                           credentialsId: 'jenkins-aws',
+                           secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+
+            script {
+              echo "Looking for existing ${params.folioHostname} instance"
+              def instance = sh(returnStdout: true, script: "aws --region us-east-1 --output text ec2 describe-instances --filters 'Name=tag:Group,Values=${params.ec2Group}' 'Name=instance-state-name,Values=running' --query 'Reservations[*].Instances[*].[InstanceId]'")
+
+              if (instance) {
+                echo "Found and terminating existing instance: $instance"
+                sh "aws --region us-east-1 --output text ec2 terminate-instances --instance-ids $instance"
+                sleep 120
+              }
+            }
+
+
+            logFileFilter {
+              echo "Building FOLIO Host: ${params.folioHostname} EC2 Group: ${params.ec2Group}"
+              ansiblePlaybook(credentialsId: '11657186-f4d4-4099-ab72-2a32e023cced',
+                              disableHostKeyChecking: true,
+                              installation: 'Ansible',
+                              inventory: 'ansible/inventory',
+                              playbook: "CI/ansible/folio-testing.yml",
+                              sudoUser: null,
+                              vaultCredentialsId: 'ansible-vault-pass',
+                              extraVars: [ec2_group: "${params.ec2Group}",
+                                         folio_hostname: "${params.folioHostname}",
+                                         folio_config: "${params.folioConfig}",
+                                         data_export_bucket_name: "${env.folioHostname}-export",
+                                         instance_type: "${params.instanceType}" ],
+                              extras: "-e \"{\\\"docker_image_repo\\\":{\\\"username\\\":\\\"${env.DOCKERHUB_CI_PULL_USR}\\\",\\\"password\\\":\\\"${env.DOCKERHUB_CI_PULL_PSW}\\\"}}\"")
+            }
+          }
+        }
+      }
+    }
+     stage("Run API tests") {
+            sharedLib.runNewman(context, PostmanEnvironment)
+          }
+         catch (e) {
+          currentBuild.result = 'FAILURE'
+          throw e
+        } finally {
+          stage("Tear down environment") {
+            sharedLib.notifySlack(currentBuild.result)
+            sleep 60
+            sharedLib.teardownEnv(context)
+          }
+        }
+  } // end stages
+  post {
+    always {
+      sendNotifications currentBuild.result
+    }
+  } // end post
+}
+

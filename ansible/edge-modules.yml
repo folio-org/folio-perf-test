@@ -1,0 +1,91 @@
+---
+# Add edge modules
+
+- name: Configure edge-rtac module
+  include_role: name=folio-ansible/roles/edge-module
+  vars:
+    edge_module: edge-rtac
+    edge_module_publish_port: 9700
+    edge_module_path:
+      - "/prod/rtac"
+      - "/rtac"
+    edge_module_expose_port: 8081
+    auth_required: yes
+    inst_user_perms:
+      - rtac.all
+
+- name: Configure edge-oai-pmh
+  include_role: name=folio-ansible/roles/edge-module
+  vars:
+    edge_module: edge-oai-pmh
+    edge_module_publish_port: 9701
+    edge_module_path: /oai
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+    auth_required: yes
+    inst_user_perms:
+      - oai-pmh.all
+
+- name: Configure edge-patron
+  include_role: name=edge-module
+  vars:
+    edge_module: edge-patron
+    edge_module_publish_port: 9702
+    edge_module_path: /patron
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+    auth_required: yes
+    inst_user_perms:
+      - patron.all
+      - users.collection.get
+
+- name: Configure edge-orders
+  include_role: name=edge-module
+  vars:
+    edge_module: edge-orders
+    edge_module_publish_port: 9703
+    edge_module_path: /orders
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+    auth_required: yes
+    inst_user_perms:
+      - gobi.all
+      - ebsconet.all
+
+- name: Configure edge-ncip
+  include_role: name=edge-module
+  vars:
+    edge_module: edge-ncip
+    edge_module_publish_port: 9704
+    edge_module_path: /ncip
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+    auth_required: yes
+    inst_user_perms:
+      - ncip.all
+
+- name: Configure edge-dematic
+  include_role: name=edge-module
+  vars:
+    edge_module: edge-dematic
+    edge_module_publish_port: 9705
+    edge_module_path: /asrService
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+      JAVA_OPTIONS: "-XX:MaxRAMPercentage=66.0 -Drequest_timeout_ms=7200000"
+    edge_module_cmd: "--okapi_url={{edge_module_okapi_url}} --secure_store_props=/mnt/{{ edge_module }}-ephemeral.properties"
+    auth_required: yes
+    inst_user_perms:
+      - remote-storage.all
+
+- name: Configure edge-connexion
+  include_role: name=edge-module
+  vars:
+    edge_module: edge-connexion
+    edge_module_publish_port: 9000
+    edge_module_expose_port: 8081
+    edge_module_docker_env:
+    auth_required: yes
+    inst_user_perms:
+      - copycat.all
+    edge_nginx_proxy: no

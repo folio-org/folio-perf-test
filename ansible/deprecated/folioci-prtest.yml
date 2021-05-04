@@ -1,0 +1,27 @@
+---
+
+## vars to pass in okapi_url, tenant, tenant_admin.username, tenant_admin.password,
+# tenant_admin.perms_user_id
+
+- hosts: localhost
+  connection: local 
+  gather_facts: yes
+  vars:
+    auth_required: true
+    tenant: folio_1043_test_69
+    okapi_url: http://folio-snapshot-test.aws.indexdata.com:9130
+    admin_user:
+      username: "{{ tenant }}_admin"
+      password: admin
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ci
+
+  roles:
+    - { role: folio-ansible/roles/mod-inventory-data }
+    - { role: folio-ansible/roles/mod-users-data }
+    - { role: folio-ansible/roles/mod-circulation-data }
+    - { role: folio-ansible/roles/mod-kb-ebsco-config }
+    - { role: folio-ansible/roles/mod-codex-ekb-config }

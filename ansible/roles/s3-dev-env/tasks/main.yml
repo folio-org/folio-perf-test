@@ -1,0 +1,24 @@
+---
+
+#
+# create S3 bucket. 
+#
+
+# Create a bucket
+- name: Create s3 bucket
+  become: no
+  local_action:
+    module: s3_bucket
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    name: "{{ item }}"
+    region: "{{ dev_region }}"
+    policy: "{{ lookup('template', 'policy.json.j2') }}"
+    state: present
+    tags:
+      Name: "{{ item }}"
+      Env: "DevEnv"
+  loop: "{{ dev_teams }}"
+  loop_control: 
+    loop_var: item
+

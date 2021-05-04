@@ -1,0 +1,23 @@
+---
+
+## create s3 bucket for folio-org dev teams to use in dev-environment.  FOLIO-2705
+
+# Note: IAM Policy ARN, 'arn:aws:iam::732722833398:policy/FolioDevEnvS3', also needs to be
+# updated when adding additional buckets.
+
+- hosts: localhost
+  connection: local 
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+  tasks:
+    - name: configure s3
+      include_role:
+        name: s3-dev-env
+      vars:
+        dev_teams: ['folio-concorde','folio-falcon','folio-core-functional','folio-firebird','folio-folijet','folio-gulfstream','folio-scout','folio-spitfire','folio-thunderjet','folio-vega']
+        

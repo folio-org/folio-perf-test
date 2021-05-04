@@ -1,0 +1,56 @@
+---
+# Ansible playbook to deploy Okapi and FOLIO modules for CI
+     
+- hosts: tag_Name_uidemo01
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  pre_tasks:
+    - name: include vars for uidemo
+      include_vars: 
+        file: group_vars/modules/uidemo.yml
+
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - debug:
+        msg: "Public IP: {{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+
+
+  roles:
+     - folio-ansible/roles/common
+     - folio-ansible/roles/postgresql
+     - { role: folio-ansible/roles/okapi, okapi_storage: postgres }
+     - folio-ansible/roles/okapi-register-modules
+     - folio-ansible/roles/okapi-deploy-modules
+     - folio-ansible/roles/mod-auth-data
+     - folio-ansible/roles/mod-configuration-data
+     - folio-ansible/roles/mod-users-data
+     - folio-ansible/roles/mod-users-bl-data
+     - folio-ansible/roles/mod-circulation-data
+     - folio-ansible/roles/mod-auth-demo-users
+     - { role: folio-ansible/roles/stripes-docker, 
+           disable_auth: false, 
+           npm_proxy: true, 
+           folio_npm_repo: npm-all,
+           npm_authtoken: "{{ folioci_npm_authtoken }}", 
+           with_nginx: true, 
+           nginx_servername: 'folio-uidemo.aws.indexdata.com', 
+           stripes_okapi_url: "http://{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}:{{ stripes_okapi_port }}" }
+
+  post_tasks:
+    - name: create folio-uidemo.indexdata.com alias to the instance
+      become: no
+      local_action:
+        module: route53 
+        command: create
+        overwrite: yes
+        record: 'folio-uidemo.aws.indexdata.com'
+        value: "{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'aws.indexdata.com'
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"

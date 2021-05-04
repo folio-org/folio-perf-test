@@ -1,0 +1,28 @@
+---
+
+  - name: remove stripes_nginx container
+    docker_container:
+      name: "{{ stripes_nginx_container_name }}"
+      state: absent
+
+  - name: remove stripes container
+    docker_container:
+      name: "{{ stripes_container_name }}"
+      state: absent
+     
+  - name: remove existing stripes_nginx docker image
+    docker_image:
+      name: "{{ stripes_nginx_docker_image }}"
+      state: absent
+      tag: latest
+
+  - name: remove existing stripes docker image
+    docker_image:
+      name: "{{ stripes_docker_image }}"
+      state: absent
+      tag: latest
+
+  - name: remove stripes config directory
+    file:
+      state: absent
+      path: "{{ stripes_conf_dir }}/"

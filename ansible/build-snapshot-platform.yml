@@ -1,0 +1,67 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_config=[snapshot|snapshot-core]"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "build_module_list_files="path to directory containing stripes-install.json and okapi-install.json"
+#
+# Optional:
+#    -e "instance_type=EC2_INSTANCE_TYPE"
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 'm5.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Hostname":"{{ ec2_group }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    okapi_url: "http://{{ ansible_default_ipv4.address }}:9130"
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include snapshot config
+      include_vars:
+        file: folio-ansible/group_vars/snapshot
+      when: folio_config == "snapshot"
+
+    - name: include snapshot-core config
+      include_vars:
+        file: folio-ansible/group_vars/snapshot-core
+      when: folio_config == "snapshot-core"
+
+  roles:
+    - role: common
+    - role: postgresql
+      pg_max_conn: 1000
+    - role: docker-engine
+    - role: okapi
+      okapi_storage: postgres
+      okapi_role: dev
+    - role: kafka-zk
+    - role: elasticsearch
+    - role: okapi-pull
+    - role: tenant-data
+    - role: build-module-list
+      deploy_file: "{{ build_module_list_files }}/okapi-install.json"
+      enable_file: "{{ build_module_list_files }}/stripes-install.json"
+    - role: okapi-deployment
+    - role: okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions
+    - role: set-patron-group
+

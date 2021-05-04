@@ -1,0 +1,6 @@
+When testing changes to the folio-snapshot, folio-release, or folio-testing playbooks, update
+and test your changes to the playbooks with the extension '-test-builds'.  These playbooks
+use a dedicated EC2 load balancer, 'folio-lb04', for testing or short-lived builds.  If you want
+to create an instance called something other than 'folio-snapshot-test' or 'folio-testing-test', 
+you will need to update 'group_vars/folio-lb04-elb' with the name of the instance and target
+groups BEFORE running the playbook. 

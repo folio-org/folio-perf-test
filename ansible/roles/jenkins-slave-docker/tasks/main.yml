@@ -1,0 +1,94 @@
+---
+
+- name: include vars in vault
+  include_vars: defaults/vault.yml
+
+- name: install python-pip package with apt
+  become: yes
+  apt: 
+    name: python-pip
+    state: present
+  when: ansible_os_family == "Debian"
+
+# Another Amazon Linux workaround
+- name: install python-pip package with yum
+  become: yes
+  yum: 
+    name: python26-pip
+    state: present
+  when: ansible_distribution == "Amazon"
+
+# needed for Amazon Linux ansible
+- name: install docker.py
+  become: yes
+  pip: 
+    name: docker-py
+    executable: pip-2.6
+    state: present
+  when: ansible_python.executable ==  "/usr/bin/python2.6"
+
+- name: install docker.py
+  become: yes
+  pip: 
+    name: docker-py
+    state: present
+  when: ansible_python.executable !=  "/usr/bin/python2.6"
+
+
+- name: create build directory
+  #file: 
+  #  path: "{{ docker_build_dir }}"
+  #  state:  directory    
+  tempfile:
+    state: directory
+    suffix: jenkins-slave 
+  register: tmp_dir
+
+- set_fact: 
+    docker_build_dir: "{{ tmp_dir.path }}"
+
+- name: print temp build dir
+  debug: var=docker_build_dir
+ 
+- name: generate templates and copy to build dir
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ docker_build_dir }}/{{ item.dest }}"
+  with_items: 
+    - { src: 'Dockerfile.j2',  dest: 'Dockerfile' }
+    - { src: 'aws-credentials.j2',  dest: 'aws-credentials' }
+    - { src: 'gitconfig.j2',  dest: 'gitconfig' }
+    - { src: 'gradle.properties.j2',  dest: 'gradle.properties' }
+    - { src: 'nexus-mvn-settings.xml.j2',  dest: 'nexus-mvn-settings.xml' }
+    - { src: 'npmrc.j2',  dest: 'npmrc' }
+    - { src: 'sudoers.j2',  dest: 'sudoers' }
+
+- name: copy files to build dir
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ docker_build_dir }}/{{ item.dest }}"
+    follow: yes
+  with_items: 
+    - { src: 'aws-config', dest: 'aws-config' }
+    - { src: 'docker-entrypoint.sh', dest: 'docker-entrypoint.sh' }
+    - { src: 'init.gradle', dest: 'init.gradle' }
+    - { src: 'set-psql-password.sh', dest: 'set-psql-password.sh' }
+    - { src: 'supervisord.conf', dest: 'supervisord.conf' }
+    - { src: 'folioci_npmver.sh', dest: 'folioci_npmver.sh' }
+
+- name: copy generate_api_docs
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ docker_build_dir }}/"
+    follow: yes
+  with_items:
+     - { src: 'generate-api-docs', dest: 'generate-api-docs' }
+  
+
+- name: build docker image
+  docker_image:
+    name: "{{  build_image_name }}"
+    tag: "{{ build_image_tag }}" 
+    path: "{{ docker_build_dir }}"
+    state: present
+    force: yes

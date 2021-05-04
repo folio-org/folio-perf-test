@@ -1,0 +1,91 @@
+---
+# Ansible playbook to deploy Okapi and FOLIO modules for CI
+     
+- hosts: tag_Name_folioami
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  pre_tasks:
+    # Specifiy this at runtime instead via -e
+    #- name: include vars for module configuration
+    #  include_vars: 
+    #    file: group_vars/modules/uidemo.yml
+
+    - name: include vars for ec2
+      include_vars: 
+        dir: group_vars/ec2
+
+
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - debug:
+        msg: "Public IP: {{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+    
+  roles:
+     - folio-ansible/roles/common
+     - folio-ansible/roles/postgresql
+     - { role: folio-ansible/roles/okapi, 
+              okapi_role: dev,
+              okapi_storage: postgres }
+     - folio-ansible/roles/okapi-register-modules
+     - folio-ansible/roles/okapi-deploy-modules
+     - folio-ansible/roles/mod-auth-data
+     - folio-ansible/roles/mod-configuration-data
+     - folio-ansible/roles/mod-users-data
+     - folio-ansible/roles/mod-users-bl-data
+     - folio-ansible/roles/mod-circulation-data
+     - folio-ansible/roles/mod-auth-demo-users
+     
+
+  # This tasks are specific to deploying from an AMI
+  post_tasks:
+     - name:  disable okapi-deploy from starting at next system boot
+       systemd: 
+         name: okapi-deploy
+         state: stopped 
+         enabled: no
+
+     - name: remove old okapi logs
+       command: rm -f /var/log/folio/okapi/okapi.log
+       args:
+         removes: /var/log/folio/okapi/okapi.log
+
+     - name: remove ssh host keys
+       shell: shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+       args:
+         removes: /etc/ssh/ssh_host_rsa_key
+
+     - name: remove root's public ssh key from image
+       shell: shred -u /root/.ssh/authorized_keys
+       args:
+         removes: /root/.ssh/authorized_keys
+
+     - name: remove root's bash history
+       shell: shred -u /root/.bash_history
+       args:
+         removes: /root/.bash_history
+
+     - name: remove ubuntu's bash history
+       shell: shred -u /home/ubuntu/.bash_history
+       args:
+         removes: /home/ubuntu/.bash_history
+
+     - name: remove ubuntu's public ssh key from image
+       shell: shred -u /home/ubuntu/.ssh/authorized_keys
+       args:
+         removes: /home/ubuntu/.ssh/authorized_keys
+
+     - name: create folio backend AMI
+       local_action:
+         module: ec2_ami
+         name: "{{ ami_image_name }}-{{ ami_image_version }}"
+         instance_id: "{{ ec2_facts.ansible_facts.ansible_ec2_instance_id }}"
+         aws_access_key: "{{ jenkins_aws_access_key }}"
+         aws_secret_key: "{{ jenkins_aws_secret_key }}"
+         region: "{{ aws_region }}"
+         tags: '{"{{ ami_image_name }}":"{{ ami_image_version }}"}'
+       become: false
+        

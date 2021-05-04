@@ -1,0 +1,63 @@
+---
+# Ansible playbook to deploy Okapi and FOLIO modules for CI
+     
+- hosts: tag_Name_uidemo03
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  pre_tasks:
+    - name: include vars for uidemo
+      include_vars: 
+        file: group_vars/modules/uidemo.yml
+
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - debug:
+        msg: "Public IP: {{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+
+
+  roles:
+     - folio-ansible/roles/common
+     - folio-ansible/roles/postgresql
+     - { role: folio-ansible/roles/okapi, okapi_storage: postgres }
+     - folio-ansible/roles/okapi-register-modules
+     - folio-ansible/roles/okapi-deploy-modules
+     - folio-ansible/roles/mod-auth-data
+     - folio-ansible/roles/mod-configuration-data
+     - folio-ansible/roles/mod-users-data
+     - folio-ansible/roles/mod-users-bl-data
+     - folio-ansible/roles/mod-circulation-data
+     - folio-ansible/roles/mod-auth-demo-users
+     - { role: folio-ansible/roles/stripes-docker, 
+           disable_auth: false, 
+           with_github: false,
+           stripes_core_version: "^0.7.0",
+           'stripes_modules:
+             - { name: "@folio/users", version: "^1.1.0" }
+             - { name: "@folio/items", version: "^1.1.0" }
+             - { name: "@folio/scan", version: "^0.2.0" }
+             - { name: "@folio/trvial", version: "^0.2.0-test" }',
+           npm_proxy: true, 
+           folio_npm_repo: npm-ci-all,
+           npm_authtoken: "{{ folioci_npm_authtoken }}", 
+           with_nginx: true, 
+           nginx_servername: 'folio-uidev.aws.indexdata.com', 
+           stripes_okapi_url: "http://{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}:{{ stripes_okapi_port }}" }
+
+  post_tasks:
+    - name: create folio-uidev.aws.indexdata.com alias to the instance
+      become: no
+      local_action:
+        module: route53 
+        command: create
+        overwrite: yes
+        record: 'folio-uidev.aws.indexdata.com'
+        value: "{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+        type: 'CNAME'
+        ttl: 60
+        zone: 'aws.indexdata.com'
+        aws_access_key: "{{ jenkins_aws_access_key }}"
+        aws_secret_key: "{{ jenkins_aws_secret_key }}"

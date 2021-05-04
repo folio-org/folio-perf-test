@@ -1,0 +1,13 @@
+---
+
+## pass these in as arg to role
+#bucket_name: name_of_bucket
+#file_root_path: path_to_local_files
+
+# Add tags to bucket if defined
+#s3_tags: '{"key1":"value1","key2":"value2"}'
+
+# Set in group_vars
+#aws_access_key: 
+#aws_secret_key:
+#region: us-east-1

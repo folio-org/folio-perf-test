@@ -1,0 +1,43 @@
+---
+
+- name: create build dir
+  become: yes
+  file: 
+    path: "{{ stripes_conf_dir }}"
+    state: directory
+
+- name: Template nginx conf to build dir
+  become: yes
+  template: src=nginx.conf.j2 dest={{ stripes_conf_dir }}/nginx.conf
+  notify: Rebuild container
+
+- name: Check for install.json
+  stat: path={{ stripes_conf_dir }}/install.json
+  register: install_json
+
+- name: Check for yarn.lock
+  stat: path={{ stripes_conf_dir }}/yarn.lock
+  register: yarn_lock
+
+- name: copy Dockerfile to docker build dir
+  become: yes
+  template:
+    src: Dockerfile.j2
+    dest: "{{ stripes_conf_dir }}/Dockerfile"
+  notify: Rebuild container
+
+- name: create docker network for stripes
+  become: yes
+  docker_network: 
+    name: stripes-net
+
+- name: Rebuild container on stripes rebuild
+  command: /bin/true
+  when: stripes_rebuild == true
+  notify: Rebuild container
+
+- name: Ensure container is up and running
+  command: /bin/true
+  notify: "Build container"
+
+- meta: flush_handlers 

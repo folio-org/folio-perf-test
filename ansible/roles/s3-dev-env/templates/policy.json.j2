@@ -1,0 +1,44 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "OwnerList",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "{{ aws_user_arn }}"
+            },
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{{ item }}"
+            ]
+        },
+        {
+            "Sid": "PublicRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action":[
+                "s3:GetObject",
+                "s3:GetObjectVersion"],
+            "Resource": [
+                "arn:aws:s3:::{{ item }}/*"
+            ]
+        },
+        {
+            "Sid": "DevWrite",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "{{ aws_user_arn }}"
+            },
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{{ item }}/*"
+            ]
+        }
+    ]
+}

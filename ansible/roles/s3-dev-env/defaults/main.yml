@@ -1,0 +1,8 @@
+---
+# Set in group_vars
+#aws_access_key: 
+#aws_secret_key:
+dev_region: us-west-2
+dev_teams: []
+# grant permissions on bucket to this user
+aws_user_arn: arn:aws:iam::732722833398:user/ci-data-export-s3

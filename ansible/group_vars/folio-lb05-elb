@@ -1,0 +1,226 @@
+lb_name: folio-lb05
+default_tg: folio-snapshot-stripes
+dns_hostnames:
+  - "{{ folio_hostname }}.dev.folio.org"
+  - "{{ folio_hostname }}-okapi.dev.folio.org"
+
+lb_sslcert_arn: [ 'arn:aws:acm:us-east-1:732722833398:certificate/7e6bdbbd-7e42-4b39-9a12-8ac4b06dee88' ]
+route53_zone_name: 'dev.folio.org'
+
+lb_rules:
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-core.dev.folio.org
+    Priority: '1'
+    Actions:
+      - TargetGroupName: folio-testing-core-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-core-okapi.dev.folio.org
+    Priority: '2'
+    Actions:
+      - TargetGroupName: folio-testing-core-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing.dev.folio.org
+    Priority: '3'
+    Actions:
+      - TargetGroupName: folio-testing-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing-okapi.dev.folio.org
+    Priority: '4'
+    Actions:
+      - TargetGroupName: folio-testing-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-core.dev.folio.org
+    Priority: '5'
+    Actions:
+      - TargetGroupName: folio-snapshot-core-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-core-okapi.dev.folio.org
+    Priority: '6'
+    Actions:
+      - TargetGroupName: folio-snapshot-core-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-core-stable.dev.folio.org
+    Priority: '7'
+    Actions:
+      - TargetGroupName: folio-snapshot-core-stable-s
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-core-stable-okapi.dev.folio.org
+    Priority: '8'
+    Actions:
+      - TargetGroupName: folio-snapshot-core-stable-o
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot.dev.folio.org
+    Priority: '9'
+    Actions:
+      - TargetGroupName: folio-snapshot-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-okapi.dev.folio.org
+    Priority: '10'
+    Actions:
+      - TargetGroupName: folio-snapshot-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-stable.dev.folio.org
+    Priority: '11'
+    Actions:
+      - TargetGroupName: folio-snapshot-stable-s
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-stable-okapi.dev.folio.org
+    Priority: '12'
+    Actions:
+      - TargetGroupName: folio-snapshot-stable-o
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-load.dev.folio.org
+    Priority: '13'
+    Actions:
+      - TargetGroupName: folio-snapshot-load-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-load-okapi.dev.folio.org
+    Priority: '14'
+    Actions:
+      - TargetGroupName: folio-snapshot-load-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-latest.dev.folio.org
+    Priority: '15'
+    Actions:
+      - TargetGroupName: folio-snapshot-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-latest-okapi.dev.folio.org
+    Priority: '16'
+    Actions:
+      - TargetGroupName: folio-snapshot-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-monthly.dev.folio.org
+    Priority: '17'
+    Actions:
+      - TargetGroupName: folio-monthly-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-monthly-okapi.dev.folio.org
+    Priority: '18'
+    Actions:
+      - TargetGroupName: folio-monthly-okapi
+        Type: forward
+
+lb_rules_edge: 
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-testing.dev.folio.org
+    Priority: '19'
+    Actions:
+     - TargetGroupName: folio-testing-edge
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot.dev.folio.org
+    Priority: '20'
+    Actions:
+     - TargetGroupName: folio-snapshot-edge
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-stable.dev.folio.org
+    Priority: '21'
+    Actions:
+     - TargetGroupName: folio-snapshot-stable-e
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-snapshot-latest.dev.folio.org
+    Priority: '22'
+    Actions:
+     - TargetGroupName: folio-snapshot-edge
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values: 
+        - folio-snapshot-load.dev.folio.org
+    Priority: '23'
+    Actions:
+     - TargetGroupName: folio-snapshot-load-edge 
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values: 
+        - folio-monthly.dev.folio.org
+    Priority: '24'
+    Actions:
+     - TargetGroupName: folio-monthly-edge 
+       Type: forward

@@ -1,0 +1,60 @@
+<settings>
+  <servers>
+     <server>
+        <id>folio-nexus</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+     </server>
+  </servers>
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>folio-nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://repository.folio.org/repository/maven-public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>folio-nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+          <id>folioSnapshots</id>
+          <url>https://repository.folio.org/repository/maven-snapshots/</url>
+          <name>Folio Snapshots</name>
+          <layout>default</layout>
+          <releases>
+             <enabled>false</enabled>
+             <updatePolicy>always</updatePolicy>
+             <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+             <enabled>true</enabled>
+             <updatePolicy>always</updatePolicy>
+             <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>folio-nexus</activeProfile>
+  </activeProfiles>
+</settings>

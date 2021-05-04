@@ -1,0 +1,68 @@
+lb_name: folio-lb02
+default_tg: folio-release-stripes
+
+lb_rules:
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release-core.aws.indexdata.com
+    Priority: '1'
+    Actions:
+     - TargetGroupName: folio-release-core-stripes
+       Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release-core-okapi.aws.indexdata.com
+    Priority: '2'
+    Actions:
+      - TargetGroupName: folio-release-core-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release.aws.indexdata.com
+    Priority: '3'
+    Actions:
+     - TargetGroupName: folio-release-stripes
+       Type: forward
+ 
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release-okapi.aws.indexdata.com
+    Priority: '4'
+    Actions:
+      - TargetGroupName: folio-release-okapi
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release-pr.aws.indexdata.com
+    Priority: '17'
+    Actions:
+      - TargetGroupName: folio-release-pr-stripes
+        Type: forward
+
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release-pr-okapi.aws.indexdata.com
+    Priority: '18'
+    Actions:
+      - TargetGroupName: folio-release-pr-okapi
+        Type: forward
+
+lb_rules_edge: 
+  - Conditions:
+    - Field: host-header
+      Values:
+        - folio-release.aws.indexdata.com
+    Priority: '1'
+    Actions:
+     - TargetGroupName: folio-release-edge
+       Type: forward
+

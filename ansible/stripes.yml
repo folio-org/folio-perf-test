@@ -1,0 +1,40 @@
+---
+
+# Required options:
+# -i inventory
+# --vault-password-file VAULT_PASSWD_FILE
+# -e "ec2_group=GROUP"
+#
+#
+
+- hosts: "tag_Env_ci:&tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  pre_tasks: 
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include folio-ansible/group_vars/testing
+      include_vars: 
+        file: folio-ansible/group_vars/testing
+      when: ec2_group == "folio_testing"
+
+    - name: include folio-ansible/group_vars/testing
+      include_vars: 
+        file: folio-ansible/group_vars/testing-core
+      when: ec2_group == "folio_testing_core"
+
+  roles: 
+    - role: remove-stripes-docker
+    - role: okapi-authenticate
+    - role: stripes-docker
+      disable_auth: false
+      stripes_host_address: '0.0.0.0'
+      stripes_listen_port: 80
+    - role: tenant-admin-permissions
+

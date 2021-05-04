@@ -1,0 +1,13 @@
+---
+
+# defaults
+cloudfront: false
+cloudfront_alias: false
+folio_hostname: 'hostname'
+jenkins_aws_access_key: 'KEY'
+jenkins_aws_secret_key: 'SECRET'
+aws_region: 'us-east-1'
+public_domain: 'aws.indexdata.com'
+private_domain: 'indexdata.internal'
+ttl: 60
+

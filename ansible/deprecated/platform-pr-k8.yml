@@ -1,0 +1,78 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "okapi_url=Okapi URL"
+# -e "tenant=FOLIO tenant"
+# -e "platform=platform repo name"
+# -e "build_module_list_files="path to directory containing stripes-install.json and okapi-install.json"
+# -e "load_data=true #(use loadSamle and loadReference tenant parameters) 
+#
+
+- hosts: localhost
+  connection: local 
+  gather_facts: no
+  vars:
+    k8_cluster: folio-eks-oregon-1
+    k8_namespace: folio-default
+    admin_user: 
+      username: "{{ tenant }}_admin"
+      password: admin
+      first_name: "{{ tenant }}"
+      last_name: ADMINISTRATOR
+      email: "admin@{{ tenant }}.example.org"
+    kafka_host: kafka
+
+  pre_tasks:
+    - name: include k8 cluster vars
+      include_vars:
+        dir: "group_vars/{{ k8_cluster }}/{{ k8_namespace }}"
+    - name: set tenant_parameters
+      set_fact:
+        tenant_parameters:
+          - { name: loadReference, value: "true" }
+          - { name: loadSample, value: "true" }
+      when: load_data
+    - name: set tenant_parameters
+      set_fact:
+        tenant_parameters:
+          - { name: loadReference, value: "true" }
+      when: not load_data
+  roles:
+    - role: folio-ansible/roles/okapi-authenticate
+      okapi_login_url: "{{ okapi_url }}"
+      superuser_username: "{{ okapi_supertenant_user }}"
+      superuser_password: "{{ okapi_supertenant_password }}"
+    - role: folio-ansible/roles/build-module-list
+      deploy_file: "{{ build_module_list_files }}/okapi-install.json"
+      enable_file: "{{ build_module_list_files }}/stripes-install.json"
+#    - role: folio-ansible/roles/module-kubernetes
+#      namespace: "{{ k8_namespace }}"
+#      pg_admin_user: "{{ pg_admin_user }}"
+#      pg_admin_password: "{{ pg_admin_password }}"
+#      pg_host: "{{ pg_host }}"
+#      db_database: "{{ module_db }}"
+#      db_host: "{{ pg_host }}"
+#      db_username: "{{ module_db_username }}"
+#      db_password: "{{ module_db_password }}"
+#      okapi_url: "{{ okapi_url }}"
+#      create_db: false
+#      create_secret: false
+#      okapi_pull: true
+    - role: folio-ansible/roles/okapi-pull
+    - role: folio-ansible/roles/tenant-data
+      enable_okapi: true
+    - role: folio-ansible/roles/okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - role: folio-ansible/roles/create-tenant-admin
+    - role: folio-ansible/roles/tenant-admin-permissions
+    - role: folio-ansible/roles/set-patron-group
+    - role: folio-ansible/roles/ebsco-rmapi-config
+      when: platform == "platform-complete"
+
+  tasks:
+    - name: Configure edge modules
+      include_tasks: edge-modules.yml
+      vars: 
+        edge_docker_repo: folioorg
+      when: platform == "platform-complete"

@@ -1,0 +1,15 @@
+---
+
+aws_region: us-west-2
+
+vpc_cidr: '172.26.0.0/16'
+
+availability_zones:
+  us-west-2a:
+    public_cidr: '172.26.16.0/24'
+    private_cidr_1: '172.26.17.0/24'
+    private_cidr_2: '172.26.18.0/24'
+  us-west-2b:
+    public_cidr: '172.26.19.0/24'
+    private_cidr_1: '172.26.20.0/24'
+    private_cidr_2: '172.26.21.0/24'

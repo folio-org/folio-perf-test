@@ -1,0 +1,34 @@
+---
+folioci: true
+
+pg_admin_user: folio_admin
+pg_admin_password: "{{ vault_pg_admin_password }}"
+
+okapi_supertenant_user: okapi_default_admin
+okapi_supertenant_password: "{{ vault_okapi_supertenant_password }}"
+
+folioci_npm_authtoken:  "{{ vault_folioci_npm_authtoken }}"
+dockerhub_user: idjenkins
+dockerhub_email: jenkins@indexdata.com
+dockerhub_pass: "{{ vault_dockerhub_pass }}"
+
+# for mod-codex-ekb
+rmapi: true
+
+rmapi_url: "https://api.ebsco.io"
+rmapi_key: "{{ vault_rmapi_key }}"
+rmapi_custid: "{{ vault_rmapi_custid }}"
+
+email_smtp_host: "email-smtp.us-east-1.amazonaws.com"
+email_smtp_port: 587
+email_from: noreply@folio.org
+email_username: "{{ vault_ses_smtp_username }}"
+email_password: "{{ vault_ses_smtp_password }}"
+
+cf_certificate: "arn:aws:acm:us-east-1:732722833398:certificate/7e6bdbbd-7e42-4b39-9a12-8ac4b06dee88"
+cf_domain: "dev.folio.org"
+
+kubernetes_user: "{{ vault_kubernetes_user }}"
+kubernetes_token: "{{ vault_kubernetes_token }}"
+
+ldp_password: diku_ldp9367

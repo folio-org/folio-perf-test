@@ -1,0 +1,79 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: find correct ec2 AMI
+      ec2_ami_find: 
+        owner: 099720109477
+        name: "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+        region: "{{ aws_region }}"
+        sort: name
+        sort_order: descending
+        sort_end: 1
+        no_result_action: fail
+      register: ami_find  
+
+  roles:
+    - { role: launch_ec2_instance,
+          ec2_security_groupids:  ['sg-246f4b5a','sg-1de5ac61'],
+          ec2_group: jenkins_slave_ami,
+          ec2_instance_type: 't2.small',
+          ec2_ami: "{{ ami_find.results[0].ami_id }}",
+          ec2_instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Postgres":"true" }'
+      }
+
+- hosts: tag_Group_jenkins_slave_ami
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Bootstrap Python 2.x
+      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+      register: output
+      changed_when: output.stdout != ""
+
+- hosts: tag_Group_jenkins_slave_ami
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  pre_tasks:
+    - name: include vars for ec2
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+  roles:
+    - folio-ansible/roles/common
+    - folio-ansible/roles/postgresql 
+    - { role: folio-ansible/roles/docker-engine,
+           docker_users: ['ubuntu'] }
+    - folio-ansible/roles/openjdk-8
+    - folio-ansible/roles/maven-3
+    - folio-ansible/roles/gradle
+
+  post_tasks:
+     - name: create jenkins-slave-ec2 backend AMI
+       local_action:
+         module: ec2_ami
+         name: folio-jenkins-slave
+         instance_id: "{{ ec2_facts.ansible_facts.ansible_ec2_instance_id }}"
+         aws_access_key: "{{ jenkins_aws_access_key }}"
+         aws_secret_key: "{{ jenkins_aws_secret_key }}"
+         region: "{{ aws_region }}"
+         tags: '{"folio-jenkins-slave":"latest"}'
+       become: false
+
+

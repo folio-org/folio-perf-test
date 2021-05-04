@@ -1,0 +1,24 @@
+
+USE WITH CAUTION!!
+
+Before using the 'shutdown-ci', understand how to use it.  
+
+By default, it will stop every ec2 instance with an EC2 tag of 
+"Env" equal to "ci".  You will probably want to limit the scope 
+to a subset of instances.   Use the '-l' argument to accomplish 
+this specifying either the appropriate Tag_Group or or Tag_Name.
+
+Example:
+
+ansible-playbook -i inventory --vault-password-file ~/.vault-pass.txt \
+    -l tag_Group_test shutdown-ci.yml
+
+
+If you want to terminate the instance instead of just stopping it, 
+use '--extra-vars' or '-e'.  The following example will terminate instances
+in the group, 'tag_Group_test'
+
+ansible-playbook -i inventory --vault-password-file ~/.vault-pass \
+    -l tag_Group_test -e "instance_state=absent" shutdown-ci.yml
+
+    

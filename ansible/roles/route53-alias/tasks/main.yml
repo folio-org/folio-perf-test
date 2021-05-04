@@ -1,0 +1,76 @@
+---
+
+- name: Gather ec2_instance_facts
+  become: no
+  local_action:
+    module: ec2_instance_facts
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    filters:
+      "private-ip-address": "{{ ansible_default_ipv4.address }}"
+  register: ec2_instance_facts
+  when: not cloudfront
+
+- name: create FOLIO DNS alias to the instance
+  become: no
+  local_action:
+    module: route53 
+    command: create
+    overwrite: yes
+    record: "{{ folio_hostname }}.{{ public_domain }}"
+    value: "{{ ec2_instance_facts.instances.0.public_dns_name }}"
+    type: 'CNAME'
+    ttl: "{{ ttl }}"
+    zone: "{{ public_domain }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+  when: not cloudfront
+
+- name: create internal FOLIO DNS alias to the instance
+  become: no
+  local_action:
+    module: route53 
+    command: create
+    overwrite: yes
+    record: "{{ folio_hostname }}.{{ private_domain }}"
+    value: "{{ ec2_instance_facts.instances.0.private_dns_name }}"
+    type: 'CNAME'
+    ttl: "{{ ttl }}"
+    zone: "{{ private_domain }}"
+    private_zone: true
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+  when: not cloudfront
+
+- name: Gather cloudfront facts
+  become: no
+  local_action:
+    module: cloudfront_facts
+    distribution: true
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    domain_name_alias: "{{ cloudfront_alias }}"
+  register: cf_facts
+  when: cloudfront
+
+- name: get cf distribution address
+  set_fact: 
+    cf_distribution_address: "{{ cf_facts.ansible_facts.cloudfront[cloudfront_alias].Distribution.DomainName }}"
+  when: cloudfront
+
+- name: create DNS for cloudfront distribution
+  become: no
+  local_action:
+    module: route53 
+    command: create
+    overwrite: yes
+    record: "{{ cloudfront_alias }}"
+    value: "{{ cf_distribution_address }}"
+    type: 'CNAME'
+    ttl: "{{ ttl }}"
+    zone: "{{ public_domain }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+  when: cloudfront

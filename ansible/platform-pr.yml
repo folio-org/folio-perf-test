@@ -1,0 +1,76 @@
+---
+
+# This playbook requires two variables to be set at runtime:
+# -e "pr=Github PR number"
+# -e "platform=platform repo name"
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "build_module_list_files="path to directory containing stripes-install.json and okapi-install.json"
+#
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 'm5.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Pr":"{{ pr }}","Hostname":"{{ folio_hostname }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    pg_max_conn: 1000
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars:
+        dir: group_vars/ec2
+
+    - name: include some vars
+      include_vars:
+        dir: group_vars/platform-pr
+
+  roles:
+    - role: route53-alias
+    - role: common
+    - role: postgresql
+      pg_max_conn: 1000
+    - role: docker-engine
+    - role: okapi
+      okapi_storage: postgres
+      okapi_role: dev
+    - role: kafka-zk
+    - role: elasticsearch
+    - role: okapi-pull
+    - role: tenant-data
+    - role: build-module-list
+      deploy_file: "{{ build_module_list_files }}/okapi-install.json"
+      enable_file: "{{ build_module_list_files }}/stripes-install.json"
+    - role: okapi-deployment
+    - role: okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - role: create-tenant-admin
+    - role: tenant-admin-permissions
+      okapi_url: "http://{{ folio_hostname }}.aws.indexdata.com:9130"
+    - role: set-patron-group
+
+  tasks:
+    - name: create stripes dir
+      become: yes
+      file:
+        path: /etc/folio/stripes
+        state: directory
+        mode: 0777
+
+#    - name: Configure edge modules
+#      include_tasks: edge-modules.yml
+#      vars:
+#        edge_docker_repo: folioorg
+#      when: platform == "platform-complete"

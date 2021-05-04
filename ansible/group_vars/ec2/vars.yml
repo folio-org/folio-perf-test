@@ -1,0 +1,14 @@
+---
+
+aws_region: us-east-1
+jenkins_aws_access_key: "{{ vault_jenkins_aws_access_key }}"
+jenkins_aws_secret_key: "{{ vault_jenkins_aws_secret_key }}"
+data_export_aws_id: "{{ vault_data_export_aws_id }}"
+data_export_aws_secret: "{{ vault_data_export_aws_secret }}"
+ec2_subnet_id: 'subnet-c8df3dbe'
+okapi_ec2_security_groupid: 'sg-3775684c'
+postgres_ec2_security_groupid: 'sg-1de5ac61'
+stripes_ec2_security_groupid: 'sg-4b69923a'
+edge_modules_ec2_security_groupid: 'sg-036a87d43c5dd4b7a'
+vpc_id: 'vpc-f9c16d9d'
+

@@ -1,0 +1,199 @@
+---
+
+- name: include vars from vars_file
+  include_vars: 
+    file: "{{ elb_vars }}"
+  when: elb_vars is defined
+
+- name: gather ec2 instance facts about our host group
+  become: no
+  local_action:
+    module: ec2_instance_facts
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    filters:
+      "tag:Group": "{{ ec2_group }}"
+      "instance-state-name": running
+  register: ec2_instance_facts
+
+- name: get list of instance ids for target groups
+  set_fact: 
+    instance_ids: "{{ instance_ids|default([]) + [ item.instance_id ] }}"
+  loop: "{{ ec2_instance_facts.instances }}"
+  loop_control:
+    loop_var: item
+
+- name: set okapi target group
+  set_fact:
+    okapi_tg: "{{ okapi_tg|default([]) + [{'Id': item, 'Port': 9130 }] }}"
+  with_items: "{{ instance_ids }}"
+
+- name: set okapi target group name
+  set_fact:
+    okapi_tg_name: "{{ folio_hostname }}-okapi"
+
+- name: set stripes target group
+  set_fact:
+    stripes_tg: "{{ stripes_tg|default([]) + [{'Id': item, 'Port': 80 }] }}"
+  with_items: "{{ instance_ids }}"
+
+- name: set stripes target group name
+  set_fact: 
+    stripes_tg_name: "{{ folio_hostname }}-stripes"
+
+- name: set edge modules target group
+  set_fact:
+    edge_tg: "{{ edge_tg|default([]) + [{'Id': item, 'Port': 8000 }] }}"
+  with_items: "{{ instance_ids }}"
+  when: include_edge_elb
+
+- name: set edge target group name
+  set_fact: 
+    edge_tg_name: "{{ folio_hostname }}-edge"
+  when: include_edge_elb
+
+- name: create stripes elb target group
+  become: no
+  local_action: 
+    module: elb_target_group
+    name: "{{ stripes_tg_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    state: present
+    protocol: http
+    port: 80
+    targets: "{{ stripes_tg }}"
+    health_check_path: /
+    successful_response_codes: "{{ stripes_healthy_status }}"
+
+- name: create okapi elb target group
+  become: no
+  local_action: 
+    module: elb_target_group
+    name: "{{ okapi_tg_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    state: present
+    protocol: http
+    port: 9130
+    targets: "{{ okapi_tg }}"
+    health_check_path: /_/proxy/health
+    successful_response_codes: "{{ okapi_healthy_status }}"
+
+- name: create edge elb target group
+  become: no
+  local_action: 
+    module: elb_target_group
+    name: "{{ edge_tg_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+    region: "{{ aws_region }}"
+    vpc_id: "{{ vpc_id }}"
+    state: present
+    protocol: http
+    port: 8000
+    targets: "{{ edge_tg }}"
+    health_check_path: /
+    successful_response_codes: "{{ edge_healthy_status }}"
+  when: include_edge_elb
+
+- name: debug lb name
+  debug: var=lb_name
+
+- name:  set dict list of ssl certs to apply to elb
+  set_fact:
+    ssl_cert_arns: "{{ ssl_cert_arns|default([]) + [ { 'CertificateArn': item } ] }}"
+  loop: "{{ lb_sslcert_arn }}" 
+  loop_control:
+    loop_var: item
+
+- name: configure load balancer 
+  become: no
+  local_action:
+    module: elb_application_lb
+    region: "{{ aws_region }}"
+    name: "{{ lb_name }}"
+    security_groups: "{{ lb_security_groups }}"
+    subnets: "{{ lb_subnets }}"
+    state: present
+    purge_listeners: no
+    listeners: 
+      - Protocol: HTTPS
+        Port: 443
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: "{{ default_tg }}"  
+        SslPolicy: "{{ lb_ssl_policy }}"
+        Certificates: "{{ ssl_cert_arns }}"
+        Rules: "{{ lb_rules }}"
+      - Protocol: HTTPS
+        Port: 8000
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: "{{ default_tg }}"
+        SslPolicy: "{{ lb_ssl_policy }}"
+        Certificates: "{{ ssl_cert_arns }}"
+        Rules: "{{ lb_rules_edge }}"
+        
+
+- name: Gather elb facts
+  become: no
+  local_action:
+    module: elb_application_lb_facts
+    region: "{{ aws_region }}"
+    names:
+      - "{{ lb_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}"
+  register: elb_facts
+
+- name: set elb arn
+  set_fact:
+    elb_arn: "{{ elb_facts.load_balancers[0].load_balancer_arn }}"
+
+# https://github.com/ansible/ansible/issues/43506
+- name: Create the redirect listener for HTTP to HTTPS
+  become: no
+  local_action:
+    module: shell aws --region "{{ aws_region }}" elbv2 create-listener
+      --load-balancer-arn {{ elb_arn }}
+      --protocol HTTP
+      --port 80
+      --default-actions "Type=redirect,RedirectConfig={Protocol=HTTPS,Port=443,Host='#{host}',Query='#{query}',Path='/#{path}',StatusCode=HTTP_301}"
+
+- name: set DNS name of elb
+  set_fact: 
+    elb_dns_name: "{{ elb_facts.load_balancers[0].dns_name }}"
+
+- name: set elb zone id
+  set_fact: 
+    elb_zone_id: "{{ elb_facts.load_balancers[0].canonical_hosted_zone_id }}"
+
+- name: print elb DNS and zone id
+  debug: 
+    msg: "{{ elb_dns_name }} - {{ elb_zone_id }}" 
+
+- name: create public FOLIO DNS aliases to the elb
+  become: no
+  local_action:
+    module: route53
+    command: create
+    overwrite: yes
+    record: "{{ item }}"
+    value: "{{ elb_dns_name }}"
+    type: A
+    zone: "{{ route53_zone_name }}"
+    aws_access_key: "{{ jenkins_aws_access_key }}"
+    aws_secret_key: "{{ jenkins_aws_secret_key }}" 
+    alias: True
+    alias_hosted_zone_id: "{{ elb_zone_id }}"
+  loop: "{{ dns_hostnames }}"
+  loop_control: 
+    loop_var: item
+
+

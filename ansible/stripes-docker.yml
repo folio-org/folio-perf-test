@@ -1,0 +1,20 @@
+---
+
+# Invoked in jenkins-pipeline vars/buildPlatformInstance
+
+# This playbook requires two variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars: 
+    nginx_servername: "{[ folio_hostname }}.aws.indexdata.com"
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
+    - role: stripes-docker-local
+      nginx_servername: "{{ folio_hostname }}.aws.indexdata.com"

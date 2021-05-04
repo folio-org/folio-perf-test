@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ansible-runner
+  labels:
+    app: ansible-runner
+  namespace: "{{ namespace }}"
+spec:
+  ttlSecondsAfterFinished: 5
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: "{{ svc_account }}"
+      containers:
+        - name: ansible-runner
+          image: folioci/folio-ansible-runner:latest
+          command: ["./entrypoint.sh"]
+          args: ["ansible-playbook", "module-playbook.yml"]
+          env:
+            - name: KUBECONFIG
+              value: /root/.kube/config
+          volumeMounts:
+          - name: "deploy-{{ module_id_safe }}"
+            mountPath: "/etc/ansible/playbooks/module-playbook.yml"
+            subPath: "module-playbook.yml"
+      volumes:
+      - name: "deploy-{{ module_id_safe }}"
+        configMap:
+          name: "deploy-{{ module_id_safe }}"

@@ -1,0 +1,15 @@
+---
+# Defaults
+aws_region: us-east-1
+
+# Required variables without defaults
+
+# jenkins_aws_access_key (string)
+# jenkins_aws_secret_key (string)
+# ec2_group (string)
+# vpc_id (string)
+# folio_hostname (string)
+# nlb_targets (list/dictionary)
+#   dictionary attributes: protocol, port (string)
+# nlb_subnets (list/string)
+# route53_zone_name (string)

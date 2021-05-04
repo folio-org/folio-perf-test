@@ -1,0 +1,90 @@
+---
+
+# This playbook requires three variables to be set at runtime:
+# -e "folio_hostname=HOSTNAME (short name)"
+# -e "ec2_group=EC2_GROUP_TAG"
+# -e "platform=PLATFORM REPO"
+#
+# The folio-ansible submodule in this repo should point to the correct 
+# release branch, q1-2019-release.
+#
+# Update group_vars/folio-lb02-elb first in order to build a system
+# with any non-default hostnames (defaults: folio-bellis and folio-bellis-core)
+#
+
+- import_playbook: launch_ec2.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+    instance_type: 't2.2xlarge'
+    ec2_exact_count: 1
+    instance_tags: '{ "Env":"ci","Group":"{{ ec2_group }}","Okapi":"true","Postgres":"true","Hostname":"{{ folio_hostname }}" }'
+
+- import_playbook: bootstrap_python.yml
+  vars:
+    ec2_group: "{{ ec2_group }}"
+
+- hosts: "tag_Group_{{ ec2_group }}"
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars: 
+    module_pg_host: "{{ ansible_default_ipv4.address }}"
+    okapi_url: "http://{{ ansible_default_ipv4.address }}:9130"
+    stripes_okapi_url: "https://{{ folio_hostname }}-okapi.aws.indexdata.com"
+
+  pre_tasks:
+    - name: include global ec2 vars
+      include_vars: 
+        dir: group_vars/ec2
+
+    - name: include folio-ansible group_vars for release-core build
+      include_vars:
+        file: folio-ansible/group_vars/release-core
+      when: platform == "platform-core"
+
+    - name: include folio-ansible group_vars for release build
+      include_vars:
+        file: folio-ansible/group_vars/release
+      when: platform == "platform-complete"
+
+  roles:
+    - folio-ansible/roles/common
+    - role: folio-ansible/roles/postgresql
+      pg_max_conn: 1000
+    - folio-ansible/roles/docker-engine
+    - role: folio-ansible/roles/okapi
+      okapi_storage: postgres
+      okapi_role: dev
+      hazelcast_aws_conf: true
+    - folio-ansible/roles/okapi-authenticate
+    - role: folio-ansible/roles/stripes-docker
+      stripes_host_address: '0.0.0.0'
+    - folio-ansible/roles/okapi-pull
+    - folio-ansible/roles/tenant-data
+    - folio-ansible/roles/build-module-list
+    - folio-ansible/roles/okapi-deployment
+    - role: folio-ansible/roles/okapi-tenant-deploy
+      create_db: no
+      module_env: []
+    - folio-ansible/roles/create-tenant-admin
+    - folio-ansible/roles/tenant-admin-permissions
+    - folio-ansible/roles/mod-inventory-mods
+    - role: folio-ansible/roles/ebsco-rmapi-config
+      when: platform == "platform-complete"
+
+  tasks: 
+    - name: configure edge modules
+      include_tasks: edge-modules.yml
+      vars: 
+        edge_docker_repo: folioorg
+      when: platform == "platform-complete"
+   
+    - name: secure Okapi
+      include_role: 
+        name: folio-ansible/roles/okapi-secure 
+
+    - name: configure elb
+      include_role: 
+        name: folio-elb
+      vars:
+        elb_vars: group_vars/folio-releases-elb

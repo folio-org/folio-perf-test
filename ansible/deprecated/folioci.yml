@@ -1,0 +1,32 @@
+---
+# Ansible playbook to deploy Okapi and FOLIO modules for CI
+     
+- hosts: tag_Env_ci:&tag_Group_jenkinsci
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  pre_tasks:
+    - name: gather ec2 facts
+      ec2_facts:
+      register: ec2_facts
+
+    - debug:
+        msg: "Public IP: {{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}"
+  roles:
+     - folio-ansible/roles/postgresql
+     - { role: folio-ansible/roles/okapi, okapi_storage: postgres }
+     - folio-ansible/roles/docker-engine
+     - folio-ansible/roles/mod-users
+     - folio-ansible/roles/mod-users-data
+     - folio-ansible/roles/mod-metadata
+     - folio-ansible/roles/mod-metadata-data
+     - folio-ansible/roles/mod-auth
+     - folio-ansible/roles/mod-auth-data
+     - folio-ansible/roles/mod-auth-demo-users
+     - { role: folio-ansible/roles/stripes-docker, 
+           disable_auth: false, 
+           folioci: true, 
+           npm_authtoken: "{{ folioci_npm_authtoken }}", 
+           with_nginx: true, 
+           nginx_servername: "{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}", 
+           stripes_okapi_url: "http://{{ ec2_facts.ansible_facts.ansible_ec2_public_hostname }}:{{ stripes_okapi_port }}" }
