@@ -443,7 +443,10 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("mod-data-export")) {
       continue
     }
-
+    // skipping mod-search temporarily due to module registartion failure
+    if (mod.id.startsWith("mod-search")) {
+      continue
+    }
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
