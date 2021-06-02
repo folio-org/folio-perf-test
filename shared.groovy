@@ -440,13 +440,22 @@ def getMods(fixedMods, mdRepo) {
 
     // registering in Okapi issue
     // should be fixed later
-    if (mod.id.startsWith("mod-data-export")) {
+    if (mod.id.startsWith("mod-data-export-spring")) {
+      continue
+    }
+	
+	if (mod.id.startsWith("mod-data-export-worker")) {
       continue
     }
     // skipping mod-search temporarily due to module registartion failure
     if (mod.id.startsWith("mod-search")) {
       continue
     }
+	
+	if (mod.id.startsWith("mod-service-interaction")) {
+      continue
+    }
+	
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
@@ -591,11 +600,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     // temporary solution to escape mod-service-interaction failure
-   if (modName.equals("mod-service-interaction")) {
-       modJob = readFile("config/mod-service-interaction.sh").trim()
+   //if (modName.equals("mod-service-interaction")) {
+    //  continue 
+      // modJob = readFile("config/mod-service-interaction.sh").trim()
       // modJob = modJob.replace('${dbHost}', dbPvtIp)
       // modJob = modJob.replace('${okapiIp}', okapiIp)
-    }
+   // }
     // mod-pubsub has different env variables
     if (modName.equals("mod-pubsub") || 
     modName.equals("mod-ebsconet") ||
