@@ -447,11 +447,7 @@ def getMods(fixedMods, mdRepo) {
 	if (mod.id.startsWith("mod-data-export-worker")) {
       continue
     }
-    // skipping mod-search temporarily due to module registartion failure
-    if (mod.id.startsWith("mod-search")) {
-      continue
-    }
-	
+    
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
