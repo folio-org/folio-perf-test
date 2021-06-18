@@ -451,7 +451,21 @@ def getMods(fixedMods, mdRepo) {
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
-	
+	if (mod.id.startsWith("mod-tags")) {
+      continue
+    }
+	if (mod.id.startsWith("mod-orders")) {
+      continue
+    }
+	if (mod.id.startsWith("mod-invoice")) {
+      continue
+    }
+	if (mod.id.startsWith("mod-gobi")) {
+      continue
+    }
+	if (mod.id.startsWith("mod-ebsconet")) {
+      continue
+    }
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
@@ -595,6 +609,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
+	// added s3 credentials to data-export
+	if (modName.equals("mod-data-export")) { 
+      modJob = readFile("config/mod-data-export.sh").trim()
+      modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
+      modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
+	}
     // temporary solution to escape mod-service-interaction failure
    //if (modName.equals("mod-service-interaction")) {
     //  continue 
