@@ -615,6 +615,11 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
       modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
 	}
+	if (modName.equals("mod-inventory")) { 
+      modJob = readFile("config/mod-inventory.sh").trim()
+	  modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+	  }
     // temporary solution to escape mod-service-interaction failure
    //if (modName.equals("mod-service-interaction")) {
     //  continue 
@@ -639,12 +644,13 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     modJob = modJob.replace('${port}', '' + port)
     modJob = modJob.replace('${modVer}', "" + modVer)
     // mod-inventory uses port 9403, not 8081
-    if (modName.equals("mod-inventory")) {
-      modJob = modJob.replace('8081', '9403')
-    }
+   // if (modName.equals("mod-inventory")) {
+    //  modJob = modJob.replace('8081', '9403')
+   // }
     // mod-circulation uses port 9801, not 8081
     if (modName.equals("mod-circulation")) {
       modJob = modJob.replace('8081', '9801')
+	 
     }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
