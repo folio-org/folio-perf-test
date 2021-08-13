@@ -447,7 +447,9 @@ def getMods(fixedMods, mdRepo) {
 	if (mod.id.startsWith("mod-data-export-worker")) {
       continue
     }
-    
+    if (mod.id.startsWith("mod-inn-reach")) {
+      continue
+    }
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
