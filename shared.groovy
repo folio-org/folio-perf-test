@@ -447,9 +447,6 @@ def getMods(fixedMods, mdRepo) {
 	if (mod.id.startsWith("mod-data-export-worker")) {
       continue
     }
-    if (mod.id.startsWith("mod-inn-reach")) {
-      continue
-    }
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
@@ -610,6 +607,11 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = readFile("config/mod-search.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
+    //mod-inn-reach needs additional db params
+	if (modName.equals("mod-inn-reach")) {
+      modJob = readFile("config/mod-inn-reach.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
 	// added s3 credentials to data-export
 	if (modName.equals("mod-data-export")) { 
