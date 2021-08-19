@@ -346,7 +346,7 @@ def runIntegrationTests(ctx) {
       }
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    sh "find . | grep json | grep '/target/surefire-reports/' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     cucumber buildStatus: "UNSTABLE",
       fileIncludePattern: "*.json",
       jsonReportDirectory: "cucumber-reports"
