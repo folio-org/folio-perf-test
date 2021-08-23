@@ -346,7 +346,7 @@ def runIntegrationTests(ctx) {
       }
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    sh "find . | grep json | grep '/target/surefire-reports/' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     cucumber buildStatus: "UNSTABLE",
       fileIncludePattern: "*.json",
       jsonReportDirectory: "cucumber-reports"
@@ -448,21 +448,6 @@ def getMods(fixedMods, mdRepo) {
       continue
     }
 	if (mod.id.startsWith("mod-service-interaction")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-tags")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-orders")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-invoice")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-gobi")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-ebsconet")) {
       continue
     }
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
@@ -609,7 +594,9 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     //mod-inn-reach needs additional db params
-	if (modName.equals("mod-inn-reach")) {
+	if ((modName.equals("mod-inn-reach")) ||
+	modName.equals("mod-tags"))
+	{
       modJob = readFile("config/mod-inn-reach.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
