@@ -450,21 +450,6 @@ def getMods(fixedMods, mdRepo) {
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
-	if (mod.id.startsWith("mod-tags")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-orders")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-invoice")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-gobi")) {
-      continue
-    }
-	if (mod.id.startsWith("mod-ebsconet")) {
-      continue
-    }
     def group = (mod.id =~ /(^\D+)-(\d+.*$)/)
     def modName = group[0][1]
     // only select backend (mod-) and frontend (folio-) modules
@@ -609,7 +594,9 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     //mod-inn-reach needs additional db params
-	if (modName.equals("mod-inn-reach")) {
+	if ((modName.equals("mod-inn-reach")) ||
+	modName.equals("mod-tags"))
+	{
       modJob = readFile("config/mod-inn-reach.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
