@@ -1,1 +1,1 @@
-docker run -d --rm --name ${modName} -e 'OKAPI_SERVICE_PORT=9130' -e 'OKAPI_SERVICE_HOST=http://${okapiIp}' -e 'JAVA_OPTIONS="-server -XX:+UseContainerSupport -XX:MaxRAMPercentage=55.0 -XX:+PrintFlagsFinal"' -p${port}:8081 folioci/${modName}:${modVer}
+docker run -d --rm --name ${modName} -e 'OKAPI_SERVICE_PORT=9130' -e 'OKAPI_SERVICE_HOST=${okapiIp}' -e 'JAVA_OPTIONS="-server -XX:+UseContainerSupport -XX:MaxRAMPercentage=55.0 -XX:+PrintFlagsFinal"' -p${port}:8081 folioci/${modName}:${modVer}
