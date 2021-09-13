@@ -78,6 +78,7 @@ node('jenkins-agent-java11') {
             }
           }
         } catch (e) {
+          sleep 1800
           currentBuild.result = 'FAILURE'
           throw e
         } finally {
