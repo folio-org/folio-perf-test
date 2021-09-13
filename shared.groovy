@@ -443,7 +443,7 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("mod-data-export-spring")) {
       continue
     }
-	
+
 	if (mod.id.startsWith("mod-data-export-worker")) {
       continue
     }
@@ -571,17 +571,17 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       }
     }
     // mod-inventory-storage, mod-source-record-storage and mod-ebsconet have different env variables
-    if (modName.equals("mod-inventory-storage") || 
-    modName.equals("mod-source-record-storage") || 
-    modName.equals("mod-ebsconet") || 
+    if (modName.equals("mod-inventory-storage") ||
+    modName.equals("mod-source-record-storage") ||
+    modName.equals("mod-ebsconet") ||
     modName.equals("mod-source-record-manager")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     // mod-bursar-export and mod-password-validator have different env variables
-    if (modName.equals("mod-bursar-export") || 
-    modName.equals("mod-password-validator") || 
+    if (modName.equals("mod-bursar-export") ||
+    modName.equals("mod-password-validator") ||
     modName.equals("mod-login")) {
       modJob = readFile("config/mod-bursar-export.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
@@ -593,6 +593,12 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
+    // mod-search has different env variables
+    if (modName.equals("mod-oa")) {
+      modJob = readFile("config/mod-oa.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+    }
     //mod-inn-reach needs additional db params
 	if ((modName.equals("mod-inn-reach")) ||
 	modName.equals("mod-tags"))
@@ -601,25 +607,25 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
 	// added s3 credentials to data-export
-	if (modName.equals("mod-data-export")) { 
+	if (modName.equals("mod-data-export")) {
       modJob = readFile("config/mod-data-export.sh").trim()
       modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
       modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
 	}
-	if (modName.equals("mod-inventory")) { 
+	if (modName.equals("mod-inventory")) {
       modJob = readFile("config/mod-inventory.sh").trim()
 	  modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
 	  }
     // temporary solution to escape mod-service-interaction failure
    //if (modName.equals("mod-service-interaction")) {
-    //  continue 
+    //  continue
       // modJob = readFile("config/mod-service-interaction.sh").trim()
       // modJob = modJob.replace('${dbHost}', dbPvtIp)
       // modJob = modJob.replace('${okapiIp}', okapiIp)
    // }
     // mod-pubsub has different env variables
-    if (modName.equals("mod-pubsub") || 
+    if (modName.equals("mod-pubsub") ||
     modName.equals("mod-ebsconet") ||
     modName.equals("mod-remote-storage") ||
     modName.equals("mod-quick-marc")) {
@@ -641,7 +647,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     // mod-circulation uses port 9801, not 8081
     if (modName.equals("mod-circulation")) {
       modJob = modJob.replace('8081', '9801')
-	 
+
     }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
