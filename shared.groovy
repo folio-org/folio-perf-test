@@ -593,7 +593,7 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
-    // mod-search has different env variables
+    // mod-oa has different env variables
     if (modName.equals("mod-oa")) {
       modJob = readFile("config/mod-oa.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
