@@ -437,6 +437,9 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("edge-sip2")) {
       continue
     }
+    if (mod.id.startsWith("mod-oa")) {
+      continue
+    }
 
     // registering in Okapi issue
     // should be fixed later
