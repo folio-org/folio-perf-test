@@ -350,7 +350,25 @@ def runIntegrationTests(ctx) {
       }
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    sh """
+    path_rep="${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    test_list=\$(find . | grep json | grep '/target/karate-reports')
+    for file in \$test_list
+    do
+      sname=\${file##*/}
+      tp=\${sname##*\\.}
+      name=\${sname%\\.\$tp}
+      cc=\$sname
+      i=0
+      while [ -a "\${path_rep}/\${sname}" ]
+        do
+        i=\$(( \$i + 1 ))       
+        sname="\${name}_\${i}.\${tp}"
+      done
+      cp \$file \${path_rep}/\$sname
+    done
+    """
+    //sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     cucumber buildStatus: "UNSTABLE",
       fileIncludePattern: "*.json",
       jsonReportDirectory: "cucumber-reports"
@@ -436,12 +454,15 @@ def getMods(fixedMods, mdRepo) {
   }
   def latestMods = [:]
   for (mod in mods) {
-// skip edge-sip2 for now due to regex issue
+// skip edge-sip2, mod-oa, mod eusage for now due to regex issue
     // should be fixed later
     if (mod.id.startsWith("edge-sip2")) {
       continue
     }
     if (mod.id.startsWith("mod-oa")) {
+      continue
+    }
+    if (mod.id.startsWith("mod-eusage-reports")) {
       continue
     }
 
