@@ -346,7 +346,7 @@ def runIntegrationTests(ctx) {
       export kbEbscoCredentialsApiKey=${ebsco_key}
       export kbEbscoCredentialsUrl=${ebsco_url}
       export kbEbscoCredentialsCustomerId=${ebsco_id}
-      mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId}
+      mvn test -Dkarate.env=${okapiDns} -DfailIfNoTests=false -Dtestrail_url=${TestRailUrl} -Dtestrail_userId=${testrail_user} -Dtestrail_pwd=${testrail_password} -Dtestrail_projectId=${TestRailProjectId} -DkbEbscoCredentialsApiKey=${ebsco_key} -DkbEbscoCredentialsUrl=${ebsco_url} -DkbEbscoCredentialsCustomerId=${ebsco_id}
       """
       }
     }
