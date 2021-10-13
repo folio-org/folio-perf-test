@@ -352,6 +352,23 @@ def runIntegrationTests(ctx) {
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
+    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core_platform', 'erm', 'fse', 'stripes', 'leipzig', 'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
+    teams_test = ['spitfire', 'folijet']
+    team_modules = [spitfire: ['mod-kb-ebsco', 'tags'], folijet: ['mod-source-record-storage', 'mod-source-record-manager']]
+    dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
+      for (team in teams_test){
+        sh "mkdir ${team}"
+        for (mod in team_modules[team]){
+          sh """
+          arr=\$( find . | grep "domain.${mod}")
+          for i in \${arr[*]}; do
+            name="\${i}"
+            mv \$i "${team}"/"${team}.\${i#./}"
+          done
+          """
+        }
+      }
+    }
     cucumber buildStatus: "UNSTABLE",
       fileIncludePattern: "*.json",
       jsonReportDirectory: "cucumber-reports"
