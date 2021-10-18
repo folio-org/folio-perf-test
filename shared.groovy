@@ -764,8 +764,8 @@ def notifySlack(String buildStatus = 'STARTED') {
           color = '#FFFE89'
       } else {
         color = '#FF9FA1'
-      msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-      slackSend(color: color, message: msg, channel: "#karate-tests-reports-${team}")
+      def team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+      slackSend(color: color, message: team_msg, channel: "#karate-tests-reports-${team}")
     }
 }
 
