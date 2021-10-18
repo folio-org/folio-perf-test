@@ -352,13 +352,28 @@ def runIntegrationTests(ctx) {
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core_platform', 'erm', 'fse', 'stripes', 'leipzig', 'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
+    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core_platform', 'erm', 'fse', 'stripes', 'leipzig',
+             'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
     teams_test = ['spitfire', 'folijet']
     team_modules = [spitfire: ['mod-kb-ebsco', 'tags'], folijet: ['mod-source-record-storage', 'mod-source-record-manager']]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
       for (team in teams_test){
-        sh "mkdir ${team}"
+        sh """
+        mkdir ${team}
+        touch ${team}/status.txt
+        echo SUCCESS > ${team}/status.txt
+        """
         for (mod in team_modules[team]){
+          sh """
+          for i in \$(find . | grep json | grep '/target/karate-reports'| grep summary); do
+		        if [[ \$(cat \$i | grep ${mod}) ]]; then
+			        if [[ $(cat \$i | grep '"failed":true') ]]; then
+				        echo FAILED > ${team}/status.txt
+				        break
+			        fi
+		        fi
+	        done
+          """
           sh """
           arr=\$( find . | grep "domain.${mod}")
           for i in \${arr[*]}; do
@@ -722,6 +737,7 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
+    teams_test = ['spitfire', 'folijet']
 
     // Build status of null means success.
     buildStatus = buildStatus ?: 'SUCCESS'
@@ -736,7 +752,21 @@ def notifySlack(String buildStatus = 'STARTED') {
         color = '#FF9FA1'
     }
     def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    slackSend(color: color, message: msg, channel: '#api-integration-testing')
+    //slackSend(color: color, message: msg, channel: '#api-integration-testing')
+    for (team in teams_test) {
+      def tests_status = readFile "${env.WORKSPACE}/folio-integration-tests/cucumber-reports/${team}/status.txt"
+      def color
+      if (tests_status == 'STARTED') {
+          color = '#D4DADF'
+      } else if (tests_status == 'SUCCESS') {
+          color = '#BDFFC3'
+      } else if (tests_status == 'UNSTABLE') {
+          color = '#FFFE89'
+      } else {
+        color = '#FF9FA1'
+      msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+      slackSend(color: color, message: msg, channel: "#karate-tests-reports-${team}")
+    }
 }
 
 return this
