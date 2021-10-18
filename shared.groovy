@@ -366,7 +366,7 @@ def runIntegrationTests(ctx) {
         for (mod in team_modules[team]){
           sh """
           for i in \$(find . | grep json | grep '/target/karate-reports'| grep summary); do
-		        if [[ \$(cat \$i | grep ${mod}) ]]; then
+		        if [[ \$(cat \$i | grep "${mod}") ]]; then
 			        if [[ $(cat \$i | grep '"failed":true') ]]; then
 				        echo FAILED > ${team}/status.txt
 				        break
