@@ -75,6 +75,7 @@ node('jenkins-agent-java11') {
           stage("Run integration tests") {
             node('jenkins-slave-all') {
               sharedLib.runIntegrationTests(context)
+              sharedLib.notifySlack(currentBuild.result)
             }
           }
         } catch (e) {
@@ -82,7 +83,6 @@ node('jenkins-agent-java11') {
           throw e
         } finally {
           stage("Tear down environment") {
-            sharedLib.notifySlack(currentBuild.result)
             sleep 60
             sharedLib.teardownEnv(context)
           }

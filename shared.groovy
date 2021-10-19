@@ -361,25 +361,20 @@ def runIntegrationTests(ctx) {
         sh """
         mkdir ${team}
         touch ${team}/status.txt
-        echo SUCCESS > ${team}/status.txt
+        touch ${team}/failed.txt
+        echo -n SUCCESS > ${team}/status.txt
         """
         for (mod in team_modules[team]){
           sh """
-          for i in \$(find . | grep json | grep '/target/karate-reports'| grep summary); do
+          for i in \$(find .. | grep json | grep '/target/karate-reports'| grep summary); do
 		        if [[ \$(cat \$i | grep ${mod}) ]]; then
 			        if [[ \$(cat \$i | grep '"failed":true') ]]; then
-				        echo FAILED > ${team}/status.txt
+				        echo -n FAILED > ${team}/status.txt
+                echo -n ${mod} > ${team}/failed.txt
 				        break
 			        fi
 		        fi
 	        done
-          """
-          sh """
-          arr=\$( find . | grep "domain.${mod}")
-          for i in \${arr[*]}; do
-            name="\${i}"
-            mv \$i "${team}"/"${team}.\${i#./}"
-          done
           """
         }
       }
@@ -737,37 +732,34 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-    teams_test = ['spitfire', 'folijet']
+  teams_test = ['spitfire', 'folijet']
 
-    // Build status of null means success.
-    buildStatus = buildStatus ?: 'SUCCESS'
-    // def color
-    // if (buildStatus == 'STARTED') {
-    //     color = '#D4DADF'
-    // } else if (buildStatus == 'SUCCESS') {
-    //     color = '#BDFFC3'
-    // } else if (buildStatus == 'UNSTABLE') {
-    //     color = '#FFFE89'
-    // } else {
-    //     color = '#FF9FA1'
-    // }
-    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-    //slackSend(color: color, message: msg, channel: '#api-integration-testing')
-    for (team in teams_test) {
-      def tests_status = readFile "${env.WORKSPACE}/folio-integration-tests/cucumber-reports/${team}/status.txt"
-      def color
-      if (tests_status == 'STARTED') {
-          color = '#D4DADF'
-      } else if (tests_status == 'SUCCESS') {
-          color = '#BDFFC3'
-      } else if (tests_status == 'UNSTABLE') {
-          color = '#FFFE89'
-      } else {
-        color = '#FF9FA1'
-      }
-      def team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
-      slackSend(color: color, message: team_msg, channel: "#karate-tests-reports-${team}")
+  // Build status of null means success.
+  buildStatus = buildStatus ?: 'SUCCESS'
+  def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+  
+  //slackSend(color: color, message: msg, channel: '#api-integration-testing')
+  for (team in teams_test) {
+    def tests_status = readFile "${env.WORKSPACE}/folio-integration-tests/cucumber-reports/${team}/status.txt"
+    def failed_mod = readFile "${env.WORKSPACE}/folio-integration-tests/cucumber-reports/${team}/failed.txt"
+    def color
+    def team_msg
+    if (tests_status == 'STARTED') {
+        color = '#D4DADF'
+    } else if (tests_status == 'SUCCESS') {
+        color = '#BDFFC3'
+    } else if (tests_status == 'UNSTABLE') {
+        color = '#FFFE89'
+    } else {
+      color = '#FF9FA1'
     }
+    if (tests_status == 'FAILED'){
+      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\nAt least one failed module:${failed_mod}"
+    } else {
+      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+      }
+    slackSend(color: color, message: team_msg, channel: "#karate-tests-reports-${team}")
+  }
 }
 
 return this
