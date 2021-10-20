@@ -355,7 +355,9 @@ def runIntegrationTests(ctx) {
     teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core_platform', 'erm', 'fse', 'stripes', 'leipzig',
              'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
     teams_test = ['spitfire', 'folijet']
-    team_modules = [spitfire: ['mod-kb-ebsco', 'tags'], folijet: ['mod-source-record-storage', 'mod-source-record-manager']]
+    team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
+                    folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'mod-data-import-converter-storage'],
+                    ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
       for (team in teams_test){
         sh """
@@ -754,7 +756,7 @@ def notifySlack(String buildStatus = 'STARTED') {
       color = '#FF9FA1'
     }
     if (tests_status == 'FAILED'){
-      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\nAt least one failed module:${failed_mod}"
+      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\nAt least one failed module: ${failed_mod}"
     } else {
       team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
       }
