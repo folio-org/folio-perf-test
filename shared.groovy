@@ -357,6 +357,7 @@ def runIntegrationTests(ctx) {
     teams_test = ['spitfire', 'folijet']
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'mod-data-import-converter-storage'],
+                    thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-invoice', 'mod-ebsconet', '' ]
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
       for (team in teams_test){
