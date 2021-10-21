@@ -378,7 +378,7 @@ def runIntegrationTests(ctx) {
 		        if [[ \$(cat \$i | grep ${mod}) ]]; then
 			        if [[ \$(cat \$i | grep '"failed":true') ]]; then
 				        echo -n FAILED > ${team}/status.txt
-                echo -n ${mod} >> ${team}/failed.txt
+                echo ${mod} >> ${team}/failed.txt
 				        break
 			        fi
 		        fi
@@ -762,7 +762,7 @@ def notifySlack(String buildStatus = 'STARTED') {
       color = '#FF9FA1'
     }
     if (tests_status == 'FAILED'){
-      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\nAt failed: ${failed_mod}"
+      team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\n Failed:\n${failed_mod}"
     } else {
       team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
       }
