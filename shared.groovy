@@ -352,12 +352,17 @@ def runIntegrationTests(ctx) {
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core_platform', 'erm', 'fse', 'stripes', 'leipzig',
+    teams = ['thunderjet', 'firebird', 'core-functional', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
              'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
-    teams_test = ['spitfire', 'folijet']
+    teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'core-functional', 'vega', 'core-platform', 'falcon']
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
-                    folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'mod-data-import-converter-storage'],
-                    thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-invoice', 'mod-ebsconet', '' ]
+                    folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
+                    thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-invoice', 'mod-ebsconet'],
+                    firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh'],
+                    core-functional: ['mod-inventory', 'mod-circulation', 'mod-users-bl'],
+                    vega: ['mod-event-config', 'mod-sender', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-calendar'],
+                    core-platform: ['mod-configuration', 'mod-login', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
+                    falcon: ['mod-search']
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
       for (team in teams_test){
