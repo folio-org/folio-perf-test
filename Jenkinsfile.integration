@@ -76,7 +76,6 @@ node('jenkins-agent-java11') {
             node('jenkins-slave-all') {
               sharedLib.runIntegrationTests(context)
               sharedLib.notifySlack(currentBuild.result)
-              sleep 1800
             }
           }
         } catch (e) {
