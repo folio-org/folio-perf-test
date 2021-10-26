@@ -741,6 +741,8 @@ def stopFolioDockers(ctx, ip) {
 
 def notifySlack(String buildStatus = 'STARTED') {
   teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'core_functional', 'vega', 'core_platform', 'falcon']
+  teams_channels = [spitfire: '#spitfire', folijet: '#folijet', thunderjet: '#acquisitions-dev', firebird: '#firebird',
+                    core_functional: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
 
   // Build status of null means success.
   buildStatus = buildStatus ?: 'SUCCESS'
@@ -767,6 +769,7 @@ def notifySlack(String buildStatus = 'STARTED') {
       team_msg = "${tests_status}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
       }
     slackSend(color: color, message: team_msg, channel: "#karate-tests-reports-${team}")
+    slackSend(color: color, message: team_msg, channel: "${teams_channels[team]}")
   }
 }
 
