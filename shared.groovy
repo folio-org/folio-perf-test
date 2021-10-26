@@ -179,7 +179,7 @@ def bootstrapModules(ctx) {
   echo "mods: ${mods}"
   mods = registerMods(mods, ctx.mdRepo, ctx.okapiIp)
   echo "valid mods: ${mods}"
-  deployMods(mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.dbPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
+  deployMods(ctx.envName, mods, ctx.okapiIp, ctx.modsIp, ctx.modsPvtIp, ctx.dbPvtIp, ctx.tenant, ctx.sshCmd, ctx.sshUser)
 }
 
 def populateData(ctx) {
@@ -553,7 +553,7 @@ def registerMods(mods, mdRepo, okapiIp) {
 }
 
 // deploy modules
-def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUser) {
+def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUser) {
   def port = 9200
   def modJobTemplate = readFile("config/mods.sh").trim()
   def installTemplate = readFile("config/install.json").trim()
@@ -603,10 +603,18 @@ def deployMods(mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCmd, sshUse
     if (modName.equals("mod-inventory-storage") ||
     modName.equals("mod-source-record-storage") ||
     modName.equals("mod-ebsconet") ||
-    modName.equals("mod-source-record-manager")) {
+    modName.equals("mod-source-record-manager") ||
+    modName.equals("mod-data-import")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+    }
+    // mod-data-import-converter-storage, users has different env variables
+    if (modName.equals("mod-data-import-converter-storage") ||
+    modName.equals("mod-users")) {
+      modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
     // mod-bursar-export and mod-password-validator have different env variables
     if (modName.equals("mod-bursar-export") ||
