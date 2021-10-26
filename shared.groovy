@@ -609,7 +609,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     // mod-data-import has different env variables
-    if (modName.equals("mod-data-import") {
+    if (modName.equals("mod-data-import")) {
       modJob = readFile("config/mod-data-import.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
