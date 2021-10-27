@@ -361,7 +361,7 @@ def runIntegrationTests(ctx) {
                     firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh'],
                     core_functional: ['mod-inventory', 'mod-circulation', 'mod-users-bl'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-calendar'],
-                    core_platform: ['mod-configuration', 'mod-login', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
+                    core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
                     falcon: ['mod-search']
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
