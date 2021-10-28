@@ -603,18 +603,20 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     if (modName.equals("mod-inventory-storage") ||
     modName.equals("mod-source-record-storage") ||
     modName.equals("mod-ebsconet") ||
-    modName.equals("mod-source-record-manager")) {
+    modName.equals("mod-source-record-manager") ||
+    modName.equals("mod-data-import")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
-      modJob = modJob.replace('${dbHost}', dbPvtIp)
-      modJob = modJob.replace('${okapiIp}', okapiIp)
-    }
-    // mod-data-import has different env variables
-    if (modName.equals("mod-data-import")) {
-      modJob = readFile("config/mod-data-import.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
       modJob = modJob.replace('${envName}', envName)
     }
+    // mod-data-import has different env variables
+    // if (modName.equals("mod-data-import")) {
+    //   modJob = readFile("config/mod-data-import.sh").trim()
+    //   modJob = modJob.replace('${dbHost}', dbPvtIp)
+    //   modJob = modJob.replace('${okapiIp}', okapiIp)
+    //   modJob = modJob.replace('${envName}', envName)
+    // }
     // mod-bursar-export and mod-password-validator have different env variables
     if (modName.equals("mod-bursar-export") ||
     modName.equals("mod-password-validator") ||
