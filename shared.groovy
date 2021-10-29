@@ -85,7 +85,7 @@ def waitForEnv(ctx) {
 def bootstrapDb(ctx) {
   stopFolioDockers(ctx, ctx.dbIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo service ecs stop"
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo amazon-linux-extras install -y postgresql10"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo amazon-linux-extras install -y postgresql12"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y jq wget"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo yum install -y git"
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-\$(uname -s)-\$(uname -m) -o /usr/local/bin/docker-compose"
