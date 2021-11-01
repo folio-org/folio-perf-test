@@ -30,7 +30,7 @@ def context
 
 
 node('jenkins-agent-java11') {
-  timeout(200) {
+  timeout(210) {
 
     stage("Checkout") {
       cleanWs()
@@ -78,7 +78,8 @@ node('jenkins-agent-java11') {
             }
           }
         } catch (e) {
-          sleep 1800
+          // turn the timer on in case of failures
+          //sleep 1800
           currentBuild.result = 'FAILURE'
           throw e
         } finally {
