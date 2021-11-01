@@ -610,13 +610,12 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${okapiIp}', okapiIp)
       modJob = modJob.replace('${envName}', envName)
     }
-    // mod-data-import has different env variables
-    // if (modName.equals("mod-data-import")) {
-    //   modJob = readFile("config/mod-data-import.sh").trim()
-    //   modJob = modJob.replace('${dbHost}', dbPvtIp)
-    //   modJob = modJob.replace('${okapiIp}', okapiIp)
-    //   modJob = modJob.replace('${envName}', envName)
-    // }
+    // mod-data-import-converter-storage, users has different env variables
+    if (modName.equals("mod-data-import-converter-storage") ||
+    modName.equals("mod-users")) {
+      modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+    }
     // mod-bursar-export and mod-password-validator have different env variables
     if (modName.equals("mod-bursar-export") ||
     modName.equals("mod-password-validator") ||
