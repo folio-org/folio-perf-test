@@ -48,7 +48,7 @@ node('jenkins-agent-java11') {
         try {
 
           stage("Create Environment") {
-        //    sharedLib.notifySlack()
+            sharedLib.notifySlack()
             sharedLib.createEnv(context)
           }
 
@@ -84,7 +84,7 @@ node('jenkins-agent-java11') {
           throw e
         } finally {
           stage("Tear down environment") {
-          //  sharedLib.notifySlack(currentBuild.result)
+            sharedLib.notifySlack(currentBuild.result)
             sleep 60
             sharedLib.teardownEnv(context)
           }
