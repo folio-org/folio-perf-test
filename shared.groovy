@@ -669,6 +669,12 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
+    if (modName.equals("mod-audit")) {
+      modJob = readFile("config/mod-audit.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+    }
     // mod-graphql has a different way to run Docker
     if (modName.equals("mod-graphql")) {
       modJob = readFile("config/mod-graphql.sh").trim()
