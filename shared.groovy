@@ -461,7 +461,7 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("edge-sip2")) {
       continue
     }
-    if (mod.id.startsWith("mod-oa")) {
+    if (mod.id.startsWith("mod-oa-")) {
       continue
     }
     if (mod.id.startsWith("mod-eusage-reports")) {
@@ -470,13 +470,13 @@ def getMods(fixedMods, mdRepo) {
 
     // registering in Okapi issue
     // should be fixed later
-    if (mod.id.startsWith("mod-data-export-spring")) {
-      continue
-    }
+    //if (mod.id.startsWith("mod-data-export-spring")) {
+    //  continue
+   // }
 
-	if (mod.id.startsWith("mod-data-export-worker")) {
-      continue
-    }
+	//if (mod.id.startsWith("mod-data-export-worker")) {
+  //    continue
+  //  }
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
