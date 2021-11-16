@@ -48,7 +48,7 @@ node('jenkins-agent-java11') {
         try {
 
           stage("Create Environment") {
-            sharedLib.notifySlack()
+          //  sharedLib.notifySlack()
             sharedLib.createEnv(context)
           }
 
@@ -79,12 +79,12 @@ node('jenkins-agent-java11') {
           }
         } catch (e) {
           // turn the timer on in case of failures
-          //sleep 1800
+          sleep 3600
           currentBuild.result = 'FAILURE'
           throw e
         } finally {
           stage("Tear down environment") {
-            sharedLib.notifySlack(currentBuild.result)
+          //  sharedLib.notifySlack(currentBuild.result)
             sleep 60
             sharedLib.teardownEnv(context)
           }
