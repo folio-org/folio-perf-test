@@ -193,7 +193,7 @@ def populateData(ctx) {
   // change to always use perf name for convenience
   // sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd ${ctx.dataName} && ${cmd}\""
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} \"cd perf && ${cmd}\""
-  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} docker run --rm -e TENANT_ID=supertenant -e ADMIN_USER=testing_admin -e ADMIN_PASSWORD=admin -e OKAPI_URL=http://${ctx.okapiIp}:9130 folioci/bootstrap-superuser"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} docker run --rm -e TENANT_ID=supertenant -e ADMIN_USER=admin -e ADMIN_PASSWORD=admin -e OKAPI_URL=http://${ctx.okapiIp}:9130 folioci/bootstrap-superuser"
 }
 
 def runJmeterTests(ctx, platformOnly=false) {
@@ -202,7 +202,7 @@ def runJmeterTests(ctx, platformOnly=false) {
 
   def jMeterConfTemplate = readFile("config/jmeter.csv").trim()
   def jMeterConf = jMeterConfTemplate.replace('tenant', ctx.tenant)
-  jMeterConf = jMeterConf.replace('user', 'testing_admin').replace('password', 'admin')
+  jMeterConf = jMeterConf.replace('user', 'admin').replace('password', 'admin')
   jMeterConf = jMeterConf.replace('protocol', 'http').replace('host', ctx.okapiIp).replace('port', '9130')
   echo "JMeter config: ${jMeterConf}"
   writeFile(text: jMeterConf, file: "${jMeterInput}/config.csv")
@@ -270,7 +270,7 @@ def runNewman(ctx, postmanEnvironment) {
     userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
-  def okapiUser="testing_admin"
+  def okapiUser="admin"
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--user 0:0 --entrypoint=\'\'') {
