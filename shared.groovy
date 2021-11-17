@@ -460,7 +460,7 @@ def getMods(fixedMods, mdRepo) {
     if (mod.id.startsWith("edge-sip2")) {
       continue
     }
-    if (mod.id.startsWith("mod-oa")) {
+    if (mod.id.startsWith("mod-oa-")) {
       continue
     }
     if (mod.id.startsWith("mod-eusage-reports")) {
