@@ -269,7 +269,7 @@ def runNewman(ctx, postmanEnvironment) {
     userRemoteConfigs: [[url: 'https://github.com/folio-org/folio-api-tests.git']]
   ])
   def okapiDns = "ec2-" + ctx.okapiIp.replaceAll(/\./, "-") + ".compute-1.amazonaws.com"
-  def okapiUser="super_admin"
+  def okapiUser="admin"
   def okapiPwd="admin"
   dir("${env.WORKSPACE}/folio-api-tests") {
     withDockerContainer(image: 'postman/newman', args: '--user 0:0 --entrypoint=\'\'') {
