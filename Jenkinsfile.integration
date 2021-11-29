@@ -69,7 +69,7 @@ node('jenkins-agent-java11') {
           }
 
           stage("Populate data") {
-            sharedLib.populateData(context)
+            //sharedLib.populateData(context)
           }
 
           stage("Run integration tests") {
