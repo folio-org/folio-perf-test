@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
-  Create basic FOLIO AWS infrastructure. It consists of three EC2
-  instances where OKAPI, backend modules, and database are to be deployed.
+  Create basic FOLIO AWS infrastructurefor cypress tests. It consists of three EC2
+  instances where OKAPI, backend modules, and databaseare to be deployed, along with EC2 agents machines .
 
 Parameters:
   EnvName:

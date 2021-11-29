@@ -7,7 +7,7 @@
 
 properties([
   parameters([
-    string(name: 'EnvName', defaultValue: 'folio-integration', description: 'Unique environment name'),
+    string(name: 'EnvName', defaultValue: 'folio-cypress', description: 'Unique environment name'),
     string(name: 'JenkinsAwsCredential', defaultValue: 'jenkins-aws', description: 'Jenkins credential to access AWS account'),
     string(name: 'JenkinsEc2Credential', defaultValue: '11657186-f4d4-4099-ab72-2a32e023cced', description: 'Jenkins credential to SSH into AWS EC2'),
     string(name: 'AwsKeyPair', defaultValue: 'aws-sling-dev', description: 'Aws KeyPair name for EC2 instances'),
@@ -75,6 +75,7 @@ node('jenkins-agent-java11') {
           stage("Run integration tests") {
             node('jenkins-slave-all') {
               //sharedLib.runIntegrationTests(context)
+              sleep 600
             }
           }
         } catch (e) {
