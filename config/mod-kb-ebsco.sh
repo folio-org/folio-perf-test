@@ -1,1 +1,1 @@
-docker run -d --rm --name ${modName} -e 'EBSCO_RMAPI_BASE_URL=https://sandbox.ebsco.io' -e 'usageConsolidationCredentialsId =${ebsco_usage_id}' -e 'usageConsolidationCredentialsSecret =${ebsco_usage_secret}' -e 'usageConsolidationCustomerKey =${ebsco_usage_key}'   -p${port}:8081 folioci/${modName}:${modVer}
+docker run -d --rm --name ${modName} -e 'EBSCO_RMAPI_BASE_URL=https://sandbox.ebsco.io'  -p${port}:8081 folioci/${modName}:${modVer}
