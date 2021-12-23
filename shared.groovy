@@ -366,7 +366,7 @@ def runIntegrationTests(ctx) {
       i=0
       while [ -a "\${path_rep}/\${sname}" ]
         do
-        i=\$(( \$i + 1 ))       
+        i=\$(( \$i + 1 ))
         sname="\${name}_\${i}.\${tp}"
       done
       cp \$file \${path_rep}/\$sname
