@@ -82,6 +82,15 @@ def waitForEnv(ctx) {
   }
 }
 
+def disableipv6(ctx) {
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.modsIp} sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1"
+  sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.okapiIp} sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1"
+}
+
 def bootstrapDb(ctx) {
   stopFolioDockers(ctx, ctx.dbIp)
   sh "${ctx.sshCmd} -l ${ctx.sshUser} ${ctx.dbIp} sudo service ecs stop"

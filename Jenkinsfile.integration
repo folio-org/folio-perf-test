@@ -54,6 +54,7 @@ node('jenkins-agent-java11') {
 
           stage("Wait for Environment") {
           sharedLib.waitForEnv(context)
+          sharedLib.disableipv6(context)
           }
 
           stage("Bootstrap DB") {
