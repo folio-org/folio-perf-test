@@ -27,7 +27,7 @@ Parameters:
   InstanceTypeMods:
     Description: EC2 instance type for backend modules server
     Type: String
-    Default: m5.2xlarge
+    Default: m5.4xlarge
   InstanceTypeDb:
     Description: EC2 instance type for database server
     Type: String
