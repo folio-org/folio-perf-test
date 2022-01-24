@@ -336,7 +336,7 @@ def runIntegrationTests(ctx) {
   echo "Run all folio-integration-tests"
   dir("${env.WORKSPACE}/folio-integration-tests") {
     withMaven(
-      jdk: 'openjdk-8-jenkins-slave-all',
+      jdk: 'openjdk-11-jenkins-slave-all',
       maven: 'maven3-jenkins-slave-all',
       mavenSettingsConfig: 'folioci-maven-settings'
     ) {
