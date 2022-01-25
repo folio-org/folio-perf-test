@@ -615,7 +615,8 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     }
     // mod-data-import-converter-storage, users has different env variables
     if (modName.equals("mod-data-import-converter-storage") ||
-    modName.equals("mod-users")) {
+    modName.equals("mod-users")) ||
+    modName.equals("mod-notes") {
       modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
