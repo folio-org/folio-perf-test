@@ -30,7 +30,7 @@ def context
 
 
 node('jenkins-agent-java11') {
-  timeout(300) {
+  timeout(600) {
 
     stage("Checkout") {
       cleanWs()
