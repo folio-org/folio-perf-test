@@ -30,7 +30,7 @@ def context
 
 
 node('jenkins-agent-java11') {
-  timeout(300) {
+  timeout(600) {
 
     stage("Checkout") {
       cleanWs()
@@ -73,9 +73,7 @@ node('jenkins-agent-java11') {
           }
 
           stage("Run integration tests") {
-            node('jenkins-slave-all') {
               sharedLib.runIntegrationTests(context)
-            }
           }
         } catch (e) {
           // turn the timer on in case of failures

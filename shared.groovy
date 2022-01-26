@@ -321,7 +321,7 @@ def runIntegrationTests(ctx) {
   echo "Checkout folio-integration-tests"
   checkout([
     $class: 'GitSCM',
-    branches: [[name: '*/master']],
+    branches: [[name: '*/RANCHER-146']],
     extensions: scm.extensions + [[$class: 'SubmoduleOption',
                                    disableSubmodules: false,
                                    parentCredentials: false,
@@ -336,7 +336,7 @@ def runIntegrationTests(ctx) {
   echo "Run all folio-integration-tests"
   dir("${env.WORKSPACE}/folio-integration-tests") {
     withMaven(
-      jdk: 'openjdk-8-jenkins-slave-all',
+      jdk: 'openjdk-11-jenkins-slave-all',
       maven: 'maven3-jenkins-slave-all',
       mavenSettingsConfig: 'folioci-maven-settings'
     ) {
@@ -615,7 +615,8 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     }
     // mod-data-import-converter-storage, users has different env variables
     if (modName.equals("mod-data-import-converter-storage") ||
-    modName.equals("mod-users")) {
+    modName.equals("mod-users") ||
+    modName.equals("mod-notes")) {
       modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
