@@ -48,7 +48,7 @@ node('jenkins-agent-java11') {
         try {
 
           stage("Create Environment") {
-            sharedLib.notifySlack()
+            // sharedLib.notifySlack()
             sharedLib.createEnv(context)
           }
 
