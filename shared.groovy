@@ -355,15 +355,15 @@ def runIntegrationTests(ctx) {
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    teams = ['thunderjet', 'firebird', 'core-functional', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
+    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
              'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
-    teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'core_functional', 'vega', 'core_platform', 'falcon']
+    teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
-                    thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-invoice', 'mod-ebsconet'],
+                    thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
                     firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh'],
-                    core_functional: ['mod-inventory', 'mod-circulation', 'mod-users-bl'],
-                    vega: ['mod-event-config', 'mod-sender', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-calendar'],
+                    prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
+                    vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation', 'mod-calendar'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
                     falcon: ['mod-search']
                     ]
@@ -759,7 +759,7 @@ def stopFolioDockers(ctx, ip) {
 def notifySlack(String buildStatus = 'STARTED') {
   teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'core_functional', 'vega', 'core_platform', 'falcon']
   teams_channels = [spitfire: '#spitfire', folijet: '#folijet', thunderjet: '#acquisitions-dev', firebird: '#firebird',
-                    core_functional: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
+                   prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
 
   // Build status of null means success.
   buildStatus = buildStatus ?: 'SUCCESS'
