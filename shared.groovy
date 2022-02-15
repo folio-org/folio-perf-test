@@ -705,6 +705,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     if (modName.equals("mod-circulation")) {
       modJob = readFile("config/mod-circulation.sh").trim()
       // modJob = modJob.replace('8081', '9801')
+      modJob = modJob.replace('${modName}', modName)
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
 
