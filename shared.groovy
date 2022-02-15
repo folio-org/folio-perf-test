@@ -710,6 +710,8 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${okapiIp}', okapiIp)
       modJob = modJob.replace('${port}', '' + port)
       modJob = modJob.replace('${modVer}', "" + modVer)
+      modJob = modJob.replace('${envName}', envName)
+
 
 
 
