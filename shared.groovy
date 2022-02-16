@@ -704,6 +704,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     // mod-circulation uses port 9801, not 8081
     if (modName.equals("mod-circulation")) {
       modJob = modJob.replace('8081', '9801')
+    }
 
     // mod-circulation-storage uses port 9801, not 8081
     if (modName.equals("mod-circulation-storage")) {
@@ -715,12 +716,8 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${port}', '' + port)
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${envName}', envName)
-    
 
-
-
-
-
+      
 
     }
     // mod-login has a special parameter
