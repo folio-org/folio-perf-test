@@ -321,7 +321,7 @@ def runIntegrationTests(ctx) {
   echo "Checkout folio-integration-tests"
   checkout([
     $class: 'GitSCM',
-    branches: [[name: '*/master']],
+    branches: [[name: '*/FAT-1548']],
     extensions: scm.extensions + [[$class: 'SubmoduleOption',
                                    disableSubmodules: false,
                                    parentCredentials: false,
