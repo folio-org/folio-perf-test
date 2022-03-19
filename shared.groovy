@@ -355,17 +355,18 @@ def runIntegrationTests(ctx) {
     }
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
-    teams = ['thunderjet', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
+    teams = ['thunderjet', 'bama', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
              'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
-    teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
+    teams_test = ['spitfire', 'bama', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
                     firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh'],
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
-                    vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation', 'mod-calendar'],
+                    vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
                     falcon: ['mod-search']
+                    bama: ['mod-calendar']
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
       for (team in teams_test){
@@ -773,8 +774,8 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-  teams_test = ['spitfire', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
-  teams_channels = [spitfire: '#spitfire', folijet: '#folijet', thunderjet: '#thunderjet-back-end', firebird: '#firebird',
+  teams_test = ['spitfire', 'bama', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
+  teams_channels = [spitfire: '#spitfire', bama: '#bama', folijet: '#folijet', thunderjet: '#thunderjet-back-end', firebird: '#firebird',
                    prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
 
   // Build status of null means success.
