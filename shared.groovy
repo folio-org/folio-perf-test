@@ -365,7 +365,7 @@ def runIntegrationTests(ctx) {
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
-                    falcon: ['mod-search']
+                    falcon: ['mod-search'],
                     bama: ['mod-calendar']
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
