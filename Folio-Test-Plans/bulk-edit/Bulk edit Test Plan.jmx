@@ -1037,7 +1037,7 @@ props.put(&quot;x-okapi-token&quot;, vars.get(&quot;x-okapi-token&quot;));</stri
           </ResponseAssertion>
           <hashTree/>
           <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - wait for edit" enabled="true">
-            <stringProp name="ConstantTimer.delay">1000</stringProp>
+            <stringProp name="ConstantTimer.delay">${waitEdit}</stringProp>
           </ConstantTimer>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
