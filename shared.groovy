@@ -672,6 +672,18 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
       modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
 	}
+  // mod-data-export-string, mod-data-export-worker has different env variables
+  if (modName.equals("mod-data-export-spring") ||
+     modName.equals("mod-data-export-worker") {
+      modJob = readFile("config/mod-data-export-spring.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+      modJob = modJob.replace('${port}', '' + port)
+      modJob = modJob.replace('${modVer}', "" + modVer)
+      modJob = modJob.replace('${modName}', modName)
+    }
+
 	if (modName.equals("mod-inventory")) {
       modJob = readFile("config/mod-inventory.sh").trim()
 	  modJob = modJob.replace('${dbHost}', dbPvtIp)
