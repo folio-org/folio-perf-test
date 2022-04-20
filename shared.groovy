@@ -490,13 +490,13 @@ def getMods(fixedMods, mdRepo) {
 
     // registering in Okapi issue
     // should be fixed later
-    if (mod.id.startsWith("mod-data-export-spring")) {
-      continue
-    }
+  //   if (mod.id.startsWith("mod-data-export-spring")) {
+  //     continue
+  //   }
 
-	if (mod.id.startsWith("mod-data-export-worker")) {
-      continue
-    }
+	// if (mod.id.startsWith("mod-data-export-worker")) {
+  //     continue
+  //   }
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
