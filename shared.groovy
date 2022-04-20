@@ -660,14 +660,14 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${okapiIp}', okapiIp)
     }
     //mod-inn-reach needs additional db params
-	if ((modName.equals("mod-inn-reach")) ||
-	modName.equals("mod-tags"))
+    if ((modName.equals("mod-inn-reach")) ||
+    modName.equals("mod-tags"))
 	{
       modJob = readFile("config/mod-inn-reach.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
 	// added s3 credentials to data-export
-	if (modName.equals("mod-data-export")) {
+  if (modName.equals("mod-data-export")) {
       modJob = readFile("config/mod-data-export.sh").trim()
       modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
       modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
@@ -683,7 +683,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${modName}', modName)
     }
-	if (modName.equals("mod-inventory")) {
+    if (modName.equals("mod-inventory")) {
       modJob = readFile("config/mod-inventory.sh").trim()
 	  modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
