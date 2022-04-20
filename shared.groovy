@@ -683,7 +683,6 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${modName}', modName)
     }
-
 	if (modName.equals("mod-inventory")) {
       modJob = readFile("config/mod-inventory.sh").trim()
 	  modJob = modJob.replace('${dbHost}', dbPvtIp)
