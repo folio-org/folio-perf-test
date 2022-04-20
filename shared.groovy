@@ -361,7 +361,7 @@ def runIntegrationTests(ctx) {
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
-                    firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh'],
+                    firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-wroker'],
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
@@ -490,13 +490,13 @@ def getMods(fixedMods, mdRepo) {
 
     // registering in Okapi issue
     // should be fixed later
-    if (mod.id.startsWith("mod-data-export-spring")) {
-      continue
-    }
+  //   if (mod.id.startsWith("mod-data-export-spring")) {
+  //     continue
+  //   }
 
-	if (mod.id.startsWith("mod-data-export-worker")) {
-      continue
-    }
+	// if (mod.id.startsWith("mod-data-export-worker")) {
+  //     continue
+  //   }
 	if (mod.id.startsWith("mod-service-interaction")) {
       continue
     }
@@ -637,6 +637,17 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
     modName.equals("mod-notes")) {
       modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
+    }
+    // mod-data-export-string, mod-data-export-worker has different env variables
+    if (modName.equals("mod-data-export-spring") ||
+      modName.equals("mod-data-export-worker")) {
+      modJob = readFile("config/mod-data-export-spring.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+      modJob = modJob.replace('${port}', '' + port)
+      modJob = modJob.replace('${modVer}', "" + modVer)
+      modJob = modJob.replace('${modName}', modName)
     }
     // mod-bursar-export and mod-password-validator have different env variables
     if (modName.equals("mod-bursar-export") ||
