@@ -667,27 +667,16 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
     // added s3 credentials to data-export
-	if (modName.equals("mod-data-export")) {
+	  if (modName.equals("mod-data-export")) {
       modJob = readFile("config/mod-data-export.sh").trim()
       modJob = modJob.replace('${AWS_ACCESS_KEY_ID}', AWS_ACCESS_KEY_ID)
       modJob = modJob.replace('${AWS_SECRET_ACCESS_KEY}', AWS_SECRET_ACCESS_KEY)
 	}
-	if (modName.equals("mod-inventory")) {
+	  if (modName.equals("mod-inventory")) {
       modJob = readFile("config/mod-inventory.sh").trim()
-	  modJob = modJob.replace('${dbHost}', dbPvtIp)
+	    modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
 	  }
-  // mod-data-export-string, mod-data-export-worker has different env variables
-  if (modName.equals("mod-data-export-spring") ||
-     modName.equals("mod-data-export-worker") {
-      modJob = readFile("config/mod-data-export-spring.sh").trim()
-      modJob = modJob.replace('${dbHost}', dbPvtIp)
-      modJob = modJob.replace('${okapiIp}', okapiIp)
-      modJob = modJob.replace('${envName}', envName)
-      modJob = modJob.replace('${port}', '' + port)
-      modJob = modJob.replace('${modVer}', "" + modVer)
-      modJob = modJob.replace('${modName}', modName)
-    }
     // temporary solution to escape mod-service-interaction failure
    //if (modName.equals("mod-service-interaction")) {
     //  continue
@@ -730,10 +719,19 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${port}', '' + port)
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${envName}', envName)
-
-      
-
     }
+
+    // mod-data-export-string, mod-data-export-worker has different env variables
+    if (modName.equals("mod-data-export-spring") ||
+       modName.equals("mod-data-export-worker") {
+        modJob = readFile("config/mod-data-export-spring.sh").trim()
+        modJob = modJob.replace('${dbHost}', dbPvtIp)
+        modJob = modJob.replace('${okapiIp}', okapiIp)
+        modJob = modJob.replace('${envName}', envName)
+        modJob = modJob.replace('${port}', '' + port)
+        modJob = modJob.replace('${modVer}', "" + modVer)
+        modJob = modJob.replace('${modName}', modName)
+     }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
       modJob += " verify.user=true"
