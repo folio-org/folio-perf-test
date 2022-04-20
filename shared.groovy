@@ -638,6 +638,17 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = readFile("config/mod-data-import-converter-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
     }
+    // mod-data-export-string, mod-data-export-worker has different env variables
+    if (modName.equals("mod-data-export-spring") ||
+      modName.equals("mod-data-export-worker")) {
+      modJob = readFile("config/mod-data-export-spring.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+      modJob = modJob.replace('${port}', '' + port)
+      modJob = modJob.replace('${modVer}', "" + modVer)
+      modJob = modJob.replace('${modName}', modName)
+    }
     // mod-bursar-export and mod-password-validator have different env variables
     if (modName.equals("mod-bursar-export") ||
     modName.equals("mod-password-validator") ||
@@ -719,18 +730,9 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${port}', '' + port)
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${envName}', envName)
-    } 
 
-  // mod-data-export-string, mod-data-export-worker has different env variables
-    if (modName.equals("mod-data-export-spring") ||
-       modName.equals("mod-data-export-worker") {
-        modJob = readFile("config/mod-data-export-spring.sh").trim()
-        modJob = modJob.replace('${dbHost}', dbPvtIp)
-        modJob = modJob.replace('${okapiIp}', okapiIp)
-        modJob = modJob.replace('${envName}', envName)
-        modJob = modJob.replace('${port}', '' + port)
-        modJob = modJob.replace('${modVer}', "" + modVer)
-        modJob = modJob.replace('${modName}', modName)
+      
+
     }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
