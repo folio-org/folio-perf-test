@@ -720,7 +720,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${modVer}', "" + modVer)
       modJob = modJob.replace('${envName}', envName)
     } 
-    
+
   // mod-data-export-string, mod-data-export-worker has different env variables
     if (modName.equals("mod-data-export-spring") ||
        modName.equals("mod-data-export-worker") {
@@ -731,9 +731,6 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
         modJob = modJob.replace('${port}', '' + port)
         modJob = modJob.replace('${modVer}', "" + modVer)
         modJob = modJob.replace('${modName}', modName)
-     
-      
-
     }
     // mod-login has a special parameter
     if (modName.equals("mod-login")) {
