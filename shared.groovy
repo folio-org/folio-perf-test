@@ -620,16 +620,25 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
         modJob = modJob.replace('8080', '8081')
       }
     }
-    // mod-inventory-storage, mod-source-record-storage and mod-ebsconet have different env variables
+    // mod-inventory-storage and mod-ebsconet have different env variables
     if (modName.equals("mod-inventory-storage") ||
     modName.equals("mod-source-record-storage") ||
     modName.equals("mod-ebsconet") ||
-    modName.equals("mod-source-record-manager") ||
     modName.equals("mod-data-import")) {
       modJob = readFile("config/mod-inventory-storage.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
       modJob = modJob.replace('${envName}', envName)
+    }
+    // mod-source-record-storage  has different env variables
+    if (modName.equals("mod-source-record-manager") {
+      modJob = readFile("config/mod-source-record-manager.sh").trim()
+      modJob = modJob.replace('${dbHost}', dbPvtIp)
+      modJob = modJob.replace('${okapiIp}', okapiIp)
+      modJob = modJob.replace('${envName}', envName)
+      modJob = modJob.replace('${port}', '' + port)
+      modJob = modJob.replace('${modVer}', "" + modVer)
+      modJob = modJob.replace('${modName}', modName)
     }
     // mod-data-import-converter-storage, users has different env variables
     if (modName.equals("mod-data-import-converter-storage") ||
