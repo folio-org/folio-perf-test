@@ -631,7 +631,7 @@ def deployMods(envName, mods, okapiIp, modsIp, modsPvtIp, dbPvtIp, tenant, sshCm
       modJob = modJob.replace('${envName}', envName)
     }
     // mod-source-record-storage  has different env variables
-    if (modName.equals("mod-source-record-manager") {
+    if (modName.equals("mod-source-record-manager")) {
       modJob = readFile("config/mod-source-record-manager.sh").trim()
       modJob = modJob.replace('${dbHost}', dbPvtIp)
       modJob = modJob.replace('${okapiIp}', okapiIp)
