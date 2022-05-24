@@ -361,7 +361,7 @@ def runIntegrationTests(ctx) {
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
-                    firebird: ['mod-audit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-wroker'],
+                    firebird: ['mod-audit', 'bulk-edit', 'edge-dematic', 'edge-caiasoft', 'data-export', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-worker'],
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
@@ -794,8 +794,8 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
-  teams_channels = [spitfire: '#spitfire', bama: '#bama', firebird: '#firebird',
+  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'folijet' 'vega', 'core_platform', 'falcon']
+  teams_channels = [spitfire: '#spitfire', bama: '#bama', firebird: '#firebird', folijet: '#folijet-test'
                    prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
 
   // Build status of null means success.
