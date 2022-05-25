@@ -794,7 +794,7 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'folijet' 'vega', 'core_platform', 'falcon']
+  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'folijet', 'vega', 'core_platform', 'falcon']
   teams_channels = [spitfire: '#spitfire', bama: '#bama', firebird: '#firebird', folijet: '#folijet-test'
                    prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
 
