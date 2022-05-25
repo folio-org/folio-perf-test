@@ -361,7 +361,7 @@ def runIntegrationTests(ctx) {
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
-                    firebird: ['mod-audit', 'bulk-edit', 'edge-dematic', 'edge-caiasoft', 'data-export', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-worker'],
+                    firebird: ['mod-audit', 'bulk-edit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-worker'],
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
