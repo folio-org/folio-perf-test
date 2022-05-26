@@ -358,14 +358,13 @@ def runIntegrationTests(ctx) {
     teams = ['thunderjet', 'bama', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
              'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
     teams_test = ['spitfire', 'bama', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
-    team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'passwordvalidator'],
+    team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'mod-search',  'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
                     firebird: ['mod-audit', 'bulk-edit', 'edge-dematic', 'edge-caiasoft', 'dataexport', 'oaipmh', 'mod-data-export-spring', 'mod-data-export-worker'],
                     prokopovych: ['mod-inventory', 'mod-users-bl', 'edge-patron', 'edge-rtac', 'mod-users'],
                     vega: ['mod-event-config', 'mod-sender', 'mod-circulation', 'mod-template-engine', 'mod-email', 'mod-notify', 'mod-feesfines', 'mod-patron-blocks', 'mod-circulation'],
                     core_platform: ['mod-configuration', 'mod-permissions', 'mod-login-saml', 'mod-user-import'],
-                    falcon: ['mod-search'],
                     bama: ['mod-calendar']
                     ]
     dir("${env.WORKSPACE}/folio-integration-tests/cucumber-reports"){
