@@ -356,8 +356,8 @@ def runIntegrationTests(ctx) {
     sh "mkdir ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     sh "find . | grep json | grep '/target/karate-reports' | xargs -i cp {} ${env.WORKSPACE}/folio-integration-tests/cucumber-reports"
     teams = ['thunderjet', 'bama', 'firebird', 'prokopovych', 'folijet', 'spitfire', 'vega', 'core-platform', 'erm-delivery', 'fse', 'stripes', 'leipzig',
-             'ncip', 'thor', 'falcon', 'volaris', 'knowledgeware', 'spring']
-    teams_test = ['spitfire', 'bama', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform', 'falcon']
+             'ncip', 'thor', 'volaris', 'knowledgeware', 'spring']
+    teams_test = ['spitfire', 'bama', 'folijet', 'thunderjet', 'firebird', 'prokopovych', 'vega', 'core_platform']
     team_modules = [spitfire: ['mod-kb-ebsco-java', 'tags', 'codexekb', 'mod-notes', 'mod-quick-marc', 'mod-search',  'passwordvalidator'],
                     folijet: ['mod-source-record-storage', 'mod-source-record-manager', 'mod-data-import', 'data-import', 'mod-data-import-converter-storage'],
                     thunderjet: ['mod-finance', 'edge-orders', 'mod-gobi', 'mod-orders', 'mod-organizations', 'mod-invoice', 'mod-ebsconet', 'cross-modules'],
@@ -793,9 +793,9 @@ def stopFolioDockers(ctx, ip) {
 }
 
 def notifySlack(String buildStatus = 'STARTED') {
-  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'folijet', 'vega', 'core_platform', 'falcon']
+  teams_test = ['spitfire', 'bama', 'firebird', 'prokopovych', 'folijet', 'vega', 'core_platform']
   teams_channels = [spitfire: '#spitfire', bama: '#bama', firebird: '#firebird', folijet: '#folijet-test',
-                   prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform', falcon: '#falcon']
+                   prokopovych: '#prokopovych', vega: '#vega', core_platform: '#core-platform']
 
   // Build status of null means success.
   buildStatus = buildStatus ?: 'SUCCESS'
