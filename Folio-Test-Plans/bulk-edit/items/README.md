@@ -12,6 +12,4 @@ Parameters:
 * port : test server port
 * waitUpload : wait time to upload file
 * waitEdit : wait edit to update items
-* barcodes : csv file with items barcodes
-* items : csv file with items data
-* cqlQuery : query with items barcodes
+* {identifiers} : csv file with item identifiers (barcodes, uuids, former ids, holding ids, hrids, accession numbers)
