@@ -1,1 +1,1 @@
-fs09000000,folio,folio,https,bulk-edit-perf-okapi.ci.folio.org,443,1000,1000,item_accession_numbers.csv
+diku,diku_admin,admin,http,localhost,9130,1000,1000,item_accession_numbers.csv
