@@ -48,7 +48,7 @@ BEGIN
       SELECT nextval('diku_mod_orders_storage.po_number') INTO newPoNumber;
       --
       INSERT INTO diku_mod_orders_storage.purchase_order (id, jsonb)
-      VALUES (public.uuid_generate_v5(public.uuid_nil(), 'purchase_order_uuid'),
+      VALUES (public.uuid_generate_v4(),
               jsonb_build_object('reEncumber', true,
                                  'workflowStatus', 'Pending',
                                  'poNumber', newPoNumber,
@@ -81,9 +81,7 @@ BEGIN
   for line_counter in 1..polines_per_order
     loop
       INSERT INTO diku_mod_orders_storage.po_line (id, jsonb)
-      --                SELECT public.uuid_generate_v5(public.uuid_nil(), concat('BER2', _rollover_record->>'id', tr.id, fund.id)), jsonb_build_object
-
-      VALUES (public.uuid_generate_v5(public.uuid_nil(), 'poline_uuid'),
+      VALUES (public.uuid_generate_v4(),
               jsonb_build_object('acquisitionMethod', 'df26d81b-9d63-4ff8-bf41-49bf75cfa70e',
                                  'rush', false,
                                  'cost', json_build_object(
