@@ -15,7 +15,7 @@ BEGIN
     loop
     -- Uncomment if needed to create new vendors
 /*                  INSERT INTO diku_mod_organizations_storage.organizations (id, jsonb)
-                  VALUES (public.uuid_generate_v4(),
+                    VALUES (public.uuid_generate_v5(public.uuid_nil(), 'organizations_uuid'),
                           jsonb_build_object('code', concat(orgCode, org_counter),
                                              'erpCode', '12345',
                                              'isVendor', true,
@@ -48,9 +48,8 @@ BEGIN
       SELECT nextval('diku_mod_orders_storage.po_number') INTO newPoNumber;
       --
       INSERT INTO diku_mod_orders_storage.purchase_order (id, jsonb)
-      VALUES (public.uuid_generate_v4(),
-              jsonb_build_object('id', public.uuid_generate_v4(),
-                                 'reEncumber', true,
+      VALUES (public.uuid_generate_v5(public.uuid_nil(), 'purchase_order_uuid'),
+              jsonb_build_object('reEncumber', true,
                                  'workflowStatus', 'Pending',
                                  'poNumber', newPoNumber,
                                  'vendor', vendor_id,
@@ -82,9 +81,10 @@ BEGIN
   for line_counter in 1..polines_per_order
     loop
       INSERT INTO diku_mod_orders_storage.po_line (id, jsonb)
-      VALUES (public.uuid_generate_v4(),
-              jsonb_build_object('id', public.uuid_generate_v4(),
-                                 'acquisitionMethod', 'df26d81b-9d63-4ff8-bf41-49bf75cfa70e',
+      --                SELECT public.uuid_generate_v5(public.uuid_nil(), concat('BER2', _rollover_record->>'id', tr.id, fund.id)), jsonb_build_object
+
+      VALUES (public.uuid_generate_v5(public.uuid_nil(), 'poline_uuid'),
+              jsonb_build_object('acquisitionMethod', 'df26d81b-9d63-4ff8-bf41-49bf75cfa70e',
                                  'rush', false,
                                  'cost', json_build_object(
                                    'currency', 'USD',
@@ -141,7 +141,7 @@ DECLARE
   -- !!! SET DEFAULT TENANT NAME !!!
   tenant             text DEFAULT 'diku';
   org_to_generate    integer DEFAULT 1; -- amount of organizations to be created. keep 1 if vendor exists
-  orders_to_generate integer DEFAULT 10000; -- amount of orders per organization
+  orders_to_generate integer DEFAULT 1; -- amount of orders per organization
   lines_to_generate  integer DEFAULT 1; -- amount of PO lines per order
 
 BEGIN
