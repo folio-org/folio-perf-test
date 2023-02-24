@@ -31,17 +31,17 @@
           </elementProp>
           <elementProp name="tenant" elementType="Argument">
             <stringProp name="Argument.name">tenant</stringProp>
-            <stringProp name="Argument.value">diku</stringProp>
+            <stringProp name="Argument.value"></stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="username" elementType="Argument">
             <stringProp name="Argument.name">username</stringProp>
-            <stringProp name="Argument.value">diku_admin</stringProp>
+            <stringProp name="Argument.value"></stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="password" elementType="Argument">
             <stringProp name="Argument.name">password</stringProp>
-            <stringProp name="Argument.value">admin</stringProp>
+            <stringProp name="Argument.value"></stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="X-Okapi-Token-Header" elementType="Argument">
