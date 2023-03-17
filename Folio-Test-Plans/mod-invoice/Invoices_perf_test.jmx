@@ -78,6 +78,7 @@
             <stringProp name="Argument.name">invoicesToBeCreated</stringProp>
             <stringProp name="Argument.value">50</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">amount of invoice records to be generated per single thread</stringProp>
           </elementProp>
           <elementProp name="invoiceLinesPerInvoice" elementType="Argument">
             <stringProp name="Argument.name">invoiceLinesPerInvoice</stringProp>
